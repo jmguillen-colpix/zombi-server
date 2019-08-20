@@ -1,0 +1,234 @@
+<div class="modal-header">
+    <h5 class="modal-title"><span class="i18n" data-i18n="EDIT_LABEL">EDIT_LABEL</span> <span id="labels_edit_title_id"></span></h5>
+</div>
+<div class="modal-body">
+    <form id="labels_edit_label_form">
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LABEL_NAME">LABEL_NAME</span></label><span class="text-danger">&nbsp;*</span>
+            <input type="text" class="form-control" id="labels_edit_label_name" name="labels_edit_label_name" style="text-transform: uppercase;">
+        </div>
+
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_EN">LANG_EN</span></label><span class="text-danger">&nbsp;*</span>
+            <input type="text" class="form-control" id="labels_edit_label_lang_en" name="labels_edit_label_lang_en">
+        </div>
+
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_ES">LANG_ES</span></label>
+            <input type="text" class="form-control" id="labels_edit_label_lang_es">
+        </div>
+
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_PT">LANG_PT</span></label>
+            <input type="text" class="form-control" id="labels_edit_label_lang_pt">
+        </div>
+
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_FR">LANG_FR</span></label>
+            <input type="text" class="form-control" id="labels_edit_label_lang_fr">
+        </div>
+        
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_DE">LANG_DE</span></label>
+            <input type="text" class="form-control" id="labels_edit_label_lang_de">
+        </div>
+            
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_IT">LANG_IT</span></label>
+            <input type="text" class="form-control" id="labels_edit_label_lang_it">
+        </div>
+            
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_KO">LANG_KO</span></label>
+            <input type="text" class="form-control" id="labels_edit_label_lang_ko">
+        </div>
+            
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_JA">LANG_JA</span></label>
+            <input type="text" class="form-control" id="labels_edit_label_lang_ja">
+        </div>
+            
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_HE">LANG_HE</span></label>
+            <input type="text" class="form-control" id="labels_edit_label_lang_he">
+        </div>
+            
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_RU">LANG_RU</span></label>
+            <input type="text" class="form-control" id="labels_edit_label_lang_ru">
+        </div>
+            
+        <div class="form-group">
+            <label for="labels_edit_username"><span class="i18n" data-i18n="LANG_ZH">LANG_ZH</span></label>
+            <input type="text" class="form-control" id="labels_edit_label_lang_zh">
+        </div>
+
+        <div class="form-group">
+            <label for="console_arguments"><span class="i18n" data-i18n="DETAILS">DETAILS</span></label>
+            <textarea class="form-control" placeholder="" id="labels_edit_label_details"></textarea>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-danger mr-auto" id="labels_edit_delete"><span class="i18n" data-i18n="DELETE_LABEL">DELETE_LABEL</span></button>
+    <button type="submit" class="btn btn-secondary" data-dismiss="modal"><span class="i18n" data-i18n="CLOSE">CLOSE</span></button>
+    <button type="button" class="btn btn-primary" id="labels_edit_save"><span class="i18n" data-i18n="SAVE">SAVE</span></button>
+</div>
+
+<script>
+
+    (() => {
+
+        INDEX.i18n.apply();
+
+        const id = INDEX.data.get("labels_edit_id");
+        const name = INDEX.data.get("labels_edit_name");
+
+        $("#labels_edit_title_id").html(name);
+
+        ZOMBI.server(
+            ["sys_labels", "labels_edit_data", [id]],
+
+            (error, response) => {
+
+                if(error) { INDEX.flash(INDEX.i18n.label("SERVER_ERROR")); } 
+                
+                else {
+
+                    if(response.error) { INDEX.flash(response.message); } 
+                    
+                    else {
+
+                        const data = response.data[0];
+
+                        $("#labels_edit_label_name").val(data[0]);
+
+                        $("#labels_edit_label_lang_es").val(data[1]);
+                        $("#labels_edit_label_lang_pt").val(data[2]);
+                        $("#labels_edit_label_lang_en").val(data[3]);
+                        $("#labels_edit_label_lang_fr").val(data[4]);
+                        $("#labels_edit_label_lang_de").val(data[5]);
+                        $("#labels_edit_label_lang_it").val(data[6]);
+                        $("#labels_edit_label_lang_ko").val(data[7]);
+                        $("#labels_edit_label_lang_ja").val(data[8]);
+                        $("#labels_edit_label_lang_he").val(data[9]);
+                        $("#labels_edit_label_lang_ru").val(data[10]);
+                        $("#labels_edit_label_lang_zh").val(data[11]);
+
+                        $("#labels_edit_label_details").val(data[12]);
+
+                        
+    
+                    }
+                
+                }
+            
+            }
+
+        );
+
+        const validator = $("#labels_edit_label_form").validate({
+            rules: {
+                labels_edit_label_name: {
+                    required: true
+                },
+                labels_edit_label_lang_en: {
+                    required: true
+                }
+            },
+            messages: {
+                labels_edit_label_name: {
+                    required: INDEX.i18n.label("THIS_FIELD_IS_REQUIRED")
+
+                },
+                labels_edit_label_lang_en: {
+                    required: INDEX.i18n.label("THIS_FIELD_IS_REQUIRED")
+
+                }
+            }
+        });
+        
+        $("#labels_edit_delete").on("click", (event) => {
+
+            ZOMBI.server(
+                ["sys_labels", "labels_delete", [id]],
+
+                (error, response) => {
+
+                    if(error) { INDEX.flash(INDEX.i18n.label("SERVER_ERROR")); } 
+                    
+                    else {
+
+                        if(response.error) { INDEX.flash(response.message); } 
+                        
+                        else {
+
+                            INDEX.close_modal();
+
+                            INDEX.datatables.refresh("labels_table");
+
+                        }
+                    
+                    }
+                
+                }
+
+            );
+
+        });
+
+        $("#labels_edit_save").on("click", (event) => {
+
+            if(validator.form()) {
+
+                const name = $("#labels_edit_label_name").val();
+
+                const es = $("#labels_edit_label_lang_es").val();
+                const pt = $("#labels_edit_label_lang_pt").val();
+                const en = $("#labels_edit_label_lang_en").val();
+                const fr = $("#labels_edit_label_lang_fr").val();
+                const de = $("#labels_edit_label_lang_de").val();
+                const it = $("#labels_edit_label_lang_it").val();
+                const ko = $("#labels_edit_label_lang_ko").val();
+                const ja = $("#labels_edit_label_lang_ja").val();
+                const he = $("#labels_edit_label_lang_he").val();
+                const ru = $("#labels_edit_label_lang_ru").val();
+                const zh = $("#labels_edit_label_lang_zh").val();
+
+                const details = $("#labels_edit_label_details").val();
+                
+
+                ZOMBI.server(
+                    ["sys_labels", "labels_edit", [id, name.toUpperCase(), es, pt, en, fr, de, it, ko, ja, he, ru ,zh, details]],
+
+                    (error, response) => {
+
+                        if(error) { INDEX.flash(INDEX.i18n.label("SERVER_ERROR")); } 
+                        
+                        else {
+
+                            if(response.error) { INDEX.flash(response.message); } 
+                            
+                            else {
+
+                                INDEX.close_modal();
+
+                                INDEX.datatables.refresh("labels_table");
+            
+                            }
+                        
+                        }
+                    
+                    }
+
+                );
+
+            }
+
+        });
+
+    })();
+
+</script>
+

@@ -1,0 +1,264 @@
+<div class="modal-header">
+        <h5 class="modal-title"><span class="i18n" data-i18n="EDIT_USER">EDIT_USER</span> <span id="users_edit_title_id"></span></h5>
+    </div>
+    <div class="modal-body">
+        <form id="users_edit_user_form">
+            <div class="form-group">
+                <label for="users_edit_username"><span class="i18n" data-i18n="USERNAME">USERNAME</span></label><span class="text-danger">&nbsp;*</span>
+                <input type="text" class="form-control" id="users_edit_username" name="users_edit_username" placeholder="Username">
+            </div>
+    
+            <div class="form-group">
+                <label for="users_edit_fullname"><span class="i18n" data-i18n="FULLNAME">FULLNAME</span></label><span class="text-danger">&nbsp;*</span>
+                <input type="text" class="form-control" id="users_edit_fullname" name="users_edit_fullname" placeholder="Full Name">
+            </div>
+    
+            <div class="form-group">
+                <label for="users_edit_password"><span class="i18n" data-i18n="PASSWORD">PASSWORD</span></label><span class="text-danger">&nbsp;*</span>
+                <input type="password" class="form-control" id="users_edit_password" name="users_edit_password" placeholder="Password">
+            </div>
+    
+            <div class="form-group">
+                <label for="users_edit_email"><span class="i18n" data-i18n="EMAIL">EMAIL</span></label>
+                <input type="text" class="form-control" id="users_edit_email" placeholder="Email">
+            </div>
+    
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="users_edit_language"><span class="i18n" data-i18n="LANGUAGE">LANGUAGE</span></label>
+                    <select class="form-control" id="users_edit_language"></select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="users_edit_country"><span class="i18n" data-i18n="COUNTRY">COUNTRY</span></label>
+                    <select class="form-control" id="users_edit_country"></select>
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <label for="users_edit_timezone"><span class="i18n" data-i18n="TIMEZONE">TIMEZONE</span></label>
+                <select class="form-control" id="users_edit_timezone">
+                </select>
+            </div>
+    
+            <div class="form-group">
+                <label class="custom-control material-switch">
+                    <input type="checkbox" class="material-switch-control-input" id="users_edit_is_admin">
+                    <span class="material-switch-control-indicator"></span>
+                    <span class="material-switch-control-description"><span class="i18n" data-i18n="ADMINISTRATOR">ADMINISTRATOR</span></span>
+                </label>
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger mr-auto" id="users_edit_delete"><span class="i18n" data-i18n="DELETE_USER">DELETE_USER</span></button>
+        <button type="submit" class="btn btn-secondary" data-dismiss="modal"><span class="i18n" data-i18n="CLOSE">CLOSE</span></button>
+        <button type="button" class="btn btn-primary" id="users_edit_save"><span class="i18n" data-i18n="SAVE">SAVE</span></button>
+    </div>
+    
+    <script>
+    
+        (() => {
+    
+            INDEX.i18n.apply();
+
+            const users_edit_timezone_element = document.getElementById("users_edit_timezone");
+
+            const users_edit_timezone_option = document.createElement('option');
+                                
+            users_edit_timezone_option.value = "0";
+            users_edit_timezone_option.text  = INDEX.i18n.label("SELECT_COUNTRY");
+
+            users_edit_timezone_element.add(users_edit_timezone_option);
+            
+            document.getElementById("users_edit_username").placeholder = INDEX.i18n.label("USERNAME");
+            document.getElementById("users_edit_fullname").placeholder = INDEX.i18n.label("FULLNAME");
+            document.getElementById("users_edit_password").placeholder = INDEX.i18n.label("PASSWORD");
+            document.getElementById("users_edit_email").placeholder = INDEX.i18n.label("EMAIL");
+
+            const id = INDEX.data.get("users_edit_id");
+            const name = INDEX.data.get("users_edit_name");
+
+            $("#users_edit_title_id").html(name);
+
+            ZOMBI.server(
+                ["sys_users", "users_edit_data", [id]],
+
+                (error, response) => {
+
+                    if(error) { INDEX.flash(INDEX.i18n.label("SERVER_ERROR")); } 
+                    
+                    else {
+
+                        if(response.error) { INDEX.flash(response.message); } 
+                        
+                        else {
+
+                            const data = response.data[0];
+
+                            $("#users_edit_username").val(data[0]);
+                            $("#users_edit_fullname").val(data[1]);
+                            // $("#users_edit_password").val(data[6]);
+                            $("#users_edit_email").val(data[2]);
+                            $("#users_edit_language").val(3);
+
+                            const country_id = (data[5]) ? data[5] : 0 ;
+
+                            document.getElementById("users_edit_country").value = country_id;
+
+                            INDEX.select(
+                                "users_edit_language", 
+                                "sys_users/users_languages_select", 
+                                [],
+                                [0, "-"],
+                                data[4]
+                            );
+                    
+                            INDEX.select(
+                                "users_edit_country", 
+                                "sys_users/users_countries_select",
+                                [],
+                                [0, "-"],
+                                data[5]
+                            );
+
+                            INDEX.select(
+                                "users_edit_timezone",
+                                "sys_users/users_timezones_select",
+                                ["country_id", country_id],
+                                null,
+                                data[3]
+                            );
+
+                            document.getElementById("users_edit_is_admin").checked = (data[7] === "Y");
+        
+                        }
+                    
+                    }
+                
+                }
+
+            );
+            
+            
+    
+            const users_edit_country = document.getElementById("users_edit_country");
+    
+            users_edit_country.addEventListener("change", () => {
+    
+                if(users_edit_country.value !== "0") {
+
+                    INDEX.select(
+                        "users_edit_timezone",
+                        "sys_users/users_timezones_select",
+                        ["country_id", users_edit_country.value]
+                    );
+    
+                }
+                
+            });
+    
+            
+
+            $("#users_edit_delete").on("click", (event) => {
+    
+
+                const username = $("#users_edit_username").val();
+                const fullname = $("#users_edit_fullname").val();
+                const password = $("#users_edit_password").val();
+                const email = $("#users_edit_email").val();
+                const timezone = document.getElementById("users_edit_timezone").value;
+                const language = document.getElementById("users_edit_language").value;
+                const country = document.getElementById("users_edit_country").value;
+
+                const is_admin = (document.getElementById("users_edit_is_admin").checked) ? "Y" : "N";
+
+                ZOMBI.server(
+                    ["sys_users", "users_delete", id],
+
+                    (error, response) => {
+
+                        if(error) { INDEX.flash(INDEX.i18n.label("SERVER_ERROR")); } 
+                        
+                        else {
+
+                            if(response.error) { INDEX.flash(response.message); } 
+                            
+                            else {
+
+                                INDEX.close_modal();
+
+                                INDEX.datatables.refresh("users_table");
+
+                            }
+                        
+                        }
+                    
+                    }
+
+                );
+
+            });
+            
+            
+            $("#users_edit_save").on("click", (event) => {
+    
+                if(validator.form()) {
+    
+                    const username = $("#users_edit_username").val();
+                    const fullname = $("#users_edit_fullname").val();
+                    const password = $("#users_edit_password").val();
+                    const email = $("#users_edit_email").val();
+                    const timezone = document.getElementById("users_edit_timezone").value;
+                    const language = document.getElementById("users_edit_language").value;
+                    const country = document.getElementById("users_edit_country").value;
+
+                    const is_admin = (document.getElementById("users_edit_is_admin").checked) ? "Y" : "N";
+    
+                    ZOMBI.server(
+                        ["sys_users", "users_edit", [id, username, fullname, password, email, parseInt(language), parseInt(country), parseInt(timezone), is_admin]],
+    
+                        (error, response) => {
+    
+                            if(error) { INDEX.flash(INDEX.i18n.label("SERVER_ERROR")); } 
+                            
+                            else {
+    
+                                if(response.error) { INDEX.flash(response.message); } 
+                                
+                                else {
+    
+                                    INDEX.close_modal();
+    
+                                    INDEX.datatables.refresh("users_table");
+    
+                                }
+                            
+                            }
+                        
+                        }
+    
+                    );
+    
+                }
+    
+            });
+    
+            const validator = $("#users_edit_user_form").validate({
+                rules: {
+                    users_edit_username: { required: true },
+                    users_edit_fullname: { required: true },
+                    // users_edit_password: { required: true },
+                },
+                messages: {
+                    users_edit_username: { required: INDEX.i18n.label("THIS_FIELD_IS_REQUIRED") },
+                    users_edit_fullname: { required: INDEX.i18n.label("THIS_FIELD_IS_REQUIRED") },
+                    // users_edit_password: { required: INDEX.i18n.label("THIS_FIELD_IS_REQUIRED") }
+                }
+            });
+    
+        })();
+    
+    </script>
+    
+    

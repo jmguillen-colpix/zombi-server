@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Zombi Framework</title>
+
+    <!-- <link href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" rel="stylesheet" type="text/css"> -->
+
+    <link href="vendor/fontawesome/css/fontawesome.css" rel="stylesheet">
+    <link href="vendor/fontawesome/css/brands.css" rel="stylesheet">
+    <link href="vendor/fontawesome/css/solid.css" rel="stylesheet">
+
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="vendor/datatables/datatables.min.css" rel="stylesheet" type="text/css">
+    <link href="vendor/toastr/toastr.css" rel="stylesheet" type="text/css">
+    <link href="vendor/select2/css/select2.css" rel="stylesheet" type="text/css">
+    <link href="vendor/select2/css/select2-bootstrap4.css" rel="stylesheet" type="text/css">
+
+    <link href="css/menu.css" rel="stylesheet" type="text/css">
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <link href="css/custom.css" rel="stylesheet" type="text/css">
+    <link href="css/colors.min.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <div id="overlay">
+        <img src="img/loader.gif" alt="Loading" /><br/>
+    </div>
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <a href="#"><img src="img/zombi.png" alt="Zombi Framework"></a>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="#"><span class="i18n" data-i18n="HOME">HOME</span></a>
+                </li>
+                <li>
+                    <a href="#development_submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><span class="i18n" data-i18n="DEVELOPMENT">DEVELOPMENT</span></a>
+                    <ul class="collapse list-unstyled" id="development_submenu">
+                        <li>
+                            <a href="#/console"><span class="i18n" data-i18n="CONSOLE">CONSOLE</span></a>
+                        </li>
+                        <li>
+                            <a href="#/code"><span class="i18n" data-i18n="CODE">CODE</span></a>
+                        </li>
+                        <li>
+                            <a href="#/labels"><span class="i18n" data-i18n="LABELS">LABELS</span></a>
+                        </li>
+                        <li>
+                            <a href="#/radio_log"><span class="i18n" data-i18n="LOG">LOG</span></a>
+                        </li>
+                        <li>
+                            <a href="#/state"><span class="i18n" data-i18n="STATE">STATE</span></a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                        <a href="#traffic_submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><span class="i18n" data-i18n="TRAFFIC">TRAFFIC</span></a>
+                        <ul class="collapse list-unstyled" id="traffic_submenu">
+                            <li>
+                                <a href="#/traffic"><span class="i18n">HTTP</span></a>
+                            </li>
+                            <li>
+                                <a href="#/sockets"><span class="i18n" data-i18n="SOCKETS">SOCKETS</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                <li>
+                    <a href="#administration_submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"><span class="i18n" data-i18n="ADMINISTRATION">ADMINISTRATION</span></a>
+                    <ul class="collapse list-unstyled" id="administration_submenu">
+                        <li>
+                            <a href="#/server"><span class="i18n" data-i18n="SERVER">SERVER</span></a>
+                        </li>
+                        <li>
+                            <a href="#/server_log"><span class="i18n" data-i18n="LOG">LOG</span></a>
+                        </li>
+                        <li>
+                            <a href="#/users"><span class="i18n" data-i18n="USERS">USERS</span></a>
+                        </li>
+                        <li>
+                            <a href="#/sessions"><span class="i18n" data-i18n="SESSIONS">SESSIONS</span></a>
+                        </li>
+                        <li>
+                            <a href="#/groups"><span class="i18n" data-i18n="GROUPS">GROUPS</span></a>
+                        </li>
+                        
+                    </ul>
+                </li>
+                <li>
+                    <a href="#/documentation"><span class="i18n" data-i18n="DOCUMENTATION">DOCUMENTATION</span></a>
+                </li>
+            </ul>
+        </nav>
+        <!-- Main  -->
+        <div id="content">
+            <!-- Navigation Bar  -->
+            <div>
+                <nav class="navbar navbar-dark">
+                    <button class="navbar-toggler" type="button" id="index_hamburguer">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="ml-auto">
+                        <img id="index_navbar_spinner" src="img/ajax-loader.gif" alt="loading" class="d-none">
+                        
+                    </div>
+                    <div class="ml-auto">
+                        <span id="index_navbar_connection_icon" class="fas fa-question-circle yellow"></span>
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button id="index_navbar_dropdown" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span id="index_navbar_username"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <button id="index_about_button" class="dropdown-item" type="button"><span class="i18n" data-i18n="ABOUT">ABOUT</span></button>
+                            <!-- <div class="dropdown-divider"></div>
+                            <button id="index_profile_button" class="dropdown-item" type="button"><span class="i18n" data-i18n="PROFILE">PROFILE</span></button> -->
+                            <div class="dropdown-divider"></div>
+                            <button id="index_logoff_button" class="dropdown-item" type="button"><span class="i18n" data-i18n="LOGOFF">LOGOFF</span></button>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <!-- Views  -->
+            <div class="container-fluid" id="views_container"></div>
+        </div>
+    </div>
+
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/popper.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/datatables/datatables.min.js"></script>
+    <script src="vendor/toastr/toastr.min.js"></script>
+    <script src="vendor/moment/moment-with-locales.min.js"></script>
+    <script src="vendor/moment/moment-timezone-with-data-2012-2022.js"></script>
+    <script src="vendor/validator/jquery.validate.js"></script>
+    <script src="vendor/select2/js/select2.min.js"></script>
+    <script src="vendor/numbro/numbro.js"></script>
+    <script src="vendor/numbro/languages.js"></script>
+    <script src="vendor/filesaver/FileSaver.js"></script>
+    <script src="vendor/axios/axios.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?skin=sons-of-obsidian&autorun=false"></script>
+
+
+    <script src="js/config.js"></script>
+    <script src="js/zombi.js"></script>
+    <script src="js/index.js"></script>
+
+    <!-- Login -->
+    <div class="modal fade" id="index_login_modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="background-color: black;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="index_login_i18n_title"></h5>
+                </div>
+                <div class="modal-body">
+
+                    <p class="text-info text-center d-none" id="index_login_message"></p>
+
+                    <form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="fa fa-user"></i> </span>
+                                </div>
+                                <input class="form-control" placeholder="" type="text" id="index_login_username">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+                                </div>
+                                <input class="form-control" placeholder="" type="password" id="index_login_password">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span style="padding: 6px 11px;" class="input-group-text"> <i class="fa fa-globe-americas"></i> </span>
+                                </div>
+                                <select class="form-control" id="index_login_language">
+                                    <option value="es">Español</option>
+                                    <option value="pt">Português</option>
+                                    <option value="en">English</option>
+                                    <option value="fr">Français</option>
+                                    <option value="de">Deutsch</option>
+                                    <option value="it">Italiano</option>
+                                    <option value="ko">한국어</option>
+                                    <option value="ja">日本語</option>
+                                    <option value="he">עברית</option>
+                                    <option value="ru">Русский</option>
+                                    <option value="zh">中文</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="index_login_button"><span id="index_login_i18n_login"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup -->
+    <div class="modal fade" id="index_popup_modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content" id="index_popup_modal_content">
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

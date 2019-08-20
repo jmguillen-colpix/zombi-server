@@ -1,0 +1,64 @@
+<div class="modal-header">
+    <h5 class="modal-title"><span class="i18n" data-i18n="MESSAGE_TO">MESSAGE_TO</span> <span id="users_message_title_id"></span></h5>
+</div>
+<div class="modal-body">
+    <form id="users_message_group_form">
+        <div class="form-group">
+            <label for="users_message_text"><span class="i18n" data-i18n="MESSAGE">MESSAGE</span></label>
+            <textarea class="form-control" placeholder="" id="users_message_group_description"></textarea>
+        </div>
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" id="users_message_send"><span class="i18n" data-i18n="SEND">SEND</span></button>
+</div>
+
+<script>
+
+    (() => {
+
+        INDEX.i18n.apply();
+
+        const uid   = INDEX.data.get("users_message_user_id");
+        const uname = INDEX.data.get("users_message_uname");
+
+        $("#users_message_title_id").html(uname);
+        
+        $("#users_message_send").on("click", (event) => {
+
+            const message = $("#users_message_group_description").val();
+
+            ZOMBI.server(
+                ["sys_users", "send_message_to_user", [uid, message]],
+
+                (error, response) => {
+
+                    if(error) {
+
+                        INDEX.flash(INDEX.i18n.label("SERVER_ERROR"));
+
+                    } else {
+
+                        if(response.error) {
+
+                            INDEX.flash(response.message);
+        
+                        } else {
+
+                            INDEX.close_modal();
+
+                        }
+                    
+                    }
+                
+                }
+
+            );
+
+        });
+
+    })();
+
+</script>
+

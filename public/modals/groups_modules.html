@@ -1,0 +1,172 @@
+<div class="modal-header">
+        <h5 class="modal-title"><span class="i18n" data-i18n="MODULES_OF">MODULES_OF</span> "<span id="groups_modules_title_id"></span>"</h5>
+    </div>
+    <div class="modal-body">
+        <form id="groups_modules_member_form">
+            <div class="form-group">
+                <label for="groups_modules_username"><span class="i18n" data-i18n="MODULE_NAME">MODULE_NAME</span></label><span class="text-danger">&nbsp;*</span>
+                <!-- <input type="text" class="form-control" id="groups_modules_module_name" name="groups_modules_module_name" style="text-transform: uppercase;"> -->
+                <select id="groups_modules_module_name" name="groups_modules_module_name"></select>
+            </div>
+    
+            <div id="groups_modules_members_table"></div>
+    
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-secondary" data-dismiss="modal"><span class="i18n" data-i18n="CLOSE">CLOSE</span></button>
+    </div>
+    
+    <script>
+    
+        (() => {
+    
+            INDEX.i18n.apply();
+    
+            const group_id = INDEX.data.get("groups_modules_id");
+            const group_name = INDEX.data.get("groups_modules_name");
+    
+            $("#groups_modules_title_id").html(group_name);
+
+            var s2 = [];
+
+            $("#groups_modules_module_name").select2({
+                width: 'style',
+                dropdownParent: $("#groups_modules_module_name").parent(),
+                theme: "bootstrap4",
+                data: s2
+            });
+
+            const groups_modules_generate_table = (data) => {
+
+                let table_html = "<table class='table'>";
+
+                for (const row of data) {
+
+                    table_html += "<tr><td>" + row + "</td><td style='text-align: right;'><a href='#' class='groups_modules_delete_memeber_from_group' data-uid='" + row + "'><i class='fas fa-times'></i></a></td></tr>";
+
+                }
+                
+                table_html += "</table>";
+
+                $("#groups_modules_members_table").html(table_html);
+
+            };
+
+            const groups_modules_show_user_select = (group_id) => {
+
+                ZOMBI.server(
+                    ["sys_groups", "groups_modules_shift_to_group", group_id],
+        
+                    (error, response) => {
+        
+                        if(error) { INDEX.flash(INDEX.i18n.label("SERVER_ERROR")); } 
+                        
+                        else {
+        
+                            if(response.error) { INDEX.flash(response.message); } 
+                            
+                            else {
+        
+                                const out_group = response.data[0];
+                                const in_group = response.data[1];
+
+                                out_group.unshift(INDEX.i18n.label("SELECT_A_MODULE"));
+
+                                s2 = out_group.map(function(x) {
+                                    return {id: x, text: x};
+                                });
+
+                                $("#groups_modules_module_name").empty();
+
+                                // TODO check if there is a way to update the component without recreating it as it flashes when selecting
+                                $("#groups_modules_module_name").select2({
+                                    width: 'style',
+                                    dropdownParent: $("#groups_modules_module_name").parent(),
+                                    theme: "bootstrap4",
+                                    data: s2
+                                });
+
+                                groups_modules_generate_table(in_group);
+        
+                            }
+                        
+                        }
+                    
+                    }
+        
+                );
+
+            };
+
+
+            groups_modules_show_user_select(group_id);
+
+            $('#groups_modules_module_name').on("select2:selecting", function(e) { 
+
+                const module_name = e.params.args.data.text;
+
+                ZOMBI.server(
+                    ["sys_groups", "groups_add_module_to_group", [group_id, module_name]],
+        
+                    (error, response) => {
+        
+                        if(error) { INDEX.flash(INDEX.i18n.label("SERVER_ERROR")); } 
+                        
+                        else {
+        
+                            if(response.error) { INDEX.flash(response.message); } 
+                            
+                            else {
+        
+                                groups_modules_show_user_select(group_id);
+        
+                            }
+                        
+                        }
+                    
+                    }
+        
+                );
+
+            });
+
+            // .off is to prevent multiple bindings every time the modal is opened, see: http://api.jquery.com/off/
+            $("body").off("click", ".groups_modules_delete_memeber_from_group").on("click", ".groups_modules_delete_memeber_from_group", function(event) {
+
+                event.preventDefault();
+
+                const user_id = $(this).data("uid");
+
+                console.log(user_id);
+
+                ZOMBI.server(
+                    ["sys_groups", "groups_remove_module_from_group", [group_id, user_id]],
+        
+                    (error, response) => {
+        
+                        if(error) { INDEX.flash(INDEX.i18n.label("SERVER_ERROR")); } 
+                        
+                        else {
+        
+                            if(response.error) { INDEX.flash(response.message); } 
+                            
+                            else {
+        
+                                groups_modules_show_user_select(group_id);
+        
+                            }
+                        
+                        }
+                    
+                    }
+        
+                );
+
+            });
+    
+        })();
+    
+    </script>
+    
+    

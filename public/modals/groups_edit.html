@@ -1,0 +1,161 @@
+<div class="modal-header">
+        <h5 class="modal-title"><span class="i18n" data-i18n="EDIT_GROUP">EDIT_GROUP</span> <span id="groups_edit_title_id"></span></h5>
+    </div>
+    <div class="modal-body">
+        <form id="groups_edit_group_form">
+            <div class="form-group">
+                <label for="groups_edit_username"><span class="i18n" data-i18n="GROUP_NAME">GROUP_NAME</span></label><span class="text-danger">&nbsp;*</span>
+                <input type="text" class="form-control" id="groups_edit_group_name" name="groups_edit_group_name">
+            </div>
+    
+            <div class="form-group">
+                <label for="groups_edit_group_description"><span class="i18n" data-i18n="DESCRIPTION">DESCRIPTION</span></label>
+                <textarea class="form-control" placeholder="" id="groups_edit_group_description"></textarea>
+            </div>
+    
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger mr-auto" id="groups_edit_delete"><span class="i18n" data-i18n="DELETE_GROUP">DELETE_GROUP</span></button>
+        <button type="submit" class="btn btn-secondary" data-dismiss="modal"><span class="i18n" data-i18n="CLOSE">CLOSE</span></button>
+        <button type="button" class="btn btn-primary" id="groups_edit_save"><span class="i18n" data-i18n="SAVE">SAVE</span></button>
+    </div>
+    
+    <script>
+    
+        (() => {
+    
+            INDEX.i18n.apply();
+    
+            const validator = $("#groups_edit_group_form").validate({
+                rules: {
+                    groups_edit_group_name: {
+                        required: true
+                    }
+                },
+                messages: {
+                    groups_edit_group_name: {
+                        required: INDEX.i18n.label("THIS_FIELD_IS_REQUIRED")
+    
+                    }
+                }
+            });
+
+            const group_id = INDEX.data.get("groups_edit_id");
+            const group_name = INDEX.data.get("groups_edit_name");
+
+            $("groups_edit_title_id").html(group_name);
+
+            ZOMBI.server(
+                ["sys_groups", "groups_edit_data", [group_id]],
+
+                (error, response) => {
+
+                    if(error) {
+
+                        INDEX.flash(INDEX.i18n.label("SERVER_ERROR") + ": " + error);
+
+                    } else {
+
+                        if(response.error) {
+
+                            INDEX.flash(response.message);
+        
+                        } else {
+
+                            const data = response.data[0];
+
+                            if(data && data.length > 0) {
+
+                                $("#groups_edit_group_name").val(data[0]);
+                                $("#groups_edit_group_description").val(data[1]);
+
+                            } else { INDEX.flash(INDEX.i18n.label("NO_DATA_FOUND")); }
+        
+                        }
+                    
+                    }
+                
+                }
+
+            );
+            
+            $("#groups_edit_save").on("click", (event) => {
+    
+                if(validator.form()) {
+    
+                    const name = $("#groups_edit_group_name").val();
+                    const desc = $("#groups_edit_group_description").val();
+    
+                    ZOMBI.server(
+                        ["sys_groups", "groups_edit", [name, desc, group_id]],
+    
+                        (error, response) => {
+    
+                            if(error) {
+    
+                                INDEX.flash(INDEX.i18n.label("SERVER_ERROR"));
+    
+                            } else {
+    
+                                if(response.error) {
+    
+                                    INDEX.flash(response.message);
+                
+                                } else {
+    
+                                    INDEX.close_modal();
+    
+                                    INDEX.datatables.refresh("groups_table");
+                
+                                }
+                            
+                            }
+                        
+                        }
+    
+                    );
+    
+                }
+    
+            });
+
+            $("#groups_edit_delete").on("click", (event) => {
+
+                ZOMBI.server(
+                    ["sys_groups", "groups_delete", group_id],
+
+                    (error, response) => {
+
+                        if(error) {
+
+                            INDEX.flash(INDEX.i18n.label("SERVER_ERROR"));
+
+                        } else {
+
+                            if(response.error) {
+
+                                INDEX.flash(response.message);
+            
+                            } else {
+
+                                INDEX.close_modal();
+
+                                INDEX.datatables.refresh("groups_table");
+            
+                            }
+                        
+                        }
+                    
+                    }
+
+                );
+
+
+            });
+            
+        })();
+    
+    </script>
+    
+    

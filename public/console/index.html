@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Zombi Console</title>
+    <meta name="description" content="Zombi Console">
+    <meta name="author" content="JMG">
+
+    <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/barebones.css">
+
+    <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– 
+  <link rel="icon" type="image/png" href="images/favicon-16.png">
+  -->
+    <style>
+		.string { color: green; }
+		.number { color: darkorange; }
+		.boolean { color: blue; }
+		.null { color: magenta; }
+		.key { color: red; }
+	</style>
+</head>
+
+<body>
+
+    <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="grid-container halves">
+        <div style="border: 0px solid #FF0000">
+            <h4>Server Test Tool</h4>
+            <!-- The above form looks like this -->
+            <div class="grid-container thirds">
+                <div>
+                    <label for="console_username">Username</label>
+                    <input type="text" class="u-full-width" id="console_username" value="juan" />
+                </div>
+                <div>
+                    <label for="console_password">Password</label>
+                    <input type="text" class="u-full-width" id="console_password" value="pelotas" />
+                </div>
+                <div>
+                    <label for="login_buttton">&nbsp;</label>
+                    <button class="button-primary" id="login_buttton">
+                        Login
+                    </button>
+                </div>
+            </div>
+            <form>
+                <div class="row">
+                    <label for="console_module">Module</label>
+                    <select class="u-full-width" id="console_module">
+                        <option value="">-</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <label for="console_function">Function</label>
+                    <select class="u-full-width" id="console_function">
+                        <option value="">-</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <label for="console_arguments">Arguments</label>
+                    <textarea class="u-full-width" placeholder="" id="console_arguments"></textarea>
+                </div>
+                <div class="row">
+                    <label for="console_raw_json">
+                        <input type="checkbox" id="console_raw_json" />
+                        <span class="label-body">Parse as JSON data</span>
+                    </label>
+                </div>
+                <div class="row">
+                    <button class="button-primary" id="submit_buttton">
+                        Execute
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div style="overflow-x: auto; overflow-y: hidden;">
+            <h4>Response</h4>
+            <pre style="width: 100%; height: 100%; text-align: left;" id="console_response"></pre>
+        </div>
+    </div>
+    </div>
+
+    <!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="../js/config.js"></script>
+    <script src="../js/zombi.js"></script>
+
+    <script>
+
+        const console_syntax_colors = (json) => {
+
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+
+        };
+
+        const console_show_response = (data) => {
+
+            document.getElementById("console_response").innerHTML = console_syntax_colors(JSON.stringify(data, null, 4))
+
+        };
+
+        const console_module_element = document.getElementById("console_module");
+
+        console_module_element.addEventListener("change", function() {
+
+            const console_function_element = document.getElementById("console_function")
+
+            console_function_element.innerHTML = "";
+
+            if(console_module_element.value !== "") {
+
+                ZOMBI.server(
+                    {module: "core", function: "functions_in_module", args: console_module_element.value},
+
+                    (error, response) => {
+
+                        if(error) {
+
+                            console.log(error);
+
+                        } else {
+
+                            const functions = response.data
+
+                            for (const s of functions) {
+
+                                const option = document.createElement('option');
+                                
+                                option.value = s;
+                                option.text  = s;
+
+                                console_function_element.add(option);
+
+                            }
+
+                        }
+
+                    }
+
+                )
+
+            }
+            
+        });
+    
+        document.getElementById("login_buttton").addEventListener("click", function(event)  {
+
+            event.preventDefault();
+
+            const username  = document.getElementById("console_username").value;
+            const password  = document.getElementById("console_password").value;
+
+            ZOMBI.server(
+                {module: "core", function: "login", args: [username, password]},
+
+                (error, response) => {
+
+                    if(error) {
+
+                        console.log(error);
+
+                    } else {
+
+                        console_show_response(response);
+
+                        if(!response.error) {
+
+                            if(response.data.token) {
+
+                                ZOMBI.token(response.data.token);
+
+                            }
+
+                            ZOMBI.server(
+                                {module: "core", function: "list_of_modules"},
+
+                                (error, response) => {
+
+                                    if(error) {
+
+                                        console.log(error);
+
+                                    } else {
+
+                                        const console_function = document.getElementById("console_function");
+
+                                        console_function.innerHTML = "";
+
+                                        const console_module = document.getElementById("console_module");
+
+                                        console_module.innerHTML = "";
+
+                                        const modules = response.data;
+
+                                        const default_option = document.createElement('option');
+
+                                        default_option.value = "";
+                                        default_option.text  = "-";
+
+                                        console_module.add(default_option);
+
+                                        for (const s of modules) {
+
+                                            const option = document.createElement('option');
+                                            
+                                            option.value = s;
+                                            option.text  = s;
+
+                                            console_module.add(option);
+
+                                        }
+
+                                    }
+                                }
+
+                            );
+
+                        }
+                        
+                    }
+
+                }
+
+            );
+
+        }, false);
+
+        document.getElementById("submit_buttton").addEventListener("click", function(event)  {
+
+            event.preventDefault();
+
+            const mod  = document.getElementById("console_module").value;
+            const fun  = document.getElementById("console_function").value;
+            const args = document.getElementById("console_arguments").value;
+
+            const console_raw_json_checked = document.getElementById("console_raw_json").checked;
+
+            try {
+
+                const arguments = (console_raw_json_checked) ? JSON.parse(args) : (args.split('\n').length === 1) ? args : args.split('\n');
+
+                ZOMBI.server(
+                    {module: mod, function: fun, args: arguments},
+                    (error, response) => {
+
+                        if(error) {
+
+                            console.log(error);
+
+                        } else {
+
+                            console_show_response(response);
+                            
+                        }
+
+                    }
+
+                );
+
+            } catch(e) {
+
+                alert("Error parsing arguments as JSON: " + e);
+
+            }
+            
+        }, false);
+
+    </script>
+
+</body>
+
+</html>

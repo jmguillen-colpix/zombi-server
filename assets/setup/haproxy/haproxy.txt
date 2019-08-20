@@ -1,0 +1,37 @@
+Self-signed certificate
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout frontend.key -out frontend.crt
+cat frontend.crt frontend.key > frontend.pem
+
+On /etc/rsyslog.conf uncoment:
+  $ModLoad imudp
+  $UDPServerRun 514
+
+On /etc/rsyslog.d/haproxy.conf add:
+local2.*	/var/log/haproxy.log
+
+service rsyslog restart 
+
+yum install rpm-build pcre-devel openssl openssl-devel
+yum install 
+
+cd /root/ && wget http://www.haproxy.org/download/1.9/src/haproxy-1.9.6.tar.gz
+
+USE_ZLIB=1 USE_LIBCRYPT=1 USE_OPENSSL=1 rpmbuild -ta haproxy-1.9.6.tar.gz
+
+rpm -Uvh /root/rpmbuild/RPMS/x86_64/haproxy-1.9.6-1.x86_64.rpm 
+
+cp haproxy.cfg /etc/haproxy/haproxy.cfg
+cp haproxy.init /etc/init.d/haproxy
+chkconfig --add haproxy
+chkconfig haproxy on
+
+mkdir /etc/haproxy/errorfiles
+mkdir /var/lib/haproxy
+
+cp public/500.html /etc/haproxy/errorfiles/500.html
+
+See http://blog.haproxy.com/2012/11/07/websockets-load-balancing-with-haproxy/
+
+
+
+

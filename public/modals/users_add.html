@@ -1,0 +1,177 @@
+<div class="modal-header">
+    <h5 class="modal-title"><span class="i18n" data-i18n="ADD_USER">ADD_USER</span></h5>
+</div>
+<div class="modal-body">
+    <form id="users_add_user_form">
+        <div class="form-group">
+            <label for="users_add_username"><span class="i18n" data-i18n="USERNAME">USERNAME</span></label><span class="text-danger">&nbsp;*</span>
+            <input type="text" class="form-control" id="users_add_username" name="users_add_username" placeholder="Username">
+        </div>
+
+        <div class="form-group">
+            <label for="users_add_fullname"><span class="i18n" data-i18n="FULLNAME">FULLNAME</span></label><span class="text-danger">&nbsp;*</span>
+            <input type="text" class="form-control" id="users_add_fullname" name="users_add_fullname" placeholder="Full Name">
+        </div>
+
+        <div class="form-group">
+            <label for="users_add_password"><span class="i18n" data-i18n="PASSWORD">PASSWORD</span></label><span class="text-danger">&nbsp;*</span>
+            <input type="password" class="form-control" id="users_add_password" name="users_add_password" placeholder="Password">
+        </div>
+
+        <div class="form-group">
+            <label for="users_add_email"><span class="i18n" data-i18n="EMAIL">EMAIL</span></label>
+            <input type="text" class="form-control" id="users_add_email" placeholder="Email">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="users_add_language"><span class="i18n" data-i18n="LANGUAGE">LANGUAGE</span></label>
+                <select class="form-control" id="users_add_language"></select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="users_add_country"><span class="i18n" data-i18n="COUNTRY">COUNTRY</span></label>
+                <select class="form-control" id="users_add_country"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="users_add_timezone"><span class="i18n" data-i18n="TIMEZONE">TIMEZONE</span></label>
+            <select class="form-control" id="users_add_timezone">
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="custom-control material-switch">
+                <input type="checkbox" class="material-switch-control-input" id="users_add_is_admin">
+                <span class="material-switch-control-indicator"></span>
+                <span class="material-switch-control-description"><span class="i18n" data-i18n="ADMINISTRATOR">ADMINISTRATOR</span></span>
+            </label>
+        </div>
+        
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-secondary" data-dismiss="modal"><span class="i18n" data-i18n="CLOSE">CLOSE</span></button>
+    <button type="button" class="btn btn-primary" id="users_add_save"><span class="i18n" data-i18n="SAVE">SAVE</span></button>
+</div>
+
+<script>
+
+    (() => {
+
+        INDEX.i18n.apply();
+
+        const users_add_timezone_element = document.getElementById("users_add_timezone");
+
+        const users_add_timezone_option = document.createElement('option');
+                            
+        users_add_timezone_option.value = "0";
+        users_add_timezone_option.text  = INDEX.i18n.label("SELECT_COUNTRY");
+
+        users_add_timezone_element.add(users_add_timezone_option);
+        
+        document.getElementById("users_add_username").placeholder = INDEX.utils.to_unicode(INDEX.i18n.label("USERNAME"));
+        document.getElementById("users_add_fullname").placeholder = INDEX.utils.to_unicode(INDEX.i18n.label("FULLNAME"));
+        document.getElementById("users_add_password").placeholder = INDEX.utils.to_unicode(INDEX.i18n.label("PASSWORD"));
+        document.getElementById("users_add_email").placeholder    = INDEX.utils.to_unicode(INDEX.i18n.label("EMAIL"));
+        
+        INDEX.select(
+            "users_add_language", 
+            "sys_users/users_languages_select",// {table: "zombi_i18n_languages", id: "id", text: "language_name"}, 
+            [],
+            [0, "-"]
+        );
+
+        INDEX.select(
+            "users_add_country", 
+            "sys_users/users_countries_select",
+            [],
+            [0, "-"]
+        );
+
+        const users_add_country = document.getElementById("users_add_country");
+
+        users_add_country.addEventListener("change", () => {
+
+            if(users_add_country.value !== "0") {
+
+                INDEX.select(
+                    "users_add_timezone", 
+                    "sys_users/users_timezones_select",
+                    ["country_id", users_add_country.value]
+
+                );
+
+            }
+            
+        });
+        // {
+        //                 table: "zombi_tz_zones", 
+        //                 id: "zone_id", 
+        //                 text: "zone_name", 
+        //                 filter: 
+        //             },
+        //
+
+        $("#users_add_save").on("click", (event) => {
+
+            if(validator.form()) {
+
+                const username = $("#users_add_username").val();
+                const fullname = $("#users_add_fullname").val();
+                const password = $("#users_add_password").val();
+                const email = $("#users_add_email").val();
+                const timezone = document.getElementById("users_add_timezone").value;
+                const language = document.getElementById("users_add_language").value;
+                const country = document.getElementById("users_add_country").value;
+
+                const is_admin = (document.getElementById("users_add_is_admin").checked) ? "Y" : "N";
+
+                console.log(users_add_country.value);
+
+                ZOMBI.server(
+                    ["sys_users", "users_add", [username, fullname, password, email, parseInt(language), parseInt(country), parseInt(timezone), is_admin]],
+
+                    (error, response) => {
+
+                        if(error) { INDEX.flash(INDEX.i18n.label("SERVER_ERROR")); } 
+                        
+                        else {
+
+                            if(response.error) { INDEX.flash(response.message); } 
+                            
+                            else {
+
+                                INDEX.close_modal();
+
+                                INDEX.datatables.refresh("users_table");
+
+                            }
+                        
+                        }
+                    
+                    }
+
+                );
+
+            }
+
+        });
+
+        const validator = $("#users_add_user_form").validate({
+            rules: {
+                users_add_username: { required: true },
+                users_add_fullname: { required: true },
+                users_add_password: { required: true },
+            },
+            messages: {
+                users_add_username: { required: INDEX.i18n.label("THIS_FIELD_IS_REQUIRED") },
+                users_add_fullname: { required: INDEX.i18n.label("THIS_FIELD_IS_REQUIRED") },
+                users_add_password: { required: INDEX.i18n.label("THIS_FIELD_IS_REQUIRED") }
+            }
+        });
+
+    })();
+
+</script>
+
