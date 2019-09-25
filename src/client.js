@@ -371,27 +371,35 @@ const connect = async () => {
 
         for (const server of servers) {
 
-            const token = await _login(server);
+            if(server.enabled) {
+
+                const token = await _login(server);
 
             
 
-            // switch(server_type) {
+                // switch(server_type) {
+    
+                //     case "ws": db[server_name] = require("./abstraction/postgresql"); break;
+    
+                //     case "http": db[server_name] = require("./abstraction/oracle"); break;
+    
+                //     default: throw new Error("Wrong DB Type, check config file");
+                
+                // }
 
-            //     case "ws": db[server_name] = require("./abstraction/postgresql"); break;
+                radio.turnon("ZOMBI_SERVER_SESSION_EXPIRED", server => {
 
-            //     case "http": db[server_name] = require("./abstraction/oracle"); break;
+                    _login(server);
+                
+                });
 
-            //     default: throw new Error("Wrong DB Type, check config file");
-            
-            // }
+            } else {
+
+                log(`Peer ${server} disabled`, "client/connect");
+
+            }
             
         }
-
-        radio.turnon("ZOMBI_SERVER_SESSION_EXPIRED", server => {
-
-            _login(server);
-        
-        });
 
     } catch (error) {
 

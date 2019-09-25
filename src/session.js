@@ -180,8 +180,6 @@ const expire = async () => {
     } catch (error) {
 
         log(error.message, "session/expire", true);
-
-        throw(error);
         
     }
 

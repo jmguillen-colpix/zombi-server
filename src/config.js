@@ -9,6 +9,7 @@ const config = {
 
     peers: {
         tserver: {
+            enabled: false,
             user: "peer",
             pass: "peer",
             url:  "http://localhost:8888/server",
@@ -20,10 +21,11 @@ const config = {
         default: {
             user: process.env.ZOMBI_DB_USER || "zombi",
             host: process.env.ZOMBI_DB_HOST || "localhost",
-            port: process.env.ZOMBI_DB_PORT || 5432,
+            port: process.env.ZOMBI_DB_PORT || 5433,
             pass: process.env.ZOMBI_DB_PASS || "SIBSadmin01",
             name: process.env.ZOMBI_DB_NAME || "zombi",
             type: process.env.ZOMBI_DB_TYPE || "postgresql", // oracle, mysql or postgresql
+            enabled: true
         },
         otra: {
             user: "zombi",
@@ -32,6 +34,7 @@ const config = {
             pass: "SIBSadmin01",
             name: "xepdb1",
             type: "oracle",
+            enabled: false
         },
         pg2: {
             user: "postgres",
@@ -40,6 +43,7 @@ const config = {
             pass: "P0stgr3sS",
             name: "chino_mock",
             type: "postgresql",
+            enabled: false
         },
         maria: {
             user: "zombi",
@@ -48,6 +52,7 @@ const config = {
             pass: "SIBSadmin01",
             name: "zombi",
             type: "mysql",
+            enabled: false
         },
     },
 
@@ -80,7 +85,7 @@ const config = {
             access_enabled: true,
             access_file_name: "access.log"
         },
-        http_port: 8080
+        http_port: process.env.ZOMBI_HTTP_PORT || 8080
     },
 
     reactor: {

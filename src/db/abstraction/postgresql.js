@@ -107,17 +107,28 @@ const connect = async (db_name, callback) => {
 
         }
 
-        clients[db_name].connect()
-            .then(() => {
-                log("Connected to " + db_name + " postgresql@" + config.db[db_name].host + ":" + config.db[db_name].port + "/" + config.db[db_name].name, "postgresql/connect");
-                if(typeof callback === "function") { callback(null, true); }
-            })
-            .catch((err) => {
-                log(db_name + ": " + err.message, "postgresql/connect", true);
-                if(typeof callback === "function") { callback(err.message, false); }
-            });
+        log("About to really connect to postgesql");
 
-    } catch (err) { log(err.message, "postgresql/connect", true); }
+        return clients[db_name].connect();
+
+        // return new Promise((resolve, reject) => {
+
+            
+
+            // .then(() => {
+            //     log("Connected to " + db_name + " postgresql@" + config.db[db_name].host + ":" + config.db[db_name].port + "/" + config.db[db_name].name, "postgresql/connect");
+            //     if(typeof callback === "function") { callback(null, true); }
+            // })
+            // .catch((err) => {
+            //     log(db_name + ": " + err.message, "postgresql/connect", true);
+            //     if(typeof callback === "function") { callback(err.message, false); }
+            // });
+
+        // });
+
+        
+
+    } catch (error) { log(error.message, "postgresql/connect", true); }
 
 }
 
@@ -130,7 +141,7 @@ const sql = (sql, bind, callback, db_name) => {
 
     // This is to use Oracle style bindvars, meaning colon prefixed words as bind variables on the SQL text
     // so this transforms a SQL text like "where id = :id" to "where id = $1"
-    // Please note that PG uses double colon for casting, for example column::integer
+    // Please note that PG uses double colon for casting, for example column::integer so we check for it
     let pgized_sql = sql.replace(/:\S*\w/g, x => { 
         if(x.indexOf("::") === -1) { return "$" + (++bind_count); } 
         else { return x; } 
