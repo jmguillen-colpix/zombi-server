@@ -5,7 +5,7 @@ const i18n    = require("../../src/i18n");
 // const cache   = require("../../src/cache");
 // const log     = require("../../src/log");
 const db      = require("../../src/db/db");
-const sockets   = require("../../src/sockets");
+const cache   = require("../../src/cache");
 
 // const path = require("path");
 // const fs = require('fs');
@@ -15,7 +15,7 @@ const sockets   = require("../../src/sockets");
 // const si = require('systeminformation');
 // const os = require('os');
 
-const joi = require('@hapi/joi');
+// const joi = require('@hapi/joi');
 
 /**
 sys_tests/ping
@@ -183,14 +183,25 @@ const test = async (args, extras) => {
 
     try {
 
-        throw new Error("Whaaaaat!!!");
+        // throw new Error("Whaaaaat!!!");
 
-        db.sql("select token from zombi_sessions where user_id = :user_id", [17750])
-            .then((res) => { console.log(res); return [false]; });
+        // db.sql("select token from zombi_sessions where user_id = :user_id", [17750])
+        //     .then((res) => { console.log(res); return [false]; });
             // .then(what => { console.log(what); return [false, what]; })
             // .catch(what => { console.log(what); return [true, what]; })
 
         // return [false];
+
+
+        // await cache.set("XXXX", [1,2,3,4,5,6]);
+
+        // await cache.del("XXXX");
+
+        const xxxx = await cache.get("XXXXYYY");
+
+        console.log(xxxx);
+
+        return [false, xxxx];
 
     } catch(error) {
 

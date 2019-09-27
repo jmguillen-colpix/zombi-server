@@ -1,0 +1,16 @@
+config:
+  target: 'https://192.168.0.199'
+  tls:
+    rejectUnauthorized: false
+  phases:
+    - duration: 5
+      arrivalRate: 5
+  defaults:
+    headers:
+      x-my-service-auth: '987401838271002188298567'
+scenarios:
+  - flow:
+    - post:
+        url: "/server"
+        json:
+            {"module":"sys_tests","function":"test","args":[],"sequence":1,"token":"BE6CE354C0807E284A23D048BFD60FB798F9F1B8ABFA952AED64B34F9E3AF58614ABE53B7D177DD6CA5DDFA3105D3244046F625E5736E04B874A160B81557F19"}

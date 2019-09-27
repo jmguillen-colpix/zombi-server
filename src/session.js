@@ -1,69 +1,31 @@
 const config  = require("./config");
 const utils   = require("./utils");
 const log     = require("./log");
-const db      = require("./db/db");
+// const db      = require("./db/db");
+
+const cache   = require("./cache");
 
 
 const crypto = require("crypto");
 const moment = require('moment');
 
-var session_data = {};
+// var session_data = {};
 
-const check = (token) => {
+const check = async token => {
 
-    return (session_data[token] && session_data[token].authenticated && session_data[token].authenticated === true);
+    const data = await cache.hgetall(config.session.cache_prefix + token);
+
+    console.log("session data", data);
+
+    return (data !== null && data.authenticated && data.authenticated === "true");
+
+    // return (session_data[token] && session_data[token].authenticated && session_data[token].authenticated === true);
 
 };
 
-const start = async token => {
+const update = async token => {
 
-    try {
-
-        const session_base = {
-            user_id: -1,
-            full_name: "unknonwn",
-            timezone: config.i18n.timezone,
-            language: config.i18n.lang
-        };
-    
-        if(token) {
-    
-            const data = await db.sql(`select session_data from ${db.table_prefix()}sessions where token = :token`, [token]);
-            
-            if(data.rows.length === 1) {
-    
-                const sess_data = JSON.parse(data.rows[0][0]);
-    
-                session_data[token] = { ...session_base, ...sess_data };
-    
-                log(`Session started for token ${utils.make_token_shorter(token)}`, "sessions/start");
-    
-                return true;
-    
-            } else {
-    
-                log("Session not found", "session/start");
-    
-                return false;
-                
-            }
-    
-        } else {
-            
-            log("Token not found", "session/start");
-            
-            return false;
-        
-        }
-
-        
-    } catch (error) {
-
-        log("Cannot create session", "session/start", true);
-
-        throw("Cannot create session");
-        
-    }
+    return await cache.hset(config.session.cache_prefix + token, "updated", utils.timestamp());
 
 };
 
@@ -73,21 +35,22 @@ const create = async (token, user_id, language, timezone, full_name, is_admin) =
 
         if(token) {
 
+            const timestamp = utils.timestamp();
+
             const data = {
                 "authenticated": true, 
                 "language": language, 
                 "user_id": user_id, 
                 "timezone": timezone,
                 "full_name": full_name,
-                "is_admin": is_admin
+                "is_admin": is_admin,
+                "created": timestamp,
+                "updated": timestamp
             };
 
-            const timestamp = utils.timestamp();
+            console.log("session create", data);
 
-            await db.sql(
-                `insert into ${db.table_prefix()}sessions (token, session_data, user_id, created, updated) values (:token, :session_data, :user_id, :created, :updated)`,
-                [token, JSON.stringify(data), user_id, timestamp, timestamp]
-            );
+            await cache.hmset(config.session.cache_prefix + token, data);
 
             log("Session created for token " + utils.make_token_shorter(token), "sessions/create");
 
@@ -103,35 +66,6 @@ const create = async (token, user_id, language, timezone, full_name, is_admin) =
 
 };
 
-const save = async token => {
-
-    try {
-
-        if(token && session_data[token]) {
-
-            await db.sql(
-                `update ${db.table_prefix()}sessions set session_data = :session_data, updated = :updated where token = :token`,
-                [JSON.stringify(session_data[token]), utils.timestamp(), token]
-            ); 
-
-            log("Session saved for token " + utils.make_token_shorter(token), "sessions/save");
-    
-        } else {
-            
-            log("Cannot save, empty token", "session/save");
-        
-        }
-        
-    } catch (error) {
-
-        log(error, "session/save", true);
-
-        throw(error);
-        
-    }
-
-};
-
 const destroy = async (token) => {
 
     try {
@@ -140,12 +74,7 @@ const destroy = async (token) => {
 
         sockets.send_message_to_session(token, "ZOMBI_SERVER_SESSION_EXPIRED");
 
-        delete session_data[token];
-
-        await db.sql(
-            `delete from ${db.table_prefix()}sessions where token = :token`,
-            [token]
-        );
+        await cache.del(config.session.cache_prefix + token);
 
         log("Deleted session with token " + utils.make_token_shorter(token), "sessions/destroy");
         
@@ -165,17 +94,25 @@ const expire = async () => {
 
         const limit = Math.floor(new Date() / 1000) - config.session.expire;
 
-        const reply = await db.sql(`select token from ${db.table_prefix()}sessions where updated < :limit`, [limit]);
+        const keys = await cache.keys(config.session.cache_prefix);
 
-        for (const row of reply.rows) {
+        keys.forEach(async key => {
 
-            const token = row[0];
+            const updated = await cache.hget(key, "updated");
 
-            await destroy(token);
+            if(updated === null || (parseInt(updated) < limit)) {
 
-            log("Expired session token " + utils.make_token_shorter(token) + " inactive since " + moment.utc(limit, "X").format("LLL") + " (UTC), " + Math.floor(config.session.expire / 60) + " minutes ago", "session/expire");
+                const parts = key.split(":");
+
+                const token = parts[1];
+
+                log("Expired session token " + utils.make_token_shorter(token) + " inactive since " + moment.utc(limit, "X").format("LLL") + " (UTC), " + Math.floor(config.session.expire / 60) + " minutes ago", "session/expire");
+
+                await destroy(token);
+
+            }
             
-        }
+        });
         
     } catch (error) {
 
@@ -185,31 +122,15 @@ const expire = async () => {
 
 };
 
-const get = (token, key) => {
+const get = async (token, key) => {
 
-    if(token && session_data[token] && typeof session_data[token][key] !== "undefined") {
-
-        return session_data[token][key];    
-
-    } else {
-
-        log("Unable to get session value for key " + key, "session/get", true);
-
-        return null;
-
-    }
+    return await cache.hget(config.session.cache_prefix + token, key);
 
 };
 
-const set = (token, key, value) => {
+const set = async (token, key, value) => {
 
-    if(session_data[token]) {
-
-        session_data[token][key] = value;
-
-        return true;
-
-    } else { return false; }
+    return await cache.hset(config.session.cache_prefix + token, key, value);
 
 };
 
@@ -220,13 +141,12 @@ const token = () => {
 };
 
 module.exports = {
-    start,
     destroy,
     set,
     get,
     check,
     token,
-    save,
     create,
-    expire
+    expire,
+    update
 };

@@ -271,10 +271,11 @@ const INDEX = (() => {
                         $('#views_container > #' + path_id).remove();
     
                     }
-    
-                    const viewHTML = 'views/' + path + '.html';
-    
-                    const viewJS = 'views/' + path + '.js';
+
+                    const url = `/views/${path}`;
+
+                    const viewHTML = `${url}.html`;
+                    const viewJS   = `${url}.js`;
     
                     if (!$('#views_container > #' + path_id).length) {
 

@@ -285,7 +285,7 @@ const ZOMBI = (() => {
 
             axios({
                 method: 'post',
-                url: ZOMBI.config("SERVER_PATH"),
+                url: `${ZOMBI.config("SERVER_PATH")}`,
                 data: JSON.stringify(merged),
                 responseType: 'json',
                 responseEncoding: 'utf8',

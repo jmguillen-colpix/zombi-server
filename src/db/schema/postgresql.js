@@ -118,14 +118,15 @@ const create_schema = table_prefix => {
         swapfree numeric
     )`);
     
-    commands.push(`create table if not exists ${table_prefix}sessions
-    (
-        token varchar(128) not null,
-        session_data varchar(3200) not null,
-        user_id integer not null,
-        created integer not null,
-        updated integer
-    )`);
+    // Sessions are on Redis now
+    // commands.push(`create table if not exists ${table_prefix}sessions
+    // (
+    //     token varchar(128) not null,
+    //     session_data varchar(3200) not null,
+    //     user_id integer not null,
+    //     created integer not null,
+    //     updated integer
+    // )`);
     
     commands.push(`create table if not exists ${table_prefix}tz_zones
     (

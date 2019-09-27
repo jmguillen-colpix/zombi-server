@@ -1,6 +1,6 @@
 const config = {
 
-    node_name: process.env.ZOMBI_NODE_NAME || "JUNKRAT",
+    node_name: process.env.ZOMBI_NODE_NAME || "NATALIANATALIA",
 
     schema: {
         locked: false,
@@ -21,7 +21,7 @@ const config = {
         default: {
             user: process.env.ZOMBI_DB_USER || "zombi",
             host: process.env.ZOMBI_DB_HOST || "localhost",
-            port: process.env.ZOMBI_DB_PORT || 5433,
+            port: process.env.ZOMBI_DB_PORT || 5432,
             pass: process.env.ZOMBI_DB_PASS || "SIBSadmin01",
             name: process.env.ZOMBI_DB_NAME || "zombi",
             type: process.env.ZOMBI_DB_TYPE || "postgresql", // oracle, mysql or postgresql
@@ -71,7 +71,12 @@ const config = {
 
     security: {
         salt_rounds: 10,
-        token_size: 64 // Check the size of the column token on zombi_sessions table before changing this
+        token_size: 64, // Check the size of the column token on zombi_sessions table before changing this
+        cors: {
+            origin: "*",
+            methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+            headers: "content-type",
+        }
     },
 
     server: {
@@ -93,7 +98,8 @@ const config = {
     },
 
     session: {
-        expire: 600 // seconds
+        cache_prefix: "ZOMBI_SESSION:",
+        expire: 60 // seconds
     },
 
     inst: {

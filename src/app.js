@@ -85,7 +85,7 @@ const http_server = app.listen(
 
             reactor.start();
 
-            await client.connect();
+            // await client.connect();
             
         } catch (error) {
 

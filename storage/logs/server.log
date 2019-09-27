@@ -29631,3 +29631,439 @@ INFO  2019-09-25T13:38:58.181Z [shutdown] Shutting down server
 INFO  2019-09-25T13:38:58.183Z [postgresql/shutdown] Shutting down postgreSQL connections
 INFO  2019-09-25T13:38:58.183Z [shutdown] Shutting down server
 INFO  2019-09-25T13:38:58.184Z [shutdown] Shutting down server
+INFO  2019-09-25T18:47:17.243Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-25T18:47:17.281Z [db/default/connect] Connected to default postgresql@localhost:5433/zombi
+INFO  2019-09-25T18:47:17.327Z [load_labels] 651 i18n labels loaded
+INFO  2019-09-25T18:47:17.330Z [reactor/start] Reactor started, interval 60 seconds
+INFO  2019-09-25T18:47:17.332Z [client/connect] Will connect to servers: tserver
+INFO  2019-09-25T18:47:17.333Z [client/connect] Peer tserver disabled
+INFO  2019-09-25T18:48:16.284Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:1 DBE:0
+INFO  2019-09-25T18:48:17.336Z [stats/run] Memory usage total (RSS): 33.30 MB
+INFO  2019-09-25T18:48:17.336Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T18:48:17.337Z [sockets/heartbeat] Nobody is connected
+INFO  2019-09-25T18:48:51.211Z [main/sigint] SIGINT signal received
+INFO  2019-09-25T18:48:51.212Z [shutdown] Shutting down server
+INFO  2019-09-25T18:48:51.213Z [postgresql/shutdown] Shutting down postgreSQL connections
+INFO  2019-09-25T18:48:51.214Z [server/access_file_close] Access file closed
+INFO  2019-09-25T18:48:54.867Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-25T18:48:54.920Z [load_labels] 651 i18n labels loaded
+INFO  2019-09-25T18:48:54.922Z [reactor/start] Reactor started, interval 60 seconds
+INFO  2019-09-25T18:48:54.923Z [client/connect] Will connect to servers: tserver
+INFO  2019-09-25T18:48:54.924Z [client/connect] Peer tserver disabled
+INFO  2019-09-25T18:49:54.449Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:1 DBE:0
+INFO  2019-09-25T18:49:54.925Z [stats/run] Memory usage total (RSS): 33.47 MB
+INFO  2019-09-25T18:49:54.926Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T18:49:54.927Z [sockets/heartbeat] Nobody is connected
+INFO  2019-09-25T18:50:08.059Z [main/sigint] SIGINT signal received
+INFO  2019-09-25T18:50:08.084Z [shutdown] Shutting down server
+INFO  2019-09-25T18:50:08.085Z [postgresql/shutdown] Shutting down postgreSQL connections
+INFO  2019-09-25T18:50:08.086Z [server/access_file_close] Access file closed
+INFO  2019-09-25T18:50:12.077Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-25T18:50:12.101Z [db/default/connect] Connected to default postgresql@localhost:5433/zombi
+INFO  2019-09-25T18:50:12.130Z [load_labels] 651 i18n labels loaded
+INFO  2019-09-25T18:50:12.134Z [reactor/start] Reactor started, interval 60 seconds
+INFO  2019-09-25T18:50:12.135Z [client/connect] Will connect to servers: tserver
+INFO  2019-09-25T18:50:12.136Z [client/connect] Peer tserver disabled
+INFO  2019-09-25T18:51:11.661Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:1 DBE:0
+INFO  2019-09-25T18:51:12.138Z [stats/run] Memory usage total (RSS): 33.37 MB
+INFO  2019-09-25T18:51:12.139Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T18:51:12.139Z [sockets/heartbeat] Nobody is connected
+INFO  2019-09-25T18:51:59.527Z [session/start] Token not found
+INFO  2019-09-25T18:51:59.529Z [server/execute] Executing sys_login/login ("system","*********","en")
+INFO  2019-09-25T18:51:59.530Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_login.js
+INFO  2019-09-25T18:51:59.759Z [sys_login/login] User [system] cannot login
+INFO  2019-09-25T18:51:59.760Z [server/execute] Server response time: 229 ms
+INFO  2019-09-25T18:51:59.765Z [session/save] Cannot save, empty token
+INFO  2019-09-25T18:52:04.236Z [session/start] Token not found
+INFO  2019-09-25T18:52:04.260Z [server/execute] Executing sys_login/login ("system","*********","en")
+INFO  2019-09-25T18:52:04.261Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_login.js
+INFO  2019-09-25T18:52:04.365Z [sys_login/login] User [system] cannot login
+INFO  2019-09-25T18:52:04.365Z [server/execute] Server response time: 105 ms
+INFO  2019-09-25T18:52:04.367Z [session/save] Cannot save, empty token
+INFO  2019-09-25T18:52:05.789Z [session/start] Token not found
+INFO  2019-09-25T18:52:05.789Z [server/execute] Executing sys_login/login ("system","*********","en")
+INFO  2019-09-25T18:52:05.790Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_login.js
+INFO  2019-09-25T18:52:05.901Z [sys_login/login] User [system] cannot login
+INFO  2019-09-25T18:52:05.902Z [server/execute] Server response time: 112 ms
+INFO  2019-09-25T18:52:05.903Z [session/save] Cannot save, empty token
+INFO  2019-09-25T18:52:09.664Z [session/start] Token not found
+INFO  2019-09-25T18:52:09.664Z [server/execute] Executing sys_login/login ("system","*********","en")
+INFO  2019-09-25T18:52:09.665Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_login.js
+INFO  2019-09-25T18:52:09.775Z [server/execute] Server response time: 110 ms
+INFO  2019-09-25T18:52:09.785Z [session/save] Cannot save, empty token
+INFO  2019-09-25T18:52:09.796Z [sessions/create] Session created for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:52:09.819Z [sockets/add_client] New WS client for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:52:09.861Z [sessions/start] Session started for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:52:09.862Z [server/execute] Executing sys_console/mods ({})
+INFO  2019-09-25T18:52:09.863Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_console.js
+INFO  2019-09-25T18:52:09.878Z [server/execute] Server response time: 15 ms
+INFO  2019-09-25T18:52:09.898Z [sessions/save] Session saved for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:52:11.661Z [stats/counters] OPS:5 OPS/s:0 ERR:0 ERR/s:0 RES:5 AVG:114 MIN:15 MAX:229 DBR:11 DBE:0
+INFO  2019-09-25T18:52:12.137Z [stats/run] Memory usage total (RSS): 28.52 MB
+INFO  2019-09-25T18:52:12.139Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T18:52:12.142Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:52:12.147Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:53:11.661Z [stats/counters] OPS:6 OPS/s:0 ERR:0 ERR/s:0 RES:5 AVG:114 MIN:15 MAX:229 DBR:14 DBE:0
+INFO  2019-09-25T18:53:12.137Z [stats/run] Memory usage total (RSS): 28.59 MB
+INFO  2019-09-25T18:53:12.137Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T18:53:12.139Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:53:12.141Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:54:11.662Z [stats/counters] OPS:7 OPS/s:0 ERR:0 ERR/s:0 RES:5 AVG:114 MIN:15 MAX:229 DBR:17 DBE:0
+INFO  2019-09-25T18:54:12.138Z [stats/run] Memory usage total (RSS): 28.62 MB
+INFO  2019-09-25T18:54:12.138Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T18:54:12.139Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:54:12.141Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:55:11.664Z [stats/counters] OPS:8 OPS/s:0 ERR:0 ERR/s:0 RES:5 AVG:114 MIN:15 MAX:229 DBR:20 DBE:0
+INFO  2019-09-25T18:55:12.139Z [stats/run] Memory usage total (RSS): 27.86 MB
+INFO  2019-09-25T18:55:12.139Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T18:55:12.140Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:55:12.142Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:55:50.833Z [main/sigint] SIGINT signal received
+INFO  2019-09-25T18:56:00.937Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-25T18:56:00.962Z [db/default/connect] Connected to default postgresql@localhost:5433/zombi
+INFO  2019-09-25T18:56:00.999Z [load_labels] 651 i18n labels loaded
+INFO  2019-09-25T18:56:01.002Z [reactor/start] Reactor started, interval 60 seconds
+INFO  2019-09-25T18:56:01.003Z [client/connect] Will connect to servers: tserver
+INFO  2019-09-25T18:56:01.004Z [client/connect] Peer tserver disabled
+INFO  2019-09-25T18:56:01.148Z [sockets/add_client] New WS client for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:00.513Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:1 DBE:0
+INFO  2019-09-25T18:57:01.006Z [stats/run] Memory usage total (RSS): 33.82 MB
+INFO  2019-09-25T18:57:01.007Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T18:57:01.011Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:01.016Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:12.604Z [sessions/start] Session started for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:12.605Z [server/execute] Executing sys_console/funs ("sys_tests")
+INFO  2019-09-25T18:57:12.630Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_console.js
+INFO  2019-09-25T18:57:12.638Z [server/execute] Server response time: 32 ms
+INFO  2019-09-25T18:57:12.659Z [sessions/save] Session saved for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:39.475Z [sessions/start] Session started for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:39.476Z [server/execute] Executing sys_console/funs ("sys_admin")
+INFO  2019-09-25T18:57:39.476Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_console.js
+INFO  2019-09-25T18:57:39.480Z [server/execute] Server response time: 3 ms
+INFO  2019-09-25T18:57:39.516Z [sessions/save] Session saved for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:39.519Z [sessions/start] Session started for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:39.521Z [server/execute] Executing sys_console/coms (["sys_admin","get_server_log"])
+INFO  2019-09-25T18:57:39.522Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_console.js
+INFO  2019-09-25T18:57:39.525Z [server/execute] Server response time: 4 ms
+INFO  2019-09-25T18:57:39.545Z [sessions/save] Session saved for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:41.298Z [sessions/start] Session started for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:41.299Z [server/execute] Executing sys_console/funs ("sys_tests")
+INFO  2019-09-25T18:57:41.301Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_console.js
+INFO  2019-09-25T18:57:41.336Z [server/execute] Server response time: 5 ms
+INFO  2019-09-25T18:57:41.355Z [sessions/save] Session saved for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:41.356Z [sessions/start] Session started for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:41.357Z [server/execute] Executing sys_console/coms (["sys_tests","test"])
+INFO  2019-09-25T18:57:41.357Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_console.js
+INFO  2019-09-25T18:57:41.367Z [server/execute] Server response time: 9 ms
+INFO  2019-09-25T18:57:41.381Z [sessions/save] Session saved for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:44.526Z [sessions/start] Session started for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:57:44.527Z [server/execute] Executing sys_tests/test ("")
+INFO  2019-09-25T18:57:44.527Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_tests.js
+INFO  2019-09-25T18:57:44.555Z [server/execute] Server response time: 1 ms
+INFO  2019-09-25T18:57:44.571Z [sessions/save] Session saved for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:58:00.514Z [stats/counters] OPS:7 OPS/s:0 ERR:0 ERR/s:0 RES:6 AVG:9 MIN:1 MAX:32 DBR:16 DBE:0
+INFO  2019-09-25T18:58:01.006Z [stats/run] Memory usage total (RSS): 29.15 MB
+INFO  2019-09-25T18:58:01.006Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T18:58:01.007Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:58:01.009Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:59:00.515Z [stats/counters] OPS:8 OPS/s:0 ERR:0 ERR/s:0 RES:6 AVG:9 MIN:1 MAX:32 DBR:19 DBE:0
+INFO  2019-09-25T18:59:01.006Z [stats/run] Memory usage total (RSS): 29.22 MB
+INFO  2019-09-25T18:59:01.007Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T18:59:01.008Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:59:01.009Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:59:13.191Z [sessions/start] Session started for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T18:59:13.191Z [server/execute] Executing sys_tests/test ("")
+INFO  2019-09-25T18:59:13.192Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_tests.js
+INFO  2019-09-25T18:59:13.193Z [server/execute] Server response time: 1 ms
+INFO  2019-09-25T18:59:13.210Z [sessions/save] Session saved for token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:00:00.517Z [stats/counters] OPS:10 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:24 DBE:0
+INFO  2019-09-25T19:00:01.007Z [stats/run] Memory usage total (RSS): 29.33 MB
+INFO  2019-09-25T19:00:01.007Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:00:01.008Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:00:01.009Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:01:00.518Z [stats/counters] OPS:11 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:27 DBE:0
+INFO  2019-09-25T19:01:01.007Z [stats/run] Memory usage total (RSS): 29.40 MB
+INFO  2019-09-25T19:01:01.008Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:01:01.010Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:01:01.012Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:02:00.519Z [stats/counters] OPS:12 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:30 DBE:0
+INFO  2019-09-25T19:02:01.008Z [stats/run] Memory usage total (RSS): 29.34 MB
+INFO  2019-09-25T19:02:01.008Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:02:01.010Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:02:01.011Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:03:00.531Z [stats/counters] OPS:13 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:33 DBE:0
+INFO  2019-09-25T19:03:01.021Z [stats/run] Memory usage total (RSS): 27.74 MB
+INFO  2019-09-25T19:03:01.022Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:03:01.023Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:03:01.025Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:04:00.532Z [stats/counters] OPS:14 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:36 DBE:0
+INFO  2019-09-25T19:04:01.020Z [stats/run] Memory usage total (RSS): 27.80 MB
+INFO  2019-09-25T19:04:01.020Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:04:01.021Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:04:01.023Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:05:00.534Z [stats/counters] OPS:15 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:39 DBE:0
+INFO  2019-09-25T19:05:01.021Z [stats/run] Memory usage total (RSS): 27.83 MB
+INFO  2019-09-25T19:05:01.021Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:05:01.022Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:05:01.023Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:06:00.535Z [stats/counters] OPS:16 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:42 DBE:0
+INFO  2019-09-25T19:06:01.020Z [stats/run] Memory usage total (RSS): 27.84 MB
+INFO  2019-09-25T19:06:01.021Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:06:01.022Z [stats/save memory] Saving memory stats data
+INFO  2019-09-25T19:06:01.724Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:06:01.725Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:07:00.535Z [stats/counters] OPS:17 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:47 DBE:0
+INFO  2019-09-25T19:07:01.022Z [stats/run] Memory usage total (RSS): 28.08 MB
+INFO  2019-09-25T19:07:01.022Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:07:01.023Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:07:01.025Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:08:00.537Z [stats/counters] OPS:18 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:50 DBE:0
+INFO  2019-09-25T19:08:01.023Z [stats/run] Memory usage total (RSS): 28.12 MB
+INFO  2019-09-25T19:08:01.023Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:08:01.024Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:08:01.026Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:09:00.538Z [stats/counters] OPS:19 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:53 DBE:0
+INFO  2019-09-25T19:09:01.023Z [stats/run] Memory usage total (RSS): 28.18 MB
+INFO  2019-09-25T19:09:01.024Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:09:01.048Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:09:01.050Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:10:00.540Z [stats/counters] OPS:20 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:56 DBE:0
+INFO  2019-09-25T19:10:01.023Z [stats/run] Memory usage total (RSS): 28.20 MB
+INFO  2019-09-25T19:10:01.023Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:10:01.024Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:10:01.026Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:10:01.027Z [sockets/send_message_to_session] Sending message to token: 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:10:01.038Z [sessions/destroy] Deleted session with token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:10:01.046Z [session/expire] Expired session token 3B38E88EF3...3A7C192A88 inactive since September 25, 2019 7:00 PM (UTC), 10 minutes ago
+INFO  2019-09-25T19:11:00.541Z [stats/counters] OPS:21 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:60 DBE:0
+INFO  2019-09-25T19:11:01.024Z [stats/run] Memory usage total (RSS): 28.30 MB
+INFO  2019-09-25T19:11:01.024Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:11:01.025Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:11:01.026Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:12:00.542Z [stats/counters] OPS:22 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:63 DBE:0
+INFO  2019-09-25T19:12:01.025Z [stats/run] Memory usage total (RSS): 28.36 MB
+INFO  2019-09-25T19:12:01.025Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:12:01.027Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:12:01.028Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:13:00.543Z [stats/counters] OPS:23 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:66 DBE:0
+INFO  2019-09-25T19:13:01.025Z [stats/run] Memory usage total (RSS): 28.42 MB
+INFO  2019-09-25T19:13:01.025Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:13:01.026Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:13:01.027Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:14:00.545Z [stats/counters] OPS:24 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:69 DBE:0
+INFO  2019-09-25T19:14:01.026Z [stats/run] Memory usage total (RSS): 28.48 MB
+INFO  2019-09-25T19:14:01.027Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:14:01.029Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:14:01.030Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:15:00.547Z [stats/counters] OPS:25 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:72 DBE:0
+INFO  2019-09-25T19:15:01.026Z [stats/run] Memory usage total (RSS): 27.61 MB
+INFO  2019-09-25T19:15:01.027Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:15:01.028Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:15:01.029Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:16:00.548Z [stats/counters] OPS:26 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:75 DBE:0
+INFO  2019-09-25T19:16:01.027Z [stats/run] Memory usage total (RSS): 27.40 MB
+INFO  2019-09-25T19:16:01.027Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:16:01.028Z [stats/save memory] Saving memory stats data
+INFO  2019-09-25T19:16:01.033Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:16:01.034Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:17:00.549Z [stats/counters] OPS:27 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:80 DBE:0
+INFO  2019-09-25T19:17:01.027Z [stats/run] Memory usage total (RSS): 27.52 MB
+INFO  2019-09-25T19:17:01.028Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:17:01.029Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:17:01.031Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:18:00.551Z [stats/counters] OPS:28 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:83 DBE:0
+INFO  2019-09-25T19:18:01.026Z [stats/run] Memory usage total (RSS): 27.48 MB
+INFO  2019-09-25T19:18:01.027Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:18:01.028Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:18:01.053Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:19:00.552Z [stats/counters] OPS:29 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:86 DBE:0
+INFO  2019-09-25T19:19:01.027Z [stats/run] Memory usage total (RSS): 27.53 MB
+INFO  2019-09-25T19:19:01.028Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:19:01.029Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:19:01.030Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:20:00.554Z [stats/counters] OPS:30 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:89 DBE:0
+INFO  2019-09-25T19:20:01.027Z [stats/run] Memory usage total (RSS): 27.52 MB
+INFO  2019-09-25T19:20:01.027Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:20:01.028Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:20:01.030Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:21:00.554Z [stats/counters] OPS:31 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:92 DBE:0
+INFO  2019-09-25T19:21:01.029Z [stats/run] Memory usage total (RSS): 27.59 MB
+INFO  2019-09-25T19:21:01.030Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:21:01.031Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:21:01.032Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:22:00.557Z [stats/counters] OPS:32 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:95 DBE:0
+INFO  2019-09-25T19:22:01.030Z [stats/run] Memory usage total (RSS): 27.62 MB
+INFO  2019-09-25T19:22:01.030Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:22:01.031Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:22:01.032Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:23:00.559Z [stats/counters] OPS:33 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:98 DBE:0
+INFO  2019-09-25T19:23:01.030Z [stats/run] Memory usage total (RSS): 27.69 MB
+INFO  2019-09-25T19:23:01.031Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:23:01.031Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:23:01.033Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:24:00.560Z [stats/counters] OPS:34 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:101 DBE:0
+INFO  2019-09-25T19:24:01.031Z [stats/run] Memory usage total (RSS): 27.75 MB
+INFO  2019-09-25T19:24:01.032Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:24:01.034Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:24:01.058Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:25:00.561Z [stats/counters] OPS:35 OPS/s:0 ERR:0 ERR/s:0 RES:7 AVG:8 MIN:1 MAX:32 DBR:104 DBE:0
+INFO  2019-09-25T19:25:01.031Z [stats/run] Memory usage total (RSS): 28.24 MB
+INFO  2019-09-25T19:25:01.031Z [stats/save cpu] Saving CPU status
+INFO  2019-09-25T19:25:01.032Z [sockets/heartbeat] Pinged token 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:25:01.033Z [sockets/is_alive] It's alive! 3B38E88EF3...3A7C192A88
+INFO  2019-09-25T19:25:05.943Z [main/sigint] SIGINT signal received
+INFO  2019-09-26T18:09:09.287Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:10:09.292Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:11:09.296Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:11:21.505Z [main/sigint] SIGINT signal received
+INFO  2019-09-26T18:11:21.514Z [shutdown] Shutting down server
+INFO  2019-09-26T18:12:24.797Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:13:24.801Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:14:24.803Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:15:08.435Z [main/sigint] SIGINT signal received
+INFO  2019-09-26T18:15:08.438Z [shutdown] Shutting down server
+INFO  2019-09-26T18:16:12.629Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:17:12.633Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:17:43.879Z [main/sigint] SIGINT signal received
+INFO  2019-09-26T18:17:43.892Z [shutdown] Shutting down server
+INFO  2019-09-26T18:18:49.470Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:18:50.905Z [main/sigint] SIGINT signal received
+INFO  2019-09-26T18:18:50.908Z [shutdown] Shutting down server
+INFO  2019-09-26T18:19:13.766Z [main/sigint] SIGINT signal received
+INFO  2019-09-26T18:19:13.769Z [shutdown] Shutting down server
+INFO  2019-09-26T18:20:45.644Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:21:45.647Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:22:45.650Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T18:23:11.581Z [main/sigint] SIGINT signal received
+INFO  2019-09-26T18:23:11.584Z [shutdown] Shutting down server
+INFO  2019-09-26T19:11:34.897Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:12:34.900Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:13:34.903Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:14:34.905Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:15:34.907Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:16:34.910Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:17:34.913Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:18:34.916Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:19:34.919Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:20:34.921Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:21:34.923Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:22:34.925Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:23:34.926Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:24:34.930Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:24:49.817Z [main/sigint] SIGINT signal received
+INFO  2019-09-26T19:24:49.819Z [shutdown] Shutting down server
+INFO  2019-09-26T19:25:51.870Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:26:51.874Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:27:51.876Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:28:51.879Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:29:51.885Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:30:51.887Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:31:51.890Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:32:51.892Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:33:51.894Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:34:51.901Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:35:51.931Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:35:54.144Z [main/sigint] SIGINT signal received
+INFO  2019-09-26T19:35:54.146Z [shutdown] Shutting down server
+INFO  2019-09-26T19:36:56.235Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:37:56.239Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:40:33.762Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:43:17.410Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:44:17.416Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:45:17.418Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:46:17.420Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:47:17.422Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:48:17.424Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:49:17.451Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:52:29.562Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:53:29.564Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:54:29.567Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:55:29.570Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:56:29.572Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T19:58:39.486Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-26T19:58:41.622Z [server/execute] Server response time: -1 ms
+INFO  2019-09-26T19:59:30.870Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-26T19:59:33.148Z [server/execute] Server response time: -1 ms
+INFO  2019-09-26T20:00:09.246Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-26T20:00:11.896Z [session/start] Token not found
+INFO  2019-09-26T20:00:11.901Z [server/execute] Executing sys_login/login ("","*********","en")
+INFO  2019-09-26T20:00:11.903Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_login.js
+ERROR 2019-09-26T20:00:11.913Z [sys_login] Cannot read property 'sql' of undefined
+INFO  2019-09-26T20:00:11.918Z [server/execute] Server response time: 11 ms
+INFO  2019-09-26T20:00:11.920Z [server/execute] Server response time: -1 ms
+INFO  2019-09-26T20:00:31.959Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-26T20:00:33.637Z [session/start] Token not found
+INFO  2019-09-26T20:00:33.641Z [server/execute] Server response time: 35 ms
+INFO  2019-09-26T20:00:33.645Z [session/save] Cannot save, empty token
+INFO  2019-09-26T20:01:31.811Z [stats/counters] OPS:1 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:02:18.193Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-26T20:02:20.958Z [session/start] Token not found
+INFO  2019-09-26T20:02:20.962Z [server/execute] Executing sys_login/login ("","*********","en")
+INFO  2019-09-26T20:02:20.965Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_login.js
+INFO  2019-09-26T20:02:20.977Z [session/save] Cannot save, empty token
+ERROR 2019-09-26T20:02:20.979Z [sys_login] Cannot read property 'sql' of undefined
+INFO  2019-09-26T20:02:20.982Z [server/execute] Server response time: 16 ms
+INFO  2019-09-26T20:03:18.049Z [stats/counters] OPS:1 OPS/s:0 ERR:0 ERR/s:0 RES:1 AVG:16 MIN:16 MAX:16 DBR:0 DBE:0
+INFO  2019-09-26T20:04:18.053Z [stats/counters] OPS:1 OPS/s:0 ERR:0 ERR/s:0 RES:1 AVG:16 MIN:16 MAX:16 DBR:0 DBE:0
+INFO  2019-09-26T20:05:18.057Z [stats/counters] OPS:1 OPS/s:0 ERR:0 ERR/s:0 RES:1 AVG:16 MIN:16 MAX:16 DBR:0 DBE:0
+INFO  2019-09-26T20:06:18.061Z [stats/counters] OPS:1 OPS/s:0 ERR:0 ERR/s:0 RES:1 AVG:16 MIN:16 MAX:16 DBR:0 DBE:0
+INFO  2019-09-26T20:07:18.064Z [stats/counters] OPS:1 OPS/s:0 ERR:0 ERR/s:0 RES:1 AVG:16 MIN:16 MAX:16 DBR:0 DBE:0
+INFO  2019-09-26T20:07:56.358Z [session/start] Token not found
+INFO  2019-09-26T20:07:56.361Z [server/execute] Executing sys_login/login ("","*********","en")
+INFO  2019-09-26T20:07:56.366Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_login.js
+INFO  2019-09-26T20:07:56.371Z [session/save] Cannot save, empty token
+ERROR 2019-09-26T20:07:56.372Z [sys_login] Cannot read property 'sql' of undefined
+INFO  2019-09-26T20:07:56.374Z [server/execute] Server response time: 11 ms
+INFO  2019-09-26T20:08:18.067Z [stats/counters] OPS:2 OPS/s:0 ERR:0 ERR/s:0 RES:2 AVG:14 MIN:11 MAX:16 DBR:0 DBE:0
+INFO  2019-09-26T20:09:18.071Z [stats/counters] OPS:2 OPS/s:0 ERR:0 ERR/s:0 RES:2 AVG:14 MIN:11 MAX:16 DBR:0 DBE:0
+INFO  2019-09-26T20:09:34.902Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-26T20:09:38.151Z [session/start] Token not found
+INFO  2019-09-26T20:09:38.155Z [server/execute] Executing sys_login/login ("","*********","en")
+INFO  2019-09-26T20:09:38.157Z [server/execute] Loading module file C:\Master\Development\Zombi\App\server\face\sys_login.js
+INFO  2019-09-26T20:09:38.167Z [session/save] Cannot save, empty token
+ERROR 2019-09-26T20:09:38.171Z [sys_login] Cannot read property 'sql' of undefined
+INFO  2019-09-26T20:09:38.174Z [server/execute] Server response time: 15 ms
+INFO  2019-09-26T20:10:34.760Z [stats/counters] OPS:1 OPS/s:0 ERR:0 ERR/s:0 RES:1 AVG:15 MIN:15 MAX:15 DBR:0 DBE:0
+INFO  2019-09-26T20:11:34.763Z [stats/counters] OPS:1 OPS/s:0 ERR:0 ERR/s:0 RES:1 AVG:15 MIN:15 MAX:15 DBR:0 DBE:0
+INFO  2019-09-26T20:12:34.767Z [stats/counters] OPS:1 OPS/s:0 ERR:0 ERR/s:0 RES:1 AVG:15 MIN:15 MAX:15 DBR:0 DBE:0
+INFO  2019-09-26T20:13:12.135Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+ERROR 2019-09-26T20:13:13.138Z [app/startup] connect ECONNREFUSED 127.0.0.1:5433
+INFO  2019-09-26T20:14:11.745Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:15:11.748Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:16:11.751Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:17:11.753Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:18:11.757Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:19:11.760Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:20:11.764Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:21:11.767Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:22:11.771Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:23:11.775Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:24:11.779Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:25:11.782Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:26:11.787Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:27:11.791Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:28:11.793Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:29:11.796Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:30:11.799Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:31:11.801Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:32:11.804Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:34:17.345Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+ERROR 2019-09-26T20:34:18.352Z [app/startup] connect ECONNREFUSED 127.0.0.1:5433
+INFO  2019-09-26T20:35:17.034Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:36:17.037Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:37:17.044Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:38:11.290Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+ERROR 2019-09-26T20:38:12.296Z [app/startup] connect ECONNREFUSED 127.0.0.1:5433
+INFO  2019-09-26T20:39:10.926Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:39:29.580Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-26T20:39:52.611Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+ERROR 2019-09-26T20:39:53.616Z [app/startup] connect ECONNREFUSED 127.0.0.1:5433
+INFO  2019-09-26T20:40:11.254Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+INFO  2019-09-26T20:41:11.105Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:42:11.108Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:43:11.111Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:44:11.114Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:45:11.117Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-26T20:46:11.120Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
+INFO  2019-09-27T11:56:21.878Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+ERROR 2019-09-27T11:56:22.882Z [app/startup] connect ECONNREFUSED 127.0.0.1:5432

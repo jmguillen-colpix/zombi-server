@@ -91,7 +91,7 @@ const get_data_type = (code) => {
 
 }
 
-const connect = async (db_name, callback) => {
+const connect = db_name => {
 
     try {
 
@@ -106,8 +106,6 @@ const connect = async (db_name, callback) => {
             });
 
         }
-
-        log("About to really connect to postgesql");
 
         return clients[db_name].connect();
 
@@ -139,7 +137,7 @@ const sql = (sql, bind, callback, db_name) => {
 
     let bind_count = 0;
 
-    // This is to use Oracle style bindvars, meaning colon prefixed words as bind variables on the SQL text
+    // This is to use Oracle's style bindvars, meaning colon prefixed words as bind variables on the SQL text
     // so this transforms a SQL text like "where id = :id" to "where id = $1"
     // Please note that PG uses double colon for casting, for example column::integer so we check for it
     let pgized_sql = sql.replace(/:\S*\w/g, x => { 

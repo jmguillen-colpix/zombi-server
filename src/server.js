@@ -8,6 +8,29 @@ const i18n     = require("./i18n");
 const path   = require('path');
 const fs     = require('fs');
 
+const mime = (ext) => {
+
+    const mime_types = {
+        '.ico': 'image/x-icon',
+        '.html': 'text/html',
+        '.js': 'text/javascript',
+        '.json': 'application/json',
+        '.css': 'text/css',
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.wav': 'audio/wav',
+        '.mp3': 'audio/mpeg',
+        '.svg': 'image/svg+xml',
+        '.pdf': 'application/pdf',
+        '.doc': 'application/msword',
+        '.eot': 'appliaction/vnd.ms-fontobject',
+        '.ttf': 'aplication/font-sfnt'
+    };
+
+    return mime_types[ext];
+
+};
+
 // Access log open
 const access_file_path = path.join(__dirname, "../storage/logs/" + config.server.log.access_file_name);
 
@@ -90,7 +113,9 @@ const execute = async (mod, fun, args, token, seq, ip, ua) => {
 
         if(token) {
 
-            if(session.check(token)) {
+            session.update(token);
+
+            if(await session.check(token)) {
 
                 if(await security.authorize(token, mod)) {
 
@@ -210,5 +235,5 @@ const response = (error, message, data, sequence, elapsed = -1, expired = false)
     
 };
 
-module.exports = { shutdown, execute, response, access };
+module.exports = { shutdown, execute, response, access, mime };
 
