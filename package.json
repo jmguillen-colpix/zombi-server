@@ -28,6 +28,7 @@
     "redis": "^2.8.0",
     "request": "^2.88.0",
     "systeminformation": "^4.1.4",
+    "typescript": "^3.6.3",
     "websocket": "^1.0.29",
     "ws": "^7.1.2"
   }

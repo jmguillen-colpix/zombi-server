@@ -30067,3 +30067,15 @@ INFO  2019-09-26T20:45:11.117Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:
 INFO  2019-09-26T20:46:11.120Z [stats/counters] OPS:0 OPS/s:0 ERR:0 ERR/s:0 RES:0 AVG:0 MIN:-1 MAX:0 DBR:0 DBE:0
 INFO  2019-09-27T11:56:21.878Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
 ERROR 2019-09-27T11:56:22.882Z [app/startup] connect ECONNREFUSED 127.0.0.1:5432
+INFO  2019-09-28T18:00:34.261Z [server/access_file_open] Log file: [C:\Master\Development\Zombi\App\storage\logs\access.log] opened
+ERROR 2019-09-28T18:00:35.263Z [cache/main] Redis error: Error: Redis connection to localhost:6379 failed - connect ECONNREFUSED 127.0.0.1:6379
+ERROR 2019-09-28T18:00:35.272Z [app/startup] connect ECONNREFUSED 127.0.0.1:5432
+ERROR 2019-09-28T18:00:36.475Z [cache/main] Redis error: Error: Redis connection to localhost:6379 failed - connect ECONNREFUSED 127.0.0.1:6379
+ERROR 2019-09-28T18:00:37.827Z [cache/main] Redis error: Error: Redis connection to localhost:6379 failed - connect ECONNREFUSED 127.0.0.1:6379
+ERROR 2019-09-28T18:00:39.412Z [cache/main] Redis error: Error: Redis connection to localhost:6379 failed - connect ECONNREFUSED 127.0.0.1:6379
+ERROR 2019-09-28T18:00:41.408Z [cache/main] Redis error: Error: Redis connection to localhost:6379 failed - connect ECONNREFUSED 127.0.0.1:6379
+ERROR 2019-09-28T18:00:44.088Z [cache/main] Redis error: Error: Redis connection to localhost:6379 failed - connect ECONNREFUSED 127.0.0.1:6379
+ERROR 2019-09-28T18:00:47.940Z [cache/main] Redis error: Error: Redis connection to localhost:6379 failed - connect ECONNREFUSED 127.0.0.1:6379
+ERROR 2019-09-28T18:00:53.780Z [cache/main] Redis error: Error: Redis connection to localhost:6379 failed - connect ECONNREFUSED 127.0.0.1:6379
+ERROR 2019-09-28T18:01:03.008Z [cache/main] Redis error: Error: Redis connection to localhost:6379 failed - connect ECONNREFUSED 127.0.0.1:6379
+ERROR 2019-09-28T18:01:17.975Z [cache/main] Redis error: Error: Redis connection to localhost:6379 failed - connect ECONNREFUSED 127.0.0.1:6379
