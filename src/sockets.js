@@ -7,7 +7,7 @@ const session = require("./session");
 var clients = {};
 
 /* 
-readyState
+    readyState
 0	CONNECTING	Socket has been created. The connection is not yet open.
 1	OPEN	    The connection is open and ready to communicate.
 2	CLOSING	    The connection is in the process of closing.
@@ -35,19 +35,25 @@ const is_alive = token => {
 
     try {
 
+        const short_token = utils.make_token_shorter(token);
+
         if(clients[token]) {
 
             clients[token].is_alive = true;
 
             clients[token].timestamp = utils.timestamp();
 
-            log("It's alive! " + utils.make_token_shorter(token), "sockets/is_alive");
+            log(`Client responded ping with pong, token: ${short_token}`, "sockets/is_alive");
+
+        } else {
+
+            log(`Client sent pong but is not on client list, token: ${short_token}`, "sockets/is_alive", true);
 
         }
 
     } catch (error) {
 
-        log(error.message, "sockets/add_client", true);
+        log(error.message, "sockets/is_alive", true);
 
     }
 
@@ -90,11 +96,16 @@ const heartbeat = () => {
             
         }
 
+        const limit = config.sockets.ping_response_time_limit;
+
         setTimeout(() => {
 
             for (const token of tokens) {
 
-                if(clients[token].is_alive === false) {
+                if(
+                    clients[token].is_alive === false || 
+                    clients[token].timestamp < (utils.timestamp() - (limit * 2))
+                ) {
     
                     delete clients[token];
         
@@ -104,7 +115,7 @@ const heartbeat = () => {
                 
             }
 
-        }, config.sockets.ping_response_time_limit);
+        }, limit);
 
     } catch (error) {
 
@@ -148,30 +159,20 @@ const send_message_to_session = (token, context = "none", data = []) => {
 
 };
 
-const send_message_to_user = async (user_id, context = "none", data = []) => {
+const send_message_to_user = async (user_id = null, context = "none", data = []) => {
 
     try {
 
-        const reply = await db.sql(`select token from ${db.table_prefix()}sessions where user_id = :user_id`, [user_id]);
+        const tokens = session.tokens(user_id);
+        
+        for (const token of tokens) {
 
-        if(reply.info.rows === 0) {
+            const user_name = session.get(token, "full_name")
 
-            throw new Error("No session found for user ID " + user_id);
+            log(`Sending message to ${user_name}, token: ${utils.make_token_shorter(token)}`, "sockets/send_message_to_user");
 
-        } else {
+            send_message_to_session(token, context, data);
 
-            for (const row of reply.rows) {
-
-                const token = row[0];
-
-                const user_name = session.get(token, "full_name")
-
-                log("Sending message " + user_name + ", token: " + utils.make_token_shorter(token), "sockets/send_message_to_user");
-
-                send_message_to_session(token, context, data);
-
-            }
-            
         }
 
     } catch (error) {
@@ -188,27 +189,7 @@ const send_message_broadcast = async (context = "none", data = []) => {
 
     try {
 
-        const reply = await db.sql("select token from zombi_sessions");
-
-        if(reply.info.rows === 0) {
-
-            throw new Error("No sessions found");
-
-        } else {
-
-            for (const row of reply.rows) {
-
-                const token = row[0];
-
-                const user_name = session.get(token, "full_name")
-
-                log("Sending message " + user_name + ", token: " + utils.make_token_shorter(token), "sockets/send_message_broadcast");
-
-                send_message_to_session(token, context, data);
-
-            }
-            
-        }
+        send_message_to_user();
 
     } catch (error) {
 

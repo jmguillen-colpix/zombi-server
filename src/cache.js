@@ -88,10 +88,6 @@ const hgetall = (set) => {
 
 }
 
-
-
-//client.hmset("key", ["test keys 1", "test val 1", "test keys 2", "test val 2"], function (err, res) {});
-
 const set = (key, value) => {
 
     return new Promise((resolve, reject) => {

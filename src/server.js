@@ -82,7 +82,7 @@ const access = (token, mod, fun, args, seq, ip, ua, elapsed) => {
 
             const t = d.toISOString();
         
-            // TODO Are args needed here? They may have sensitive information...
+            // TODO Are `args` needed here? They may have sensitive information...
             const m = t + "|" + elapsed + "|" + token + "|" + mod + "|" + fun + "|" + JSON.stringify(args) + "|" + seq + "|" + ip + "|" + ua;
         
             let buffer = Buffer.from(m + "\n");
@@ -103,43 +103,21 @@ const execute = async (mod, fun, args, token, seq, ip, ua) => {
 
     try {
 
-        const string_args = JSON.stringify(args);
-
-        const trimmed_args = (string_args.length > 50) ? string_args.substring(0, 50)  + "..." : string_args;
-
-        // We don't want the user password on the log file
-        if(mod === "sys_login" && fun === "login") { log(`Executing ${mod}/${fun} ("${args[0]}","*********","${args[2]}")`, "server/execute"); }
-        else { log(`Executing ${mod}/${fun} (${trimmed_args})`, "server/execute"); }
+        log(`Executing ${mod}/${fun}`, "server/execute");
 
         if(token) {
 
             session.update(token);
 
-            if(await session.check(token)) {
+            await session.check(token);
 
-                if(await security.authorize(token, mod)) {
+            await security.authorize(token, mod);
 
-                    return await _execute(mod, fun, args, token, seq, ip, ua);
-
-                } else {
-
-                    log(`User ${session.get(token, "full_name")} is not authorized for module ${mod}`, "server/execute", true);
-
-                    return response(true, i18n.label(token, "YOU_ARE_NOT_AUTHORIZED"), null, seq);
-
-                }
-
-            } else {
-
-                log(`Invalid session`, "server/execute", true);
-
-                return response(true, "Invalid session", null, seq, -1, true);
-
-            }
+            return await _execute(mod, fun, args, token, seq, ip, ua);
 
         } else {
 
-            const is_login = (mod === "sys_login" && (fun === "login" || fun === "logoff" || fun === "start"));
+            const is_login = (mod === "sys_login" && ["login", "logoff", "start"].includes(fun));
 
             if(is_login) {
 
@@ -147,7 +125,7 @@ const execute = async (mod, fun, args, token, seq, ip, ua) => {
 
             } else {
 
-                log(`Trying to execute without token`, "server/execute", true);
+                log(`Trying to execute ${mod}/${fun} without token`, "server/execute", true);
 
                 return response(true, "Not authorized", null, seq, -1, true);
 
@@ -159,7 +137,7 @@ const execute = async (mod, fun, args, token, seq, ip, ua) => {
 
         log(error.message, "server/execute", true);
 
-        throw(error);
+        return response(true, error.message, null, seq, -1, error.message === "INVALID_SESSION");
         
     }
 

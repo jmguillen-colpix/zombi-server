@@ -1,15 +1,12 @@
-const config = require("./config");
-const server = require("./server");
-const i18n = require("./i18n");
-const reactor = require("./reactor");
-// const session = require("./session");
-const log = require("./log");
-const db = require("./db/db");
-const stats = require("./stats");
-const sockets = require("./sockets");
+const config   = require("./config");
+const server   = require("./server");
+const i18n     = require("./i18n");
+const reactor  = require("./reactor");
+const log      = require("./log");
+const db       = require("./db/db");
+const stats    = require("./stats");
+const sockets  = require("./sockets");
 const security = require("./security");
-// const client = require("./client");
-// const cache = require("./cache");
 
 const http = require('http');
 const urlm = require('url');
@@ -22,7 +19,6 @@ const http_server = http.createServer((req, res) => {
 
     const { method, url, headers } = req;
 
-    // CORS: https://www.html5rocks.com/en/tutorials/cors/
     res.setHeader('Access-Control-Allow-Origin',  config.security.cors.origin);
     res.setHeader('Access-Control-Allow-Methods', config.security.cors.methods);
     res.setHeader('Access-Control-Allow-Headers', config.security.cors.headers);
@@ -48,9 +44,6 @@ const http_server = http.createServer((req, res) => {
                     try {
         
                         stats.oup();
-        
-                        // https://github.com/expressjs/express/issues/3330
-                        req.setTimeout(config.server.request_timeout * 1000);
         
                         const post_data = JSON.parse(data.toString());
         
@@ -88,14 +81,9 @@ const http_server = http.createServer((req, res) => {
 
     } else {
 
-        let file_path = security.sanitize_path(req.url);
+        let file_path = path.join(__dirname, "../public", security.sanitize_path(req.url));
 
-        // Avoid https://en.wikipedia.org/wiki/Directory_traversal_attack
-        // const sanitize_path = path.normalize(parsed_url.pathname).replace(/^(\.\.[\/\\])+/, '');
-
-        // let pathname = path.join(__dirname + "/..", config.server.public_directory + sanitize_path);
-
-        fs.exists(file_path, (exist: Boolean) => {
+        fs.exists(file_path, (exist) => {
 
             if (!exist) {
 
@@ -106,7 +94,7 @@ const http_server = http.createServer((req, res) => {
 
                 file_path = (fs.statSync(file_path).isDirectory()) ? file_path += '/index.html' : file_path;
 
-                fs.readFile(file_path, function (err: Boolean, data: Buffer) {
+                fs.readFile(file_path, function (err, data) {
 
                     if (err) {
                         res.statusCode = 404;
@@ -127,7 +115,6 @@ const http_server = http.createServer((req, res) => {
 
 });
 
-// Server startup
 http_server.listen(
 
     config.server.http_port,
@@ -143,8 +130,6 @@ http_server.listen(
             await i18n.load_labels();
 
             reactor.start();
-
-            // await client.connect();
 
         } catch (error) {
 
@@ -190,8 +175,6 @@ wss.on('connection', (ws, req) => {
                 // This is to get IP Address from HAProxy directed requests 
                 const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
                 const ua = req.headers["user-agent"];
-
-                // sockets.is_alive(token);
 
                 ws.send(JSON.stringify(await server.execute(mod, fun, args, token, seq, ip, ua)));
 

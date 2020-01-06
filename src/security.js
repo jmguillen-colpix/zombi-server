@@ -6,12 +6,12 @@ const session = require('./session');
 
 const bcrypt = require('bcryptjs');
 const path = require('path');
-const urlm = require('urlm');
+const url = require('url');
 
 const sanitize_path = url_path => {
 
-    // Avoid https://en.wikipedia.org/wiki/Directory_traversal_attack
-    return path.normalize(urlm.parse(url_path).pathname).replace(/^(\.\.[\/\\])+/, '');
+    // https://en.wikipedia.org/wiki/Directory_traversal_attack
+    return path.normalize(url.parse(url_path).pathname).replace(/^(\.\.[\/\\])+/, '');
 
 }
         
@@ -30,7 +30,7 @@ const password_compare = (password, hash) => {
 const user_is_admin = (token) => {
 
     // TODO Ok, does this belong to session? Maybe not.
-    // A better alternative might be something that is obtained (an cached) from the user data
+    // TODO A better alternative might be something that is obtained (an cached) from the user data
     return session.get(token, "is_admin");
 
 }
@@ -43,7 +43,7 @@ const authorize = async (token, mod) => {
     
         else {
 
-            const user_id = session.get(token, "user_id");
+            const user_id = await session.get(token, "user_id");
 
             // TODO this should be cached on Redis to improve performance and avoid the extra DB call on every request
             const sql = `select count(*) from (select *
@@ -67,7 +67,7 @@ const authorize = async (token, mod) => {
 
         log("Authorization error: " + error.message, "security/authorize", true);
 
-        throw("Authorization error: " + error);
+        throw new Error("YOU_ARE_NOT_AUTHORIZED");
         
     }
 

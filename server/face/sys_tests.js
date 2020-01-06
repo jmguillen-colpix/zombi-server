@@ -7,6 +7,8 @@ const i18n    = require("../../src/i18n");
 const db      = require("../../src/db/db");
 const cache   = require("../../src/cache");
 
+const session   = require("../../src/session");
+
 // const path = require("path");
 // const fs = require('fs');
 // const bcrypt = require('bcryptjs');
@@ -183,25 +185,10 @@ const test = async (args, extras) => {
 
     try {
 
-        // throw new Error("Whaaaaat!!!");
 
-        // db.sql("select token from zombi_sessions where user_id = :user_id", [17750])
-        //     .then((res) => { console.log(res); return [false]; });
-            // .then(what => { console.log(what); return [false, what]; })
-            // .catch(what => { console.log(what); return [true, what]; })
+        const x = await session.tokens(0);
 
-        // return [false];
-
-
-        // await cache.set("XXXX", [1,2,3,4,5,6]);
-
-        // await cache.del("XXXX");
-
-        const xxxx = await cache.get("XXXXYYY");
-
-        console.log(xxxx);
-
-        return [false, xxxx];
+        return [false, x];
 
     } catch(error) {
 

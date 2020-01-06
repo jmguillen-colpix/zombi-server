@@ -1,25 +1,21 @@
 const config  = require("./config");
 const utils   = require("./utils");
 const log     = require("./log");
-// const db      = require("./db/db");
-
 const cache   = require("./cache");
-
 
 const crypto = require("crypto");
 const moment = require('moment');
-
-// var session_data = {};
 
 const check = async token => {
 
     const data = await cache.hgetall(config.session.cache_prefix + token);
 
-    console.log("session data", data);
+    if (!(data !== null && data.authenticated && data.authenticated === "true")) {
 
-    return (data !== null && data.authenticated && data.authenticated === "true");
+        log(`Invalid session for token ${utils.make_token_shorter(token)}`, "sessions/create", true);
 
-    // return (session_data[token] && session_data[token].authenticated && session_data[token].authenticated === true);
+        throw new Error("INVALID_SESSION");
+    }
 
 };
 
@@ -39,16 +35,14 @@ const create = async (token, user_id, language, timezone, full_name, is_admin) =
 
             const data = {
                 "authenticated": true, 
-                "language": language, 
-                "user_id": user_id, 
-                "timezone": timezone,
+                "language":  language, 
+                "user_id":   user_id, 
+                "timezone":  timezone,
                 "full_name": full_name,
-                "is_admin": is_admin,
-                "created": timestamp,
-                "updated": timestamp
+                "is_admin":  is_admin,
+                "created":   timestamp,
+                "updated":   timestamp
             };
-
-            console.log("session create", data);
 
             await cache.hmset(config.session.cache_prefix + token, data);
 
@@ -58,9 +52,9 @@ const create = async (token, user_id, language, timezone, full_name, is_admin) =
 
     } catch (error) {
 
-        log("Cannot create session", "session/start", true);
+        log(error.message, "session/start", true);
 
-        throw("Cannot create session");
+        throw(error);
         
     }
 
@@ -140,6 +134,27 @@ const token = () => {
 
 };
 
+const tokens = async (user_id = null) => {
+
+    const tokens = [];
+
+    const keys = await cache.keys(config.session.cache_prefix + "*");
+
+    for (const key of keys) {
+
+        const key_data = await cache.hgetall(key);
+
+        if(parseInt(key_data.user_id) === user_id || user_id === null) {
+
+            tokens.push(key.split(":")[1]);
+        }
+    }
+
+    return tokens;
+
+};
+
+
 module.exports = {
     destroy,
     set,
@@ -148,5 +163,6 @@ module.exports = {
     token,
     create,
     expire,
-    update
+    update,
+    tokens
 };

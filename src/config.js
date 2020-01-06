@@ -7,16 +7,6 @@ const config = {
         table_prefix: process.env.ZOMBI_DB_TABLE_PREFIX || "zombi_"
     },
 
-    peers: {
-        tserver: {
-            enabled: false,
-            user: "peer",
-            pass: "peer",
-            url:  "http://localhost:8888/server",
-            sockets: true // If the peer also connects via sockets
-        }
-    },
-
     db: {
         default: {
             user: process.env.ZOMBI_DB_USER || "zombi",
@@ -71,7 +61,7 @@ const config = {
 
     security: {
         salt_rounds: 10,
-        token_size: 64, // Check the size of the column token on zombi_sessions table before changing this
+        token_size: 64, // <= size of the column token on sessions table
         cors: {
             origin: "*",
             methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -113,7 +103,7 @@ const config = {
 
     sockets: {
         ping_response_time_limit: 2000, // milliseconds
-        reconnect_time: 2000
+        reconnect_time: 2000 // milliseconds
     }
 
 };

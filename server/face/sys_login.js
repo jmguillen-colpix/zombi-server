@@ -63,7 +63,7 @@ const login = async (args, extras) => {
 
         const username = args[0];
         const password = args[1];
-        const language = args[2];
+        const language = args[2] ? args[2] : config.i18n.lang;
 
         const userlower = username.toLowerCase();
 
