@@ -1,14 +1,14 @@
-const config   = require("../../src/config");
-const utils    = require('../../src/utils');
-const server   = require("../../src/server");
-const i18n     = require("../../src/i18n");
-const log      = require("../../src/log");
-const db       = require("../../src/db/db");
-const select   = require("../../src/select");
-const security = require("../../src/security");
-const sockets  = require("../../src/sockets");
+const config   = require("../app/config");
+const utils    = require("../app/utils");
+const server   = require("../app/server");
+const i18n     = require("../app/i18n");
+const log      = require("../app/log");
+const db       = require("../app/db/db");
+const select   = require("../app/select");
+const security = require("../app/security");
+const sockets  = require("../app/sockets");
 
-const datatables = require("../../src/datatables");
+const datatables = require("../app/datatables");
 
 /**
 sys_users/users_languages_select

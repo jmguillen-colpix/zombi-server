@@ -1,12 +1,10 @@
-const config   = require("../../src/config");
-const log      = require("../../src/log");
-const stats    = require("../../src/stats");
-const security = require("../../src/security");
-const db = require("../../src/db/db");
+const config   = require("../app/config");
+const log      = require("../app/log");
+const stats    = require("../app/stats");
+const security = require("../app/security");
+const db = require("../app/db/db");
 
-// const si = require('systeminformation');
-const os = require('os');
-
+const os = require("os");
 
 /**
 sys_login/server_status_data

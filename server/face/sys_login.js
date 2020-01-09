@@ -1,10 +1,10 @@
-const config   = require("../../src/config");
-const utils    = require('../../src/utils');
-const i18n     = require("../../src/i18n");
-const session  = require("../../src/session");
-const db       = require("../../src/db/db");
-const log      = require("../../src/log");
-const security = require("../../src/security");
+const config   = require("../app/config");
+const utils    = require("../app/utils");
+const i18n     = require("../app/i18n");
+const session  = require("../app/session");
+const db       = require("../app/db/db");
+const log      = require("../app/log");
+const security = require("../app/security");
 
 /**
 sys_login/start
@@ -25,7 +25,7 @@ const start = async (args, extras) => {
 
     try {
 
-        const language = session.get(extras.token, "language");
+        const language = await session.get(extras.token, "language");
 
         return [false, {i18n: i18n.get_lang_data(language)}];
 

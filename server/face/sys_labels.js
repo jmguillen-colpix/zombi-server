@@ -1,13 +1,13 @@
-const config   = require("../../src/config");
-const utils    = require('../../src/utils');
-const server   = require("../../src/server");
-const log      = require("../../src/log");
-const db       = require("../../src/db/db");
-const i18n     = require("../../src/i18n");
-const security = require("../../src/security");
-const datatables = require("../../src/datatables");
+const config   = require("../app/config");
+const utils    = require("../app/utils");
+const server   = require("../app/server");
+const log      = require("../app/log");
+const db       = require("../app/db/db");
+const i18n     = require("../app/i18n");
+const security = require("../app/security");
+const datatables = require("../app/datatables");
 
-const request = require('request');
+const request = require("request-promise-native");
 
 /**
 sys_labels/labels_table_data
@@ -348,7 +348,7 @@ const labels_translate = async (args, extras) => {
 
         var lang_values = {};
 
-        var promesas = [];
+        var messages = [];
 
         const sql = `select
                         label_name,
@@ -366,13 +366,12 @@ const labels_translate = async (args, extras) => {
                         id
                     from
                         ${db.table_prefix()}i18n_labels
+                    where label_lang_en is not null
                     order by 1`;
 
         const reply = await db.sql(sql);
 
-        const rows = reply.rows;
-                
-        for (const row of rows) {
+        for (const row of reply.rows) {
 
             lang_values.name = row[0];
             lang_values.es = row[1];
@@ -397,66 +396,43 @@ const labels_translate = async (args, extras) => {
                 const url = "https://translate.yandex.net/api/v1.5/tr.json/translate";
 
                 for (const lang of langs) {
+                    try {
+                        
+                        if(utils.is_empty(lang_values[lang])) {
 
-                    if(utils.is_empty(lang_values[lang])) {
+                            var translate_what = lang_values.en, 
+                                translate_to = lang, 
+                                translate_row_id = lang_values.row_id;
+    
+                            const body = await request.post({
+                                url: url, 
+                                form: {
+                                    "key": "trnsl.1.1.20160402T182226Z.626056fb4ea475b0.e4b4668fb20600cd4d3a9eea485898c48f423639",
+                                    "text": translate_what,
+                                    "lang": "en-" + translate_to
+                                }
+                            });
 
-                        var translate_what = lang_values.en, 
-                            translate_to = lang, 
-                            translate_row_id = lang_values.row_id;
+                            var http_body = JSON.parse(body);
+                    
+                            if(http_body.text && Array.isArray(http_body.text)) {
+    
+                                var label = http_body.text[0];
+    
+                                log("Translating [" + lang + "] " + translate_what + " to " + label, "sys_labels/labels_translate");
+    
+                                await db.sql(
+                                    `update ${db.table_prefix()}i18n_labels set label_lang_${lang} = :label where id = :id`,
+                                    [label, translate_row_id]
+                                );
 
-                        if(promesas.length <= 20) { // To prevent a runaway process to call the web service like crazy
-
-                            promesas.push(new Promise((resolve, reject) => {
-
-                                request.post({
-                                        url: url, 
-                                        form: {
-                                            "key": "trnsl.1.1.20160402T182226Z.626056fb4ea475b0.e4b4668fb20600cd4d3a9eea485898c48f423639",
-                                            "text": translate_what,
-                                            "lang": "en-" + translate_to
-                                        }
-                                    }, 
-                                    async (err, httpResponse, body) => {
-                        
-                                        if(err) { reject("Error " + err + "\n"); }
-                                        else {
-                        
-                                            try {
-                        
-                                                var http_body = JSON.parse(body);
-                        
-                                                if(http_body.text && Array.isArray(http_body.text)) {
-                        
-                                                    var label = http_body.text[0];
-                        
-                                                    log("Translating [" + lang + "] " + translate_what + " to " + label, "sys_labels/labels_translate");
-                        
-                                                    await db.sql(
-                                                        `update ${db.table_prefix()}i18n_labels set label_lang_${lang} = :label where id = :id`,
-                                                        [label, translate_row_id]
-                                                    )
-                                                    .then(() => { resolve(label); })
-                                                    .catch((error) => { log("Error updating label: " + error); reject(error); })
-                        
-                                                } else { resolve(i18n.label(extras.token, "LABEL_NOT_FOUND") + ": " + label); }
-                        
-                                            } catch (error) {
-                        
-                                                reject(error.message);
-                                                
-                                            }
-                                            
-                                        }
-                        
-                                    });
-                        
-                                })
-
-                            );
-                            
+                                messages.push(`Translated ${translate_what} to ${label}`);
+    
+                            } else { messages.push(`Label not found: ${label}`); }
+    
                         }
 
-                    }
+                    } catch (error) { messages.push(`Label not found: ${label}`); }
 
                 }
 
@@ -464,23 +440,13 @@ const labels_translate = async (args, extras) => {
 
         }
 
-        if(promesas.length === 0) {
+        if(messages.length === 0) {
 
-            return [true, i18n.label(extras.token, "NOTHING_TO_DO")];
+            return [true, "No labels to translate"];
 
         } else {
 
-            Promise.all(promesas).then(async messages => {
-
-                await i18n.load_labels(); // Reload the labels to load the new data
-
-                return [false, messages];
-
-            }).catch((errors) => {
-
-                return [true, null, errors];
-
-            });
+            return [false, null, messages];
 
         }
 

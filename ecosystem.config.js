@@ -3,7 +3,7 @@ const NODE_NAME_PREFIX = 'Z';
 
 const names = ['DVa','Orisa','Reinhardt','Roadhog','Sigma','Winston','Wrecking Ball','Zarya','Ashe','Bastion','Doomfist','Genji','Hanzo','Junkrat','McCree','Mei','Pharah','Reaper','Soldier','Sombra','Symmetra','Torbjorn','Tracer','Widowmaker','Ana','Baptiste','Brigitte','Lucio','Mercy','Moira','Zenyatta'];
 
-const cpus = require('os').cpus().length;
+const cpus = require("os").cpus().length;
 
 
 
