@@ -1,5 +1,5 @@
 config:
-  target: 'https://192.168.0.199'
+  target: 'http://localhost:8080'
   tls:
     rejectUnauthorized: false
   phases:
@@ -13,4 +13,4 @@ scenarios:
     - post:
         url: "/server"
         json:
-            {"module":"sys_tests","function":"test","args":[],"sequence":1,"token":"BE6CE354C0807E284A23D048BFD60FB798F9F1B8ABFA952AED64B34F9E3AF58614ABE53B7D177DD6CA5DDFA3105D3244046F625E5736E04B874A160B81557F19"}
+            {"module":"sys_tests","function":"test","args":[],"sequence":1,"token":"{{ $processEnvironment.ZOMBI_STRESS_TOKEN }}"}

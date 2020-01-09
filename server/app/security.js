@@ -16,20 +16,20 @@ const sanitize_path = url_path => {
         
 const password_hash = password => {
 
-    return bcrypt.hashSync(password, config.security.salt_rounds);
+    return bcrypt.hash(password, config.security.salt_rounds);
 
 }
 
 const password_compare = (password, hash) => {
 
-    return bcrypt.compareSync(password, hash);
+    return bcrypt.compare(password, hash);
     
 }
 
 const user_is_admin = (token) => {
 
     // TODO Ok, does this belong to session? Maybe not.
-    // TODO A better alternative might be something that is obtained (an cached) from the user data
+    // TODO A better alternative might be something that is obtained (an cached) from users table data
     return session.get(token, "is_admin");
 
 }
@@ -44,7 +44,7 @@ const authorize = async (token, mod) => {
 
             const user_id = await session.get(token, "user_id");
 
-            // TODO this should be cached on Redis to improve performance and avoid the extra DB call on every request
+            // TODO this should be cached to improve performance and avoid the extra DB call on every request
             const sql = `select count(*) from (select *
                         from
                             ${db.table_prefix()}users zou

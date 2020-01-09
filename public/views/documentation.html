@@ -271,7 +271,7 @@ The JSON data would look like the following:
 
 Once the server receives the JSON data it executes the function <i>login</i> on the module <i>sys_login</i> using the arguments <i>["john","Pas$$w0rd","es"]</i>
 <br>
-The function on the serrver for login is:
+The function on the server for login is:
 
 <pre class="prettyprint linenums">
 const login = async (args, extras) => {
@@ -314,7 +314,7 @@ const login = async (args, extras) => {
             const timezone  = (res.rows[0][4] === null) ? config.i18n.timezone : res.rows[0][4];
             const is_admin  = (res.rows[0][5] === "Y") ? true : false ;
 
-            if(security.password_compare(password, encrpass)) {
+            if(await security.password_compare(password, encrpass)) {
 
                 const token = session.token();
 

@@ -7,7 +7,8 @@
     "schema": "node server/app/db/schema.js $ZOMBI_DB_TABLE_PREFIX",
     "start": "node server/app/zombi.js",
     "startdev": "npx nodemon --ignore 'public/' server/app/zombi.js",
-    "test": "jest server/test/"
+    "test": "jest server/test/",
+    "stress": "npx artillery run stress.yml"
   },
   "keywords": [],
   "author": "",

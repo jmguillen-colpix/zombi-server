@@ -97,7 +97,7 @@ const login = async (args, extras) => {
             const timezone  = (res.rows[0][4] === null) ? config.i18n.timezone : res.rows[0][4];
             const is_admin  = (res.rows[0][5] === "Y") ? true : false ;
 
-            if(security.password_compare(password, encrpass)) {
+            if(await security.password_compare(password, encrpass)) {
 
                 const token = session.token();
 

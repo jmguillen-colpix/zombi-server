@@ -238,7 +238,7 @@ const users_add = async (args, extras) => {
 
         const seq = await db.sequence();
         
-        const hash = security.password_hash(password);
+        const hash = await security.password_hash(password);
 
         const reply = await db.sql(
             sql, 
@@ -387,7 +387,7 @@ const users_edit = async (args, extras) => {
                             is_admin = :is_admin
                         where id = :id`;
 
-            const hash = security.password_hash(password);
+            const hash = await security.password_hash(password);
 
             const reply = await db.sql(sql, [username, fullname, hash, email, language, country, timezone, is_admin, id]);
 
