@@ -1,5 +1,4 @@
-// const config   = require("../../src/config");
-// const utils    = require('../../src/utils');
+// const config   = require("../app/config");
 
 const fs   = require("fs");
 const util = require("util");

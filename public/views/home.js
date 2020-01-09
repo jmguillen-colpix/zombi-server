@@ -6,13 +6,13 @@
 
         // ZOMBI.state.set("foo", "bar");
 
-        const data = await ZOMBI.server(["sys_login", "login", ["inewton", "pelotas"]]);
+        // const data = await ZOMBI.server(["sys_login", "login", ["inewton", "pelotas"]]);
 
-        if(data.error) { INDEX.flash(data.message); }
+        // if(data.error) { INDEX.flash(data.message); }
 
-        else { INDEX.flash(data.data.token); }
+        // else { INDEX.flash(data.data.token); }
 
-        console.log(data);
+        // console.log(data);
         
     } catch (error) {
 

@@ -45,7 +45,7 @@ As root:
 npm i pm2 -g
 
 As zombi:
-pm2 start src/app.js --name zombi
+pm2 start server/app/zombi.js --name zombi
 
 As root:
 /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u zombi --hp /home/zombi

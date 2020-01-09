@@ -12,7 +12,7 @@ services:
     environment:
     - NODE_ENV=development
     command:
-      sh -c 'npm i && node src/app.js'
+      sh -c 'npm i && node server/app/zombi.js'
     depends_on:
       - zombi-db
 

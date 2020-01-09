@@ -1,23 +1,9 @@
-const config  = require("../../src/config");
-// const utils   = require('../../src/utils');
-// const server  = require("../../src/server");
-const i18n    = require("../../src/i18n");
-// const cache   = require("../../src/cache");
-// const log     = require("../../src/log");
-const db      = require("../../src/db/db");
-const cache   = require("../../src/cache");
+const config  = require("../app/config");
+const i18n    = require("../app/i18n");
+const db      = require("../app/db/db");
+const cache   = require("../app/cache");
 
-const session   = require("../../src/session");
-
-// const path = require("path");
-// const fs = require('fs');
-// const bcrypt = require('bcryptjs');
-// const request = require('request');
-
-// const si = require('systeminformation');
-// const os = require('os');
-
-// const joi = require('@hapi/joi');
+const session   = require("../app/session");
 
 /**
 sys_tests/ping

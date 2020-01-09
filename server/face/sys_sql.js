@@ -1,16 +1,16 @@
-const config   = require("../../src/config");
-// const utils    = require('../../src/utils');
-// const server   = require("../../src/server");
-// const i18n    = require("../../src/i18n");
-// const cache   = require("../../src/cache");
-// const log      = require("../../src/log");
-const db       = require("../../src/db/db");
-// const stats    = require("../../src/stats");
-// const session = require("../../src/session");
-// const datatables = require("../../src/datatables");
-// const sockets = require("../../src/sockets");
+const config   = require("../app/config");
+// const utils    = require("../../app/utils");
+// const server   = require("../app/server");
+// const i18n    = require("../app/i18n");
+// const cache   = require("../app/cache");
+// const log      = require("../app/log");
+const db       = require("../app/db/db");
+// const stats    = require("../app/stats");
+// const session = require("../app/session");
+// const datatables = require("../app/datatables");
+// const sockets = require("../app/sockets");
 
-const util = require('util');
+// const util = require("util");
 
 /**
 sys_sql/query

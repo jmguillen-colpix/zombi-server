@@ -7,8 +7,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}\\index.js"
+            "name": "Zombi Server",
+            "program": "${workspaceFolder}/server/app/zombi.js"
         }
     ]
 }

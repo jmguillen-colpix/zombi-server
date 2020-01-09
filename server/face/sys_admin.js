@@ -1,16 +1,14 @@
-const config   = require("../../src/config");
-// const utils    = require('../../src/utils');
-// const server   = require("../../src/server");
-// const i18n    = require("../../src/i18n");
-// const cache   = require("../../src/cache");
-const log      = require("../../src/log");
-// const db       = require("../../src/db/db");
-// const stats    = require("../../src/stats");
-// const session = require("../../src/session");
-// const datatables = require("../../src/datatables");
-// const sockets = require("../../src/sockets");
+const config   = require("../app/config");
+// const server   = require("../app/server");
+// const i18n    = require("../app/i18n");
+// const cache   = require("../app/cache");
+const log      = require("../app/log");
+// const db       = require("../app/db/db");
+// const stats    = require("../app/stats");
+// const session = require("../app/session");
+// const datatables = require("../app/datatables");
+// const sockets = require("../app/sockets");
 
-const util = require('util');
 
 /**
 sys_admin/get_server_log
@@ -31,13 +29,15 @@ const get_server_log = async (args, extras) => {
 
     try {
 
-        const lines = (!Object.keys(args).length) ? 100 : parseInt(args) ;
+        // const lines = (!Object.keys(args).length) ? 100 : parseInt(args) ;
 
-        const exec = util.promisify(require('child_process').exec);
+        // const exec = util.promisify(require("child_process").exec);
 
-        const { stdout, stderr } = await exec(`tail -${lines} storage/logs/${config.server.log.file_name} | sort -r`);
+        // const { stdout, stderr } = await exec(`tail -${lines} storage/logs/${config.server.log.file_name} | sort -r`);
 
-        return [false, stdout + stderr];
+        // return [false, stdout + stderr];
+
+        return [false, "Not implemented"];
 
     } catch(error) {
 
@@ -51,7 +51,7 @@ const db_create_schema = async (args, extras) => {
 
     try {
 
-        const schema = require("../../src/db/schema");
+        const schema = require("../app/db/schema");
 
         await schema.create();
 

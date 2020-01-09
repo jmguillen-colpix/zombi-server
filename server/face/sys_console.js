@@ -1,10 +1,10 @@
-const config  = require("../../src/config");
-const i18n  = require("../../src/i18n");
-const log = require('../../src/log');
+const config  = require("../app/config");
+const i18n  = require("../app/i18n");
+const log = require("../app/log");
 
 const path = require("path");
-const fs = require('fs');
-const comments = require('get-comments');
+const fs = require("fs");
+const comments = require("get-comments");
 
 /**
 sys_console/funs
