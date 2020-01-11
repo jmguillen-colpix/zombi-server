@@ -1,13 +1,13 @@
 {
   "name": "zombi-server",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "description": "This is the Zombi Server application",
-  "main": "index.js",
+  "main": "zombi.js",
   "scripts": {
     "schema": "node server/app/db/schema.js $ZOMBI_DB_TABLE_PREFIX",
     "start": "node server/app/zombi.js",
     "startdev": "npx nodemon --ignore 'public/' server/app/zombi.js",
-    "test": "jest server/test/",
+    "test": "jest server/test/*test.js",
     "stress": "npx artillery run stress.yml"
   },
   "keywords": [],

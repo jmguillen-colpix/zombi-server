@@ -172,5 +172,7 @@ const sql = (sql, bind, callback, db_name) => {
 
 }
 
-module.exports = { connect, sql }
+const disconnect = db_name => { clients[db_name].end(); };
+
+module.exports = { connect, disconnect, sql }
 

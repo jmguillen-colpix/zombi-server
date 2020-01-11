@@ -41,7 +41,25 @@ const connect = async (database = null) => {
 
             await db[db_name].connect(db_name);
 
-            log("Connected to " + db_name + " postgresql@" + config.db[db_name].host + ":" + config.db[db_name].port + "/" + config.db[db_name].name, `db/${db_name}/connect`);
+            log(`Connected to db ${db_name} ${db_type}@${config.db[db_name].host}:${config.db[db_name].port}/${db_name}`, `db/${db_name}/connect`);
+
+        }
+        
+    }
+
+}
+
+const disconnect = async (database = null) => {
+
+    const databases = Object.keys(config.db);
+
+    for (const db_name of databases) {
+
+        if((db_name === database || database === null) && config.db[db_name].enabled === true) {
+
+            await db[db_name].disconnect(db_name);
+
+            log(`Disconnected from db ${db_name}`, "db/disconnect");
 
         }
         
@@ -205,7 +223,17 @@ const metadata = async (object_name, object_type = "table", db_name = "default")
 
 }
 
-module.exports = { metadata, sql_cb, sql, sequence, connect, shutdown, flat, table_prefix }
+module.exports = { 
+    metadata, 
+    sql_cb, 
+    sql, 
+    sequence, 
+    connect,
+    disconnect,
+    shutdown, 
+    flat, 
+    table_prefix 
+}
 
 
 

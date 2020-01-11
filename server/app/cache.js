@@ -11,6 +11,7 @@ redis.on("connect", () => {
 
 });
 
+// redis.keys("*", function (err, replies) { });
 const keys = (key) => {
 
     return new Promise((resolve, reject) => {
@@ -26,6 +27,7 @@ const keys = (key) => {
 
 };
 
+// redis.hset("hash key", "hashtest 1", "some value", redis.print);
 const hset = (set, key, value) => {
 
     return new Promise((resolve, reject) => {
@@ -41,6 +43,7 @@ const hset = (set, key, value) => {
 
 }
 
+// redis.hmset("key", { "0123456789": "abcdefghij",  "some manner of key": "a type of value" });
 const hmset = (set, values) => {
 
     return new Promise((resolve, reject) => {
@@ -56,6 +59,7 @@ const hmset = (set, values) => {
 
 }
 
+// redis.hget( "foo", "hello", function(err, result) { }); 
 const hget = (set, key) => {
 
     return new Promise((resolve, reject) => {
@@ -71,6 +75,7 @@ const hget = (set, key) => {
 
 }
 
+// client.hgetall("key", function (err, obj) { });
 const hgetall = (set) => {
 
     return new Promise((resolve, reject) => {
@@ -107,8 +112,6 @@ const get = key => {
 
         redis.get(key, (err, reply) => {
 
-            console.log(reply);
-            
             if(err) { reject(new Error(err)); } 
             else { resolve(JSON.parse(reply)); }
     
@@ -133,5 +136,7 @@ const del = key => {
 
 };
 
-module.exports = { set, get, del, hset, hget, hgetall, hmset, keys };
+const disconnect = () => { redis.quit(); };
+
+module.exports = { set, get, del, hset, hget, hgetall, hmset, keys, disconnect };
 
