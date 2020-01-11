@@ -3,6 +3,10 @@
   "version": "8.0.0",
   "description": "This is the Zombi Server application",
   "main": "zombi.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jmlxxvi/zombi-server.git"
+  },
   "scripts": {
     "schema": "node server/app/db/schema.js $ZOMBI_DB_TABLE_PREFIX",
     "start": "node server/app/zombi.js",
@@ -19,6 +23,7 @@
     "chalk": "^3.0.0",
     "get-comments": "^1.0.1",
     "lodash": "^4.17.15",
+    "mime-types": "^2.1.26",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
     "mysql": "^2.17.1",
@@ -32,6 +37,7 @@
   "devDependencies": {
     "artillery": "^1.6.0-29",
     "jest": "^24.9.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "eslint": "^6.8.0"
   }
 }

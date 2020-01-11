@@ -1,7 +1,11 @@
-const db      = require("../app/db/db");
+"use strict";
+
+const config = require("../app/config");
+const db = require("../app/db/db");
 const session = require("../app/session");
 const sockets = require("../app/sockets");
-const datatables = require("../app/datatables");
+// const datatables = require("../app/datatables");
+const cache = require("../app/cache");
 
 /**
 sys_sessions/sessions_table_data
@@ -23,26 +27,25 @@ const sessions_table_data = async (args, extras) => {
 
     try {
 
-        const sql = `select
-                    zou.full_name,
-                    zos.token,
-                    zos.token,
-                    zos.session_data,
-                    zos.created,
-                    zos.updated,
-                    zos.token
-                from ${db.table_prefix()}sessions zos
-                    left join ${db.table_prefix()}users zou on (zos.user_id = zou.id)
-                where
-                    lower(zou.full_name) like '%' || lower(:search) || '%' or
-                    lower(zos.token) like '%' || lower(:search) || '%' or
-                    lower(zos.session_data) like '%' || lower(:search)`;
+        const sessions = [];
 
-        const data = await datatables.sql({sql: sql, data: args.data, download: args.download});
+        const session_key = config.session.cache_prefix;
 
-        return [false, data];
+        const cache_keys = await cache.keys(session_key);
 
-    } catch(error) {
+        for (const cache_key of cache_keys) {
+
+            const session_data = await cache.hgetall(cache_key);
+
+            const user_name = await db.sqlv(`select full_name from ${db.table_prefix()}users where id = :id`, [session_data.user_id])
+
+            sessions.push({...session_data, user_name});
+
+        }
+
+        return [false, sessions];
+
+    } catch (error) {
 
         return [true, null, error.message];
 
@@ -75,7 +78,7 @@ const session_delete = async (args, extras) => {
 
         return [false];
 
-    } catch(error) {
+    } catch (error) {
 
         return [true, null, error.message];
 
@@ -109,7 +112,7 @@ const send_message_to_session = async (args, extras) => {
 
         return [false];
 
-    } catch(error) {
+    } catch (error) {
 
         return [true, null, error.message];
 
@@ -143,7 +146,7 @@ const send_message_to_user = async (args, extras) => {
 
         return [false];
 
-    } catch(error) {
+    } catch (error) {
 
         return [true, null, error.message];
 

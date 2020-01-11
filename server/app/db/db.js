@@ -107,6 +107,14 @@ const sql = (sql, bind = [], db_name = "default") => {
 
 }
 
+const sqlv = async (query, bind = [], db_name = "default") => {
+
+    const data = await sql(query, bind, db_name);
+
+    return data.rows[0][0];
+
+}
+
 const sequence = async () => {
 
     try {
@@ -226,7 +234,8 @@ const metadata = async (object_name, object_type = "table", db_name = "default")
 module.exports = { 
     metadata, 
     sql_cb, 
-    sql, 
+    sql,
+    sqlv,
     sequence, 
     connect,
     disconnect,

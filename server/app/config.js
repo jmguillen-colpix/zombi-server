@@ -71,7 +71,7 @@ const config = {
 
     server: {
         endpoint: "/server",
-        public_directory:"/public",
+        public_directory:"/home/jmg/zombi-client", // If starts with / it is absolute path
         request_timeout: 60, // seconds 
         log: {
             log_info: true,
