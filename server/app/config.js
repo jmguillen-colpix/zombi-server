@@ -1,6 +1,6 @@
 const config = {
 
-    node_name: process.env.ZOMBI_NODE_NAME || "NATALIANATALIA",
+    node_name: process.env.ZOMBI_NODE_NAME || "NOBODY",
 
     schema: {
         locked: false,

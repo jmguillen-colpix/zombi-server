@@ -165,7 +165,7 @@ const send_message_to_user = async (user_id = null, context = "none", data = [])
         
         for (const token of tokens) {
 
-            const user_name = session.get(token, "full_name")
+            const user_name = await session.get(token, "full_name")
 
             log(`Sending message to ${user_name}, token: ${utils.make_token_shorter(token)}`, "sockets/send_message_to_user");
 

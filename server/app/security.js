@@ -26,11 +26,11 @@ const password_compare = (password, hash) => {
     
 }
 
-const user_is_admin = (token) => {
+const user_is_admin = async token => {
 
     // TODO Ok, does this belong to session? Maybe not.
     // TODO A better alternative might be something that is obtained (an cached) from users table data
-    return session.get(token, "is_admin");
+    return await session.get(token, "is_admin");
 
 }
 
@@ -38,7 +38,7 @@ const authorize = async (token, mod) => {
 
     try {
 
-        if(user_is_admin(token)) { return true; } // You are already God, say no more
+        if(await user_is_admin(token)) { return true; } // You are already God, say no more
     
         else {
 

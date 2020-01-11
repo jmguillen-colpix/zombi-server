@@ -424,7 +424,7 @@ const users_delete = async (args, extras) => {
 
         const id = parseInt(args);
 
-        if(id === 0) { return [true, i18n.label(extras.token, "USER_SYSTEM_CANNOT_BE_DELETED")]; }
+        if(id === 0) { return [true, await i18n.label(extras.token, "USER_SYSTEM_CANNOT_BE_DELETED")]; }
 
         else {
 

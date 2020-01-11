@@ -107,7 +107,7 @@ const labels_add = async (args, extras) => {
 
     try {
 
-        if(!Array.isArray(args) || typeof args[0] === "undefined") { throw Error(i18n.label(extras.token, "WRONG_PARAMETERS")); }
+        if(!Array.isArray(args) || typeof args[0] === "undefined") { throw Error(await i18n.label(extras.token, "WRONG_PARAMETERS")); }
 
         const name = args[0];
         const es   = args[1];

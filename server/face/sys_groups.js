@@ -99,10 +99,12 @@ const groups_add = async (args, extras) => {
                     )`;
 
         const seq = await db.sequence();
+
+        console.log(seq);
         
         const reply = await db.sql(
             sql, 
-            [seq, groupname, description, session.get(extras.token, "user_id"), utils.timestamp()]
+            [seq, groupname, description, await session.get(extras.token, "user_id"), utils.timestamp()]
         );
 
         return [false, reply.info.rows];

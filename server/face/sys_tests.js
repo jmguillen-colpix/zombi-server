@@ -140,7 +140,7 @@ const db_stress_test = async (args, extras) => {
 
                 Promise.all(promesas).then((messages) => {
             
-                    callback({error:false, message: i18n.label(extras.token, "OPERATION_SUCCEEDED")});
+                    callback({error:false, message: await i18n.label(extras.token, "OPERATION_SUCCEEDED")});
         
                 }).catch((errors) => {
         

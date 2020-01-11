@@ -1,7 +1,7 @@
 const PORT_BASE = 8080;
 const NODE_NAME_PREFIX = 'Z';
 
-const names = ['DVa','Orisa','Reinhardt','Roadhog','Sigma','Winston','Wrecking Ball','Zarya','Ashe','Bastion','Doomfist','Genji','Hanzo','Junkrat','McCree','Mei','Pharah','Reaper','Soldier','Sombra','Symmetra','Torbjorn','Tracer','Widowmaker','Ana','Baptiste','Brigitte','Lucio','Mercy','Moira','Zenyatta', 'Sigma'];
+const names = ['DVa','Orisa','Reinhardt','Roadhog','Sigma','Winston','Wrecking Ball','Zarya','Ashe','Bastion','Doomfist','Genji','Hanzo','Junkrat','McCree','Mei','Pharah','Reaper','Soldier','Sombra','Symmetra','Torbjorn','Tracer','Widowmaker','Ana','Baptiste','Brigitte','Lucio','Mercy','Moira','Zenyatta', 'Sojourn'];
 
 const cpus = require("os").cpus().length;
 

@@ -123,7 +123,7 @@ const coms = async (args, extras) => {
 
         if(commdata.length === 0) {
 
-            return [true, null, i18n.label(extras.token, "FUNCTION_DETAILS_NOT_FOUND")];
+            return [true, null, await i18n.label(extras.token, "FUNCTION_DETAILS_NOT_FOUND")];
 
         } else {
 

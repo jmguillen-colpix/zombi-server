@@ -59,7 +59,7 @@ const login = async (args, extras) => {
 
     try {
 
-        if(!Array.isArray(args) || typeof args[0] === "undefined") { throw Error(i18n.label(extras.token, "WRONG_PARAMETERS")); }
+        if(!Array.isArray(args) || typeof args[0] === "undefined") { throw Error(await i18n.label(extras.token, "WRONG_PARAMETERS")); }
 
         const username = args[0];
         const password = args[1];

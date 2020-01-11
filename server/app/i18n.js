@@ -22,9 +22,9 @@ let i18n_data = {
 
 const get_lang_data = (lang) => { return i18n_data[lang]; };
 
-const label = (token, label) => {
+const label = async (token, label) => {
 
-    const language = session.get(token, "language");
+    const language = await session.get(token, "language");
 
     if(token && i18n_data[language] && i18n_data[language][label]) { return i18n_data[language][label]; }
     else { return "[" + label + "]"}
