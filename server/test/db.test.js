@@ -9,18 +9,15 @@ beforeAll(async done => {
     done();
 });
 
-test('simple select', async () => {
-
+test("simple select", async () => {
     const uno = await db.sql("select 1");
 
     await expect(!!uno.rows).toBe(true);
 
     await expect(uno.rows[0][0]).toBe(1);
-
 });
 
-test('create test table and do some DML', async () => {
-
+test("create test table and do some DML", async () => {
     await db.sql(`drop table if exists ${test_table}`);
 
     await db.sql(`create table ${test_table} (a int, b varchar(100))`);
@@ -40,7 +37,6 @@ test('create test table and do some DML', async () => {
     await expect(phase3.rows[0][0]).toBe(99);
 
     await db.sql(`drop table if exists ${test_table}`);
-
 });
 
 afterAll(async done => {

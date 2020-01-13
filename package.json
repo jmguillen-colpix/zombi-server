@@ -12,7 +12,8 @@
     "start": "node server/app/zombi.js",
     "startdev": "npx nodemon --ignore 'public/' server/app/zombi.js",
     "test": "jest server/test/*test.js",
-    "stress": "npx artillery run stress.yml"
+    "stress": "npx artillery run stress.yml",
+    "lint": "eslint server/**/*.js"
   },
   "keywords": [],
   "author": "",
@@ -36,8 +37,14 @@
   },
   "devDependencies": {
     "artillery": "^1.6.0-29",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "jest": "^24.9.0",
-    "nodemon": "^2.0.2",
-    "eslint": "^6.8.0"
+    "nodemon": "^2.0.2"
   }
 }

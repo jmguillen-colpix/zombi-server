@@ -1,0 +1,25 @@
+{
+    "env": {
+        "commonjs": true,
+        "es6": true,
+        "node": true,
+        "jest": true
+    },
+    "extends": [
+        "standard"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parserOptions": {
+        "ecmaVersion": 2018
+    },
+    "rules": {
+        "semi": 0,
+        "camelcase": 0,
+        "quotes": [2, "double", { "avoidEscape": true }],
+        "strict": [2, "global"],
+        "indent": ["error", 4]
+    }
+}

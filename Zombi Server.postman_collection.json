@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "15bf896b-1f14-4995-b25a-19f4340be119",
+		"name": "Zombi Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c21b5d48-3555-4f6b-a341-7edb110d9c19",
+						"exec": [
+							"pm.test(\"populate token\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.environment.set(\"zombi_token\", jsonData.data.token);",
+							"    pm.expect(true).to.eql(true);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"module\":\"sys_login\",\n\t\"function\":\"login\",\n\t\"args\":[\"system\",\"*******\",\"en\"],\n\t\"sequence\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{zombi_host}}:{{zombi_port}}/server",
+					"protocol": "http",
+					"host": [
+						"{{zombi_host}}"
+					],
+					"port": "{{zombi_port}}",
+					"path": [
+						"server"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Request Example",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"token\": \"{{zombi_token}}\",\n\t\"module\":\"sys_login\",\n\t\"function\":\"start\",\n\t\"args\":[],\n\t\"sequence\":1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{zombi_host}}:{{zombi_port}}/server",
+					"protocol": "http",
+					"host": [
+						"{{zombi_host}}"
+					],
+					"port": "{{zombi_port}}",
+					"path": [
+						"server"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

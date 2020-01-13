@@ -2,18 +2,15 @@ console.log = jest.fn();
 
 const cache = require("../app/cache");
 
-test('get and set matches', async () => {
-
+test("get and set matches", async () => {
     await cache.set("test key", "test value");
 
     const value = await cache.get("test key");
 
     await expect(value).toBe("test value");
-
 });
 
-test('hget, hgetall and hmset matches', async () => {
-
+test("hget, hgetall and hmset matches", async () => {
     await cache.hmset("test set", { "test key1": "test value1", "test key2": "test value2" });
 
     const val = await cache.hget("test set", "test key2");
@@ -21,11 +18,9 @@ test('hget, hgetall and hmset matches', async () => {
 
     expect(val).toEqual("test value2");
     expect(set).toEqual({ "test key1": "test value1", "test key2": "test value2" });
-
 });
 
-test('keys and delete operations', async () => {
-
+test("keys and delete operations", async () => {
     const keys = await cache.keys("test");
 
     expect(keys.length).toBeGreaterThan(0);
@@ -39,7 +34,6 @@ test('keys and delete operations', async () => {
     const deleted = await cache.get("test key");
 
     await expect(deleted).toBeNull();
-
 });
 
 afterAll(async done => {

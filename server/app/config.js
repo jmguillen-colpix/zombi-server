@@ -43,7 +43,7 @@ const config = {
             name: "zombi",
             type: "mysql",
             enabled: false
-        },
+        }
     },
 
     cache: {
@@ -51,7 +51,7 @@ const config = {
         port: 6379,
         prefix_user: "USERS:",
         prefix_sequence: "SEQUENCE",
-        prefix_session: "SESSION:",
+        prefix_session: "SESSION:"
     },
 
     i18n: {
@@ -65,17 +65,17 @@ const config = {
         cors: {
             origin: "*",
             methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-            headers: "content-type",
+            headers: "content-type"
         }
     },
 
     server: {
         endpoint: "/server",
-        public_directory:"/home/jmg/zombi-client", // If starts with / it is absolute path
-        request_timeout: 60, // seconds 
+        public_directory: "/home/jmg/zombi-client", // If starts with / it is absolute path
+        request_timeout: 60, // seconds
         log: {
             log_info: true,
-            log_error: true,
+            log_error: true
         },
         http_port: process.env.ZOMBI_HTTP_PORT || 8080
     },
