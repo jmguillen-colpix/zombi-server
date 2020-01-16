@@ -18,6 +18,6 @@ Backup database: pg_dump -U zombi -f zombi.sql zombi
 Docker image
 docker run --name postgres -e POSTGRES_USER=zombi -e POSTGRES_PASSWORD=SIBSadmin01 -d zombi
 
-
+await ssh.putdir(`${__dirname}/../../server`, '/home/centos/zombi-server');
 
 

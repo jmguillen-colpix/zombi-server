@@ -1,4 +1,3 @@
-
 const config = require("./config");
 const server = require("./server");
 const i18n = require("./i18n");

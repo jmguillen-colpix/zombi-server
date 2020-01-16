@@ -9,49 +9,28 @@ const config = {
 
     db: {
         default: {
-            user: process.env.ZOMBI_DB_USER || "zombi",
-            host: process.env.ZOMBI_DB_HOST || "localhost",
+            user: process.env.ZOMBI_DB_USER || "the_user",
+            host: process.env.ZOMBI_DB_HOST || "the_host",
             port: process.env.ZOMBI_DB_PORT || 5432,
-            pass: process.env.ZOMBI_DB_PASS || "SIBSadmin01",
-            name: process.env.ZOMBI_DB_NAME || "zombi",
+            pass: process.env.ZOMBI_DB_PASS || "the_password",
+            name: process.env.ZOMBI_DB_NAME || "the_db_user",
             type: process.env.ZOMBI_DB_TYPE || "postgresql", // oracle, mysql or postgresql
             enabled: true
         },
-        otra: {
-            user: "zombi",
-            host: "localhost",
-            port: 1521,
-            pass: "SIBSadmin01",
-            name: "xepdb1",
-            type: "oracle",
-            enabled: false
-        },
-        pg2: {
-            user: "postgres",
-            host: "192.168.10.46",
-            port: 5432,
-            pass: "P0stgr3sS",
-            name: "chino_mock",
-            type: "postgresql",
-            enabled: false
-        },
-        maria: {
-            user: "zombi",
-            host: "localhost",
-            port: 3306,
-            pass: "SIBSadmin01",
-            name: "zombi",
-            type: "mysql",
+        other_db: {
+            user: process.env.ZOMBI_DB_USER_1 || "the_user",
+            host: process.env.ZOMBI_DB_HOST_1 || "the_host",
+            port: process.env.ZOMBI_DB_PORT_1 || 1521,
+            pass: process.env.ZOMBI_DB_PASS_1 || "the_password",
+            name: process.env.ZOMBI_DB_NAME_1 || "the_db_user",
+            type: process.env.ZOMBI_DB_TYPE_1 || "oracle",
             enabled: false
         }
     },
 
     cache: {
         host: "localhost",
-        port: 6379,
-        prefix_user: "USERS:",
-        prefix_sequence: "SEQUENCE",
-        prefix_session: "SESSION:"
+        port: 6379
     },
 
     i18n: {

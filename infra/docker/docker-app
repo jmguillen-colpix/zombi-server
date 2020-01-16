@@ -1,0 +1,6 @@
+FROM node:12
+
+WORKDIR /home/ec2-user/zombi-server
+
+COPY . /home/ec2-user/zombi-server
+
