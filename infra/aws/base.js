@@ -2,6 +2,7 @@
 
 const config = require("./config");
 const ssh = require("./ssh");
+const zombi_env = require("./zombi.env");
 
 const fs = require('fs');
 
@@ -11,44 +12,50 @@ const fs = require('fs');
 
         const instance_public_dns_name = fs.readFileSync(`${__dirname}/server.name`).toString();
 
+        const base_home = `/home/${config.aws.ssh.username}/zombi-server`;
+        const base_run_file = `${base_home}/base.sh`;
+        const base_loc_file = `${__dirname}/base.sh`;
+        const base_env_file = `${base_home}/.env`;
+
+        const zombi_env_file = zombi_env.create_env_file();
+
         await ssh.connect({
             host: instance_public_dns_name,
-            username: config.ssh.username,
-            privateKey: config.ssh.key_file
+            username: config.aws.ssh.username,
+            privateKey: config.aws.ssh.key_file
         });
 
-        // // OS
-        // // await ssh.command('sudo yum -y update');
-        // await ssh.command('sudo yum -y install rpm-build yum-utils wget net-tools gcc glibc curl gcc-c++ make tcl openssl openssl-devel pcre-devel');
+        await ssh.command(`rm -rf ${base_home}`);
+        await ssh.command(`mkdir -p ${base_home}`);
 
-        // // Node
-        // await ssh.command('curl -sL https://rpm.nodesource.com/setup_12.x | sudo bash -');
-        // await ssh.command('sudo yum -y install nodejs; node -v');
+        await ssh.putfile(zombi_env_file, base_env_file);
+        await ssh.putfile(base_loc_file, `${base_run_file}-noenv`);
 
-        // // Redis
-        // await ssh.command('sudo yum -y install redis; sudo systemctl start redis; sudo systemctl enable redis; sudo systemctl status redis');
+        await ssh.command(`source .env; envsubst < "${base_run_file}-noenv" > "${base_run_file}";`, [], base_home);
+        await ssh.command(`rm -f ${base_run_file}-noenv`);
+        await ssh.command(`sudo chmod +x ${base_run_file}`);
+        await ssh.command(base_run_file);
 
-        // // PostgeSQL
-        // await ssh.command('wget -P /tmp https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7.5-x86_64/pgdg-centos11-11-2.noarch.rpm');
-        // await ssh.command('sudo yum -y install /tmp/pgdg-centos11-11-2.noarch.rpm');
-        // await ssh.command('sudo yum -y install postgresql11 postgresql11-server postgresql11-contrib');
-        // await ssh.command('export PGSETUP_INITDB_OPTIONS="--auth=md5"; sudo -E /usr/pgsql-11/bin/postgresql-11-setup initdb');
-        // await ssh.command('sudo systemctl start postgresql-11; sudo systemctl enable postgresql-11; sudo systemctl status postgresql-11');
+        console.log(`Completed base software installation.`);
 
-        // sudo -u postgres psql -c "CREATE USER xyz WITH PASSWORD 'xyz';" 
+    } catch (error) {
 
-        // Docker
-        await ssh.command('sudo yum install -y docker');
-        await ssh.command('sudo systemctl enable docker');
-        await ssh.command('sudo systemctl start docker');
-        await ssh.command('sudo curl -L https://github.com/docker/compose/releases/download/1.25.1/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose');
-        await ssh.command('sudo chmod +x /usr/local/bin/docker-compose');
-        await ssh.command('sudo usermod -aG docker ec2-user');
-        await ssh.command('docker info');
-        await ssh.command('docker-compose --version');
+        console.log(error); 
+
+    } finally {
 
         await ssh.disconnect();
 
-    } catch (error) { console.log(error); }
+    }
 
 })();
+
+// Docker
+// await ssh.command('sudo yum install -y docker');
+// await ssh.command('sudo systemctl enable docker');
+// await ssh.command('sudo systemctl start docker');
+// await ssh.command('sudo curl -L https://github.com/docker/compose/releases/download/1.25.1/docker-compose-Linux-x86_64 -o /usr/local/bin/docker-compose');
+// await ssh.command('sudo chmod +x /usr/local/bin/docker-compose');
+// await ssh.command('sudo usermod -aG docker ec2-user');
+// await ssh.command('docker info');
+// await ssh.command('docker-compose --version');

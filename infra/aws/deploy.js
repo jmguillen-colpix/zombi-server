@@ -2,6 +2,7 @@
 
 const config = require("./config");
 const ssh = require("./ssh");
+const zombi_env = require("./zombi.env");
 
 const fs = require('fs');
 
@@ -9,41 +10,57 @@ const fs = require('fs');
 
     try {
 
+        zombi_env.create_env_file();
+
         const instance_public_dns_name = fs.readFileSync(`${__dirname}/server.name`).toString();
 
-        const deploy_dir = `/home/${config.ssh.username}/zombi-server`;
+        const deploy_home = `/home/${config.aws.ssh.username}/zombi-server`;
+        const deploy_env_file = `${deploy_home}/.env`;
 
         await ssh.connect({
             host: instance_public_dns_name,
-            username: config.ssh.username,
-            privateKey: config.ssh.key_file
+            username: config.aws.ssh.username,
+            privateKey: config.aws.ssh.key_file
         });
 
-        await ssh.command(`rm -rf ${deploy_dir}`);
-        await ssh.command(`mkdir -p ${deploy_dir}`);
+        const zombi_env_file = zombi_env.create_env_file();
+        await ssh.putfile(zombi_env_file, deploy_env_file);
 
-        await ssh.putdir(`${__dirname}/../../server`, `${deploy_dir}/server`);
-        await ssh.putfile(`${__dirname}/../../.env`, `${deploy_dir}/.env`);
-        await ssh.putfile(`${__dirname}/../../ecosystem.config.js`, `${deploy_dir}/ecosystem.config.js`);
-        await ssh.putfile(`${__dirname}/../../package-lock.json`, `${deploy_dir}/package-lock.json`);
-        await ssh.putfile(`${__dirname}/../../package.json`, `${deploy_dir}/package.json`);
-        await ssh.putfile(`${__dirname}/../docker/docker-app`, `${deploy_dir}/docker-app`);
-        // await ssh.putfile(`${__dirname}/../docker/docker-compose.yml`, `${deploy_dir}/docker-compose-noenv.yml`);
-        await ssh.putfile(`${__dirname}/../docker/docker-compose.yml`, `${deploy_dir}/docker-compose.yml`);
+        await ssh.command("source .env; pm2 delete all", [], deploy_home);
 
-        // await ssh.command(`source .env; envsubst < "docker-compose-noenv.yml" > "docker-compose.yml";`, [], deploy_dir);
+        await ssh.command(`rm -rf ${deploy_home}/server`);
 
+        await ssh.putdir(`${__dirname}/../../server`, `${deploy_home}/server`);
         
+        await ssh.putfile(`${__dirname}/../../ecosystem.config.js`, `${deploy_home}/ecosystem.config.js`);
+        await ssh.putfile(`${__dirname}/../../package-lock.json`, `${deploy_home}/package-lock.json`);
+        await ssh.putfile(`${__dirname}/../../package.json`, `${deploy_home}/package.json`);
 
-        await ssh.disconnect();
+        await ssh.command("npm i", [], deploy_home);
 
-    } catch (error) { 
+        await ssh.command("source .env; npm run schema", [], deploy_home);
+
+        await ssh.command("source .env; pm2 start", [], deploy_home);
+
+        console.log(`Completed deploy to ${instance_public_dns_name}`);
+
+    } catch (error) {
+
         console.log(error); 
+
+    } finally {
+
         await ssh.disconnect();
+
     }
 
 })();
 
+// Docker
+// await ssh.putfile(`${__dirname}/../docker/docker-app`, `${deploy_home}/docker-app`);
+// await ssh.putfile(`${__dirname}/../docker/docker-compose.yml`, `${deploy_home}/docker-compose-noenv.yml`);
+// await ssh.putfile(`${__dirname}/../docker/docker-compose.yml`, `${deploy_home}/docker-compose.yml`);
+// await ssh.command(`source .env; envsubst < "docker-compose-noenv.yml" > "docker-compose.yml";`, [], deploy_home);
 
 
 

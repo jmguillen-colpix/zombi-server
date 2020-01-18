@@ -1,6 +1,7 @@
 "use strict";
 
 const config = require("./config");
+const ssh = require("./ssh");
 
 const AWS = require("aws-sdk");
 const fs = require('fs');
@@ -27,9 +28,42 @@ const instance_check_state = async instance_id => {
 
 };
 
+const instance_check_network = async (instance_public_dns_name, attempts = 0) => {
+
+    if (attempts >= 10) {
+         console.log(`Cannot connect after ${attempts} attempts, quitting.`);
+         return false;
+    }
+
+    const resp = await ssh.ping({
+        host: instance_public_dns_name,
+        username: config.aws.ssh.username,
+        privateKey: config.aws.ssh.key_file
+    });
+
+    if (!resp) {
+
+        console.log(`Instance network still down, waiting...`);
+
+        await sleep(10000);
+
+        await instance_check_network(instance_public_dns_name, attempts + 1);
+
+    } else { console.log(`Instance network running, SSH can connect now.`); }
+
+    return true;
+
+};
+
 (async () => {
 
     try {
+
+        if (!fs.existsSync(config.aws.ssh.key_file)) {
+            console.log(`SSH key file "${config.aws.ssh.key_file}" not found, please check configuration.`);
+
+            return false;
+        }
 
         if(config.aws.use_console) { AWS.config.logger = console; }
 
@@ -39,7 +73,6 @@ const instance_check_state = async instance_id => {
 
         console.log("Access key:", AWS.config.credentials.accessKeyId);
         console.log("Region:", AWS.config.region);
-
 
         var instance_settings = {
             ImageId: config.aws.image_id,
@@ -74,6 +107,12 @@ const instance_check_state = async instance_id => {
         console.log(`Ìnstance public DNS name: ${instance_public_dns_name}`);
 
         fs.writeFileSync(`${__dirname}/server.name`, instance_public_dns_name);
+
+        if(!await instance_check_network(instance_public_dns_name)) {
+
+            console.log("Instance network didn't work, please check configuration.");
+
+        }
 
         console.log("Instance creation done");
 

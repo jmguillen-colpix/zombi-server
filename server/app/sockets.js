@@ -97,7 +97,7 @@ const send_message_to_session = (token, context = "NO_CONTEXT", data = []) => {
 
 const send_message_to_user = async (user_id = null, context = "none", data = []) => {
     try {
-        const tokens = session.tokens(user_id);
+        const tokens = await session.tokens(user_id);
 
         for (const token of tokens) {
             const user_name = await session.get(token, "full_name")

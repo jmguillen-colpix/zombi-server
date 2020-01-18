@@ -1,5 +1,5 @@
-const PORT_BASE = 8080;
-const NODE_NAME_PREFIX = 'Z';
+const PORT_BASE = parseInt(process.env.ZOMBI_HTTP_PORT) || 8080;
+const NODE_NAME_PREFIX = 'D';
 
 const names = ['DVa', 'Orisa', 'Reinhardt', 'Roadhog', 'Sigma', 'Winston', 'Wrecking Ball', 'Zarya', 'Ashe', 'Bastion', 'Doomfist', 'Genji', 'Hanzo', 'Junkrat', 'McCree', 'Mei', 'Pharah', 'Reaper', 'Soldier', 'Sombra', 'Symmetra', 'Torbjorn', 'Tracer', 'Widowmaker', 'Ana', 'Baptiste', 'Brigitte', 'Lucio', 'Mercy', 'Moira', 'Zenyatta', 'Sojourn'];
 
@@ -9,18 +9,17 @@ const pad = (num) => (`00${num}`).slice(-2);
 
 const node_app_data = (order, name) => ({
   name: `${NODE_NAME_PREFIX}-${pad(order + 1)}-${name}`,
+  cwd: __dirname,
   script: 'server/app/zombi.js',
-  args: '',
+  node_args : '-r dotenv/config',
   instances: 1,
   autorestart: true,
   watch: false,
   max_memory_restart: '1G',
   env: {
-    NODE_ENV: 'production',
     ZOMBI_HTTP_PORT: PORT_BASE + order,
     ZOMBI_NODE_NAME: name
   }
-
 });
 
 const apps = [];

@@ -18,11 +18,13 @@ const log = (message, context = "UNKNOWN", error = false) => {
             msg = message;
         }
 
+        if (typeof msg !== "string") { msg = "Incorrect message type for logging"; }
+
         const m = t + " [" + context + "] " + msg;
 
         const badge = (error) ? chalk.red("ERROR ") : chalk.green("INFO  ");
 
-        console.log(badge + m);
+        process._rawDebug(badge + m);
     }
 };
 

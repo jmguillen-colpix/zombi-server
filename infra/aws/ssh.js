@@ -5,6 +5,24 @@ const node_ssh = require('node-ssh');
 
 const ssh = new node_ssh();
 
+const ping = async params => {
+    
+    try {
+
+        await connect(params);
+
+        await disconnect(params);
+
+        return true;
+        
+    } catch (error) {
+
+        return false;
+        
+    }
+    
+}; 
+
 const connect = async (params) => {
 
     console.log(`Connecting to instance: ${params.host}`);
@@ -44,7 +62,7 @@ const putdir = async (from, to) => {
 
     const status = await ssh.putDirectory(from, to, {
         recursive: true,
-        concurrency: 10,
+        concurrency: 1,
         validate: function (itemPath) {
             const baseName = path.basename(itemPath)
             return baseName.substr(0, 1) !== '.' && // do not allow dot files
@@ -53,11 +71,14 @@ const putdir = async (from, to) => {
     });
 
     if (status) { console.log(">", `Directory local ${from} copied to remote ${to} successfully`); }
-    else { console.log(">", `Directory local ${from} copied to remote ${to} with errors`); }
+    else { 
+        console.log(">", `Directory local ${from} copied to remote ${to} with errors`);
+        throw new Error("Directory copy error");
+    }
 
 };
 
-module.exports = { command, putfile, putdir, connect, disconnect };
+module.exports = { command, putfile, putdir, connect, disconnect, ping };
 
 
 

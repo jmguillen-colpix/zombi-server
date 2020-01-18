@@ -86,9 +86,10 @@ const login = async (args, extras) => {
             const is_admin = (res.rows[0][5] === "Y");
 
             if (await security.password_compare(password, encrpass)) {
+
                 const token = session.token();
 
-                session.create(token, user_id, language, timezone, full_name, is_admin);
+                await session.create(token, user_id, language, timezone, full_name, is_admin);
 
                 return ([false, { fullname: full_name, token: token, timezone: timezone, i18n: i18n.get_lang_data(language) }]);
             } else {
@@ -116,9 +117,11 @@ Returns:
     Nothing useful: {error: false}
 */
 const logoff = async (args, extras) => {
-    session.destroy(extras.token);
+
+    await session.destroy(extras.token);
 
     return [false];
+    
 };
 
 module.exports = { login, start, logoff }

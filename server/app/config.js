@@ -65,7 +65,7 @@ const config = {
 
     session: {
         cache_prefix: "ZOMBI_SESSION:",
-        expire: 60 // seconds
+        expire: 600 // seconds
     },
 
     inst: {

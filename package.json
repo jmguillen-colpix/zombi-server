@@ -2,7 +2,6 @@
   "name": "zombi-server",
   "version": "8.0.0",
   "description": "This is the Zombi Server application",
-  "main": "zombi.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/jmlxxvi/zombi-server.git"
@@ -12,17 +11,30 @@
     "start": "node server/app/zombi.js",
     "startdev": "npx nodemon --ignore 'public/' server/app/zombi.js",
     "test": "jest server/test/*test.js",
-    "stress": "npx artillery run stress.yml",
+    "stress": "node stress.js",
     "lint": "eslint server/**/*.js",
-    "deploy": "node infra/aws/deploy.js"
+    "deploy": "npm run test && npm run lint && node infra/aws/deploy.js",
+    "audit": "npm audit --registry=https://registry.npmjs.org"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "backend",
+    "RPC",
+    "JSON",
+    "JSON-RPC",
+    "REST"
+  ],
+  "contributors": [
+    {
+      "name": "Juan Martín Guillén",
+      "email": "juanmartinguillen@gmail.com"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
     "chalk": "^3.0.0",
+    "dotenv": "^8.2.0",
     "get-comments": "^1.0.1",
     "mime-types": "^2.1.26",
     "moment": "^2.24.0",
@@ -36,7 +48,7 @@
     "websocket": "^1.0.29"
   },
   "devDependencies": {
-    "artillery": "^1.6.0-29",
+    "autocannon": "^4.4.2",
     "aws-sdk": "^2.602.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
