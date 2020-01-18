@@ -1,12 +1,11 @@
 // const config  = require("./config");
 // const server  = require("./server");
 const session = require("./session");
-const log     = require("./log");
-
+const log = require("./log");
 
 const db = require("./db/db");
 
-let i18n_data = {
+const i18n_data = {
     es: {},
     pt: {},
     en: {},
@@ -22,19 +21,14 @@ let i18n_data = {
 
 const get_lang_data = (lang) => { return i18n_data[lang]; };
 
-const label = (token, label) => {
+const label = async (token, label) => {
+    const language = await session.get(token, "language");
 
-    const language = session.get(token, "language");
-
-    if(token && i18n_data[language] && i18n_data[language][label]) { return i18n_data[language][label]; }
-    else { return "[" + label + "]"}
-
+    if (token && i18n_data[language] && i18n_data[language][label]) { return i18n_data[language][label]; } else { return "[" + label + "]" }
 };
 
 const load_labels = async () => {
-
     try {
-
         const sql = `select
                     label_name,
                     label_lang_es,
@@ -59,29 +53,23 @@ const load_labels = async () => {
         log(rows.length + " i18n labels loaded", "load_labels");
 
         for (const row of rows) {
+            const label_name = row[0].toUpperCase();
 
-            let label_name = row[0].toUpperCase();
-
-            i18n_data["es"][label_name] = row[1];
-            i18n_data["pt"][label_name] = row[2];
-            i18n_data["en"][label_name] = row[3];
-            i18n_data["fr"][label_name] = row[4];
-            i18n_data["de"][label_name] = row[5];
-            i18n_data["it"][label_name] = row[6];
-            i18n_data["ko"][label_name] = row[7];
-            i18n_data["ja"][label_name] = row[8];
-            i18n_data["he"][label_name] = row[9];
-            i18n_data["ru"][label_name] = row[10];
-            i18n_data["zh"][label_name] = row[11];
-            
+            i18n_data.es[label_name] = row[1];
+            i18n_data.pt[label_name] = row[2];
+            i18n_data.en[label_name] = row[3];
+            i18n_data.fr[label_name] = row[4];
+            i18n_data.de[label_name] = row[5];
+            i18n_data.it[label_name] = row[6];
+            i18n_data.ko[label_name] = row[7];
+            i18n_data.ja[label_name] = row[8];
+            i18n_data.he[label_name] = row[9];
+            i18n_data.ru[label_name] = row[10];
+            i18n_data.zh[label_name] = row[11];
         }
-        
     } catch (error) {
-
         log(error.message, "load_labels", true);
-        
     }
-
 };
 
 module.exports = { load_labels, label, get_lang_data }

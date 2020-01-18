@@ -1,6 +1,6 @@
 // const config   = require("../app/config");
 
-const fs   = require("fs");
+const fs = require("fs");
 const util = require("util");
 const path = require("path");
 
@@ -20,10 +20,8 @@ Returns:
 
 */
 const mod_fun_list = async (args, extras) => {
-
     try {
-
-        let modfuns = {};
+        const modfuns = {};
 
         const modules_path = path.join(__dirname);
 
@@ -32,23 +30,17 @@ const mod_fun_list = async (args, extras) => {
         const files = await rd(modules_path);
 
         files.forEach(file => {
-
             const module_path = path.join(__dirname, file);
 
             const action = require(module_path);
 
             modfuns[path.parse(file).name] = Object.keys(action);
-
         });
 
         return [false, modfuns];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 /**
@@ -67,10 +59,8 @@ Returns:
 
 */
 const modules_list = async (args, extras) => {
-
     try {
-
-        let modules = [];
+        const modules = [];
 
         const modules_path = path.join(__dirname);
 
@@ -79,19 +69,13 @@ const modules_list = async (args, extras) => {
         const files = await rd(modules_path);
 
         files.forEach(file => {
-
             modules.push(path.parse(file).name);
-
         });
 
         return [false, modules];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 /**
@@ -110,25 +94,19 @@ Returns:
 
 */
 const module_code = async (args, extras) => {
-
     try {
-
         const mod = args;
 
         const module_path = path.join(__dirname, mod + ".js");
 
         const rf = util.promisify(fs.readFile);
 
-        const file = await rf(module_path, 'utf8');
+        const file = await rf(module_path, "utf8");
 
         return [false, file];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 module.exports = { modules_list, module_code, mod_fun_list }

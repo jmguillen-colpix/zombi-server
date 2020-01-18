@@ -1,7 +1,9 @@
-const db      = require("../app/db/db");
+
+const config = require("../app/config");
+const db = require("../app/db/db");
 const session = require("../app/session");
 const sockets = require("../app/sockets");
-const datatables = require("../app/datatables");
+const cache = require("../app/cache");
 
 /**
 sys_sessions/sessions_table_data
@@ -20,34 +22,27 @@ Returns:
 
 */
 const sessions_table_data = async (args, extras) => {
-
     try {
+        const sessions = [];
 
-        const sql = `select
-                    zou.full_name,
-                    zos.token,
-                    zos.token,
-                    zos.session_data,
-                    zos.created,
-                    zos.updated,
-                    zos.token
-                from ${db.table_prefix()}sessions zos
-                    left join ${db.table_prefix()}users zou on (zos.user_id = zou.id)
-                where
-                    lower(zou.full_name) like '%' || lower(:search) || '%' or
-                    lower(zos.token) like '%' || lower(:search) || '%' or
-                    lower(zos.session_data) like '%' || lower(:search)`;
+        const session_key = config.session.cache_prefix;
 
-        const data = await datatables.sql({sql: sql, data: args.data, download: args.download});
+        const cache_keys = await cache.keys(session_key);
 
-        return [false, data];
+        for (const cache_key of cache_keys) {
+            const token = cache_key.split(":")[1];
 
-    } catch(error) {
+            const session_data = await cache.hgetall(cache_key);
 
+            const user_name = await db.sqlv(`select full_name from ${db.table_prefix()}users where id = :id`, [session_data.user_id])
+
+            sessions.push({ token, session_data, user_name });
+        }
+
+        return [false, sessions];
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 /**
@@ -66,21 +61,15 @@ Returns:
 
 */
 const session_delete = async (args, extras) => {
-
     try {
-
         const token = args;
 
         await session.destroy(token);
 
         return [false];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 /**
@@ -99,22 +88,16 @@ Returns:
 
 */
 const send_message_to_session = async (args, extras) => {
-
     try {
-
         const token = args[0];
         const message = args[1];
 
         sockets.send_message_to_session(token, "SESSIONS_SEND_MESSAGE", message);
 
         return [false];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 }
 
 /**
@@ -133,22 +116,16 @@ Returns:
 
 */
 const send_message_to_user = async (args, extras) => {
-
     try {
-
         const user_id = args[0];
         const message = args[1];
 
-        sockets.send_message_to_session(token, "SESSIONS_SEND_MESSAGE", message);
+        sockets.send_message_to_session(user_id, "SESSIONS_SEND_MESSAGE", message);
 
         return [false];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 }
 
-module.exports = { session_delete, sessions_table_data, send_message_to_session }
+module.exports = { session_delete, sessions_table_data, send_message_to_session, send_message_to_user }

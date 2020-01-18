@@ -1,9 +1,8 @@
-const config   = require("../app/config");
-const utils    = require("../app/utils");
-const i18n     = require("../app/i18n");
-const session  = require("../app/session");
-const db       = require("../app/db/db");
-const log      = require("../app/log");
+const config = require("../app/config");
+const i18n = require("../app/i18n");
+const session = require("../app/session");
+const db = require("../app/db/db");
+const log = require("../app/log");
 const security = require("../app/security");
 
 /**
@@ -22,19 +21,13 @@ Returns:
 
 */
 const start = async (args, extras) => {
-
     try {
-
         const language = await session.get(extras.token, "language");
 
-        return [false, {i18n: i18n.get_lang_data(language)}];
-
-    } catch(error) {
-
+        return [false, { i18n: i18n.get_lang_data(language) }];
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 /**
@@ -56,10 +49,8 @@ Returns:
 
 */
 const login = async (args, extras) => {
-
     try {
-
-        if(!Array.isArray(args) || typeof args[0] === "undefined") { throw Error(i18n.label(extras.token, "WRONG_PARAMETERS")); }
+        if (!Array.isArray(args) || typeof args[0] === "undefined") { throw Error(await i18n.label(extras.token, "WRONG_PARAMETERS")); }
 
         const username = args[0];
         const password = args[1];
@@ -83,46 +74,35 @@ const login = async (args, extras) => {
 
         const res = await db.sql(sql, [userlower]);
 
-        if(res.rows.length === 0) {
-
+        if (res.rows.length === 0) {
             log(`User [${username}] not found`, "sys_login/login");
 
             return [true, null, "NOLOGIN"];
-
         } else {
-
-            const encrpass  = res.rows[0][1];
+            const encrpass = res.rows[0][1];
             const full_name = res.rows[0][2];
-            const user_id   = res.rows[0][3];
-            const timezone  = (res.rows[0][4] === null) ? config.i18n.timezone : res.rows[0][4];
-            const is_admin  = (res.rows[0][5] === "Y") ? true : false ;
+            const user_id = res.rows[0][3];
+            const timezone = (res.rows[0][4] === null) ? config.i18n.timezone : res.rows[0][4];
+            const is_admin = (res.rows[0][5] === "Y");
 
-            if(security.password_compare(password, encrpass)) {
+            if (await security.password_compare(password, encrpass)) {
 
                 const token = session.token();
 
-                session.create(token, user_id, language, timezone, full_name, is_admin);
+                await session.create(token, user_id, language, timezone, full_name, is_admin);
 
-                return([false, {fullname: full_name, token: token, timezone: timezone, i18n: i18n.get_lang_data(language)}]);
-
+                return ([false, { fullname: full_name, token: token, timezone: timezone, i18n: i18n.get_lang_data(language) }]);
             } else {
-
                 log(`User [${username}] cannot login`, "sys_login/login");
 
                 return [true, null, "NOLOGIN"];
-
             }
-
         }
-
-    } catch(error) {
-
+    } catch (error) {
         log(error.message, "sys_login", true);
 
         return [true, null, "NOLOGIN"];
-        
     }
-
 };
 
 /**
@@ -138,10 +118,10 @@ Returns:
 */
 const logoff = async (args, extras) => {
 
-    session.destroy(extras.token);
+    await session.destroy(extras.token);
 
     return [false];
-
+    
 };
 
 module.exports = { login, start, logoff }

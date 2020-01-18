@@ -1,12 +1,9 @@
-const config   = require("../app/config");
-const utils    = require("../app/utils");
-const server   = require("../app/server");
-const i18n     = require("../app/i18n");
-const log      = require("../app/log");
-const db       = require("../app/db/db");
-const select   = require("../app/select");
+const utils = require("../app/utils");
+const i18n = require("../app/i18n");
+const db = require("../app/db/db");
+const select = require("../app/select");
 const security = require("../app/security");
-const sockets  = require("../app/sockets");
+const sockets = require("../app/sockets");
 
 const datatables = require("../app/datatables");
 
@@ -27,23 +24,15 @@ Returns:
 
 */
 const users_languages_select = async (args, extras) => {
-
     try {
-
-        const dbo = {table: `${db.table_prefix()}i18n_languages`, id: "id", text: "language_name", order: "2"};
+        const dbo = { table: `${db.table_prefix()}i18n_languages`, id: "id", text: "language_name", order: "2" };
 
         const res = await select.select(dbo);
-        
+
         return [false, res];
-
     } catch (error) {
-
         return [true, null, error.message];
-        
     }
-
-    
-
 };
 
 /**
@@ -63,21 +52,15 @@ Returns:
 
 */
 const users_countries_select = async (args, extras) => {
-
     try {
-
-        const dbo = {table: `${db.table_prefix()}tz_countries`, id: "id", text: "country_name", order: "2"};
+        const dbo = { table: `${db.table_prefix()}tz_countries`, id: "id", text: "country_name", order: "2" };
 
         const res = await select.select(dbo);
-        
+
         return [false, res];
-
     } catch (error) {
-
         return [true, null, error.message];
-        
     }
-
 };
 
 /**
@@ -87,33 +70,27 @@ This function get data to populate a select como on the client
 Users table {table: "zombi_tz_countries", id: "id", text: "country_name"};
 
 Arguments:
-    [<string>filter column id, <string>filter column value]    
+    [<string>filter column id, <string>filter column value]
 
 Example:
-    ["country_id", 99]    
+    ["country_id", 99]
 
 Returns:
     Error message when there is an error
 
 */
 const users_timezones_select = async (args, extras) => {
-
     try {
-
         const filter = args;
 
-        const dbo = {table: `${db.table_prefix()}tz_zones`, id: "zone_id", text: "zone_name", filter: filter, order: "2"};
+        const dbo = { table: `${db.table_prefix()}tz_zones`, id: "zone_id", text: "zone_name", filter: filter, order: "2" };
 
         const res = await select.select(dbo);
-        
+
         return [false, res];
-
     } catch (error) {
-
         return [true, null, error.message];
-        
     }
-
 };
 
 /**
@@ -133,9 +110,7 @@ Returns:
 
 */
 const users_table_data = async (args, extras) => {
-
     try {
-
         const sql = `select 
                     zou.id,
                     zou.id,
@@ -160,16 +135,12 @@ const users_table_data = async (args, extras) => {
                     lower(zco.country_name) like '%' || lower(:search) || '%' or
                     lower(zzo.zone_name) like '%' || lower(:search) || '%'`;
 
-        const data = await datatables.sql({sql: sql, data: args.data, download: args.download});
+        const data = await datatables.sql({ sql: sql, data: args.data, download: args.download });
 
         return [false, data];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 /**
@@ -179,13 +150,13 @@ This function add a user to the system.
 
 Arguments:
     [
-        <string>username, 
-        <string>full name, 
-        <string>password, 
-        <string>email, 
-        <integer>language, 
-        <integer>country, 
-        <integer>timezone, 
+        <string>username,
+        <string>full name,
+        <string>password,
+        <string>email,
+        <integer>language,
+        <integer>country,
+        <integer>timezone,
         <string>is admin
     ]
 
@@ -197,15 +168,13 @@ Returns:
 
 */
 const users_add = async (args, extras) => {
-
     try {
-
         const username = args[0];
         const fullname = args[1];
         const password = args[2];
-        const email    = args[3];
+        const email = args[3];
         const language = args[4];
-        const country  = args[5];
+        const country = args[5];
         const timezone = args[6];
         const is_admin = args[7];
 
@@ -237,22 +206,18 @@ const users_add = async (args, extras) => {
                     )`;
 
         const seq = await db.sequence();
-        
-        const hash = security.password_hash(password);
+
+        const hash = await security.password_hash(password);
 
         const reply = await db.sql(
-            sql, 
+            sql,
             [seq, username, fullname, hash, email, language, country, timezone, utils.timestamp(), is_admin, "Y"]
         );
 
         return [false, reply];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 /**
@@ -282,9 +247,7 @@ Returns:
 
 */
 const users_edit_data = async (args, extras) => {
-
     try {
-
         const user_id = parseInt(args);
 
         const sql = `select 
@@ -306,13 +269,9 @@ const users_edit_data = async (args, extras) => {
         const reply = await db.sql(sql, [user_id]);
 
         return [false, reply.rows];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 /**
@@ -324,13 +283,13 @@ otherwise it is hashed and stored the same way that when creating a new user
 
 Arguments:
     [
-        <string>username, 
-        <string>full name, 
-        <string>password, 
-        <string>email, 
-        <integer>language, 
-        <integer>country, 
-        <integer>timezone, 
+        <string>username,
+        <string>full name,
+        <string>password,
+        <string>email,
+        <integer>language,
+        <integer>country,
+        <integer>timezone,
         <string>is admin,
         <integer>id
     ]
@@ -343,21 +302,18 @@ Returns:
 
 */
 const users_edit = async (args, extras) => {
-
     try {
-
-        const id       = args[0];
+        const id = args[0];
         const username = args[1];
         const fullname = args[2];
         const password = args[3];
-        const email    = args[4];
+        const email = args[4];
         const language = args[5];
-        const country  = args[6];
+        const country = args[6];
         const timezone = args[7];
         const is_admin = args[8];
 
-        if(password === "") {
-
+        if (password === "") {
             const sql = `update ${db.table_prefix()}users
                         set
                             username = :username,
@@ -372,9 +328,7 @@ const users_edit = async (args, extras) => {
             const reply = await db.sql(sql, [username, fullname, email, language, country, timezone, is_admin, id]);
 
             return [false, reply.info.rows];
-
         } else {
-
             const sql = `update ${db.table_prefix()}users
                         set
                             username = :username,
@@ -387,20 +341,15 @@ const users_edit = async (args, extras) => {
                             is_admin = :is_admin
                         where id = :id`;
 
-            const hash = security.password_hash(password);
+            const hash = await security.password_hash(password);
 
             const reply = await db.sql(sql, [username, fullname, hash, email, language, country, timezone, is_admin, id]);
 
             return [false, reply.info.rows];
-
         }
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 /**
@@ -419,31 +368,20 @@ Returns:
 
 */
 const users_delete = async (args, extras) => {
-
     try {
-
         const id = parseInt(args);
 
-        if(id === 0) { return [true, i18n.label(extras.token, "USER_SYSTEM_CANNOT_BE_DELETED")]; }
-
-        else {
-
+        if (id === 0) { return [true, await i18n.label(extras.token, "USER_SYSTEM_CANNOT_BE_DELETED")]; } else {
             const sql = `delete from ${db.table_prefix()}users where id = :id`;
 
             const reply = await db.sql(sql, [id]);
 
             return [false, reply.info.rows];
-
         }
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
-
 
 /**
 sys_users/users_toggle_admin
@@ -461,9 +399,7 @@ Returns:
 
 */
 const users_toggle_admin = async (args, extras) => {
-
     try {
-
         const id = args;
 
         const sql = `update ${db.table_prefix()}users set is_admin = case when is_admin = 'Y' then 'N' else 'Y' end where id = :id`;
@@ -471,15 +407,10 @@ const users_toggle_admin = async (args, extras) => {
         const reply = await db.sql(sql, [id]);
 
         return [false, reply.info.rows];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
-
 
 /**
 sys_users/send_message_to_user
@@ -497,22 +428,16 @@ Returns:
 
 */
 const send_message_to_user = async (args, extras) => {
-
     try {
-
         const user_id = args[0];
         const message = args[1];
 
         await sockets.send_message_to_user(user_id, "SESSIONS_SEND_MESSAGE", message);
 
         return [false];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, error.message];
-
     }
-
 };
 
 module.exports = {
@@ -527,4 +452,3 @@ module.exports = {
     users_toggle_admin,
     send_message_to_user
 }
-

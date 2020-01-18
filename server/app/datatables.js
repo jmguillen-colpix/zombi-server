@@ -1,14 +1,14 @@
 const config = require("../app/config");
-const log    = require("../app/log");
+const log = require("../app/log");
 // const server = require("../app/server");
-const db     = require("./db/db");
+const db = require("./db/db");
 
 /*
 
 Example of data sent by the client
 
 {
-    
+
     "draw": 1,
     "columns": [{
         "data": 0,
@@ -42,7 +42,7 @@ Example of data sent by the client
 
 }
 
-Example of response    
+Example of response
 
 const response = {
     "draw": extras.sequence,
@@ -71,136 +71,102 @@ const response = {
 */
 
 const sql = async (args, callback) => {
-
     return new Promise((resolve, reject) => {
-
         try {
-
-            const db_type = config.db["default"].type;
+            const db_type = config.db.default.type;
 
             const data = args.data;
-    
-            let raw_sql = args.sql;
-    
+
+            const raw_sql = args.sql;
+
             let bind_count = 0;
-    
+
             const bind = [];
-    
+
             let sql = raw_sql.replace(/:search/g, () => { bind.push(data.search.value); return "$" + (++bind_count); });
-    
+
             const paging = [...bind];
-    
-            if(args.download) {
-    
-                sql += " order by " + (data.order[0].column + 1) + ((data.order[0].dir === "asc") ? " asc": " desc");
-    
-                let rows = [];
-        
+
+            if (args.download) {
+                sql += " order by " + (data.order[0].column + 1) + ((data.order[0].dir === "asc") ? " asc" : " desc");
+
+                const rows = [];
+
                 db.sql(sql, bind, (err, res) => {
-        
-                    if(err) { reject(err); } 
-                    
-                    else {
-        
+                    if (err) { reject(err); } else {
                         for (const s of res.rows) { rows.push(s); }
-        
+
                         resolve(rows);
-        
                     }
-            
                 });
-    
             } else {
-    
                 let count;
-    
-                switch(db_type) {
-        
-                    case "postgresql":
-                        count = "select count(*) from (" + sql + ") inq";
-                        break;
-        
-                    case "oracle":
-                        count = "select count(*) from (" + sql + ") inq";
-                        break;
-        
-                    default:
-                        log("Database setup error", "datatables/sql", true);
-                        callback("Database setup error", false);
-                        return;
-                
+
+                switch (db_type) {
+                case "postgresql":
+                    count = "select count(*) from (" + sql + ") inq";
+                    break;
+
+                case "oracle":
+                    count = "select count(*) from (" + sql + ") inq";
+                    break;
+
+                default:
+                    log("Database setup error", "datatables/sql", true);
+                    callback(new Error("Database setup error"), false);
+                    return;
                 }
-        
-                sql += " order by " + (data.order[0].column + 1) + ((data.order[0].dir === "asc") ? " asc": " desc");
-        
-                switch(db_type) {
-        
-                    case "postgresql":
-                        sql += " limit $" + (++bind_count) + " offset $" + (++bind_count) ;
-                        paging.push(data.length)
-                        paging.push(data.start);
-                        break;
-        
-                    case "oracle":
-                        sql = "select sq.* \
-                                from \
-                                ( \
-                                    select inq.*, rownum as rn  \
-                                    from (" + sql + ") inq \
-                                    where rownum <= :limit \
-                                ) sq \
-                                where sq.rn > :offset";
-                        paging.push(data.start + data.length)
-                        paging.push(data.start);
-                        break;
-        
+
+                sql += " order by " + (data.order[0].column + 1) + ((data.order[0].dir === "asc") ? " asc" : " desc");
+
+                switch (db_type) {
+                case "postgresql":
+                    sql += " limit $" + (++bind_count) + " offset $" + (++bind_count);
+                    paging.push(data.length)
+                    paging.push(data.start);
+                    break;
+
+                case "oracle":
+                    sql = `select sq.*
+                                from
+                                (
+                                    select inq.*, rownum as rn
+                                    from (" + sql + ") inq
+                                    where rownum <= :limit
+                                ) sq
+                                where sq.rn > :offset`;
+                    paging.push(data.start + data.length)
+                    paging.push(data.start);
+                    break;
                 }
-    
+
                 var response = {
-                    "draw": 0,
-                    "recordsTotal": 0,
-                    "recordsFiltered": 0,
-                    "data": []
+                    draw: 0,
+                    recordsTotal: 0,
+                    recordsFiltered: 0,
+                    data: []
                 };
-        
+
                 db.sql_cb(count, bind, (err, res) => {
-        
-                    if(err) { reject(err); } 
-                    
-                    else {
-            
+                    if (err) { reject(err); } else {
                         response.recordsFiltered = res.rows[0][0];
-        
+
                         response.recordsTotal = res.rows[0][0];
-        
+
                         db.sql_cb(sql, paging, (err, res) => {
-        
-                            if(err) { reject(err); } 
-                            
-                            else {
-        
+                            if (err) { reject(err); } else {
                                 for (const s of res.rows) { response.data.push(s); }
-        
+
                                 resolve(response);
-        
                             }
-                    
                         });
-            
                     }
-            
                 });
-    
             }
-
-        } catch(error) {
-
+        } catch (error) {
             reject(error.message);
-    
         }
-
     });
-
 };
 
 module.exports = { sql }

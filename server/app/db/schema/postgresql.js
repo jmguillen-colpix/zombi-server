@@ -1,8 +1,7 @@
 const create_schema = table_prefix => {
-
     const commands = [];
 
-    commands.push(`create sequence if not exists zombi_seq start 1`);
+    commands.push("create sequence if not exists zombi_seq start 1");
 
     commands.push(`create table if not exists ${table_prefix}groups
     (
@@ -14,8 +13,7 @@ const create_schema = table_prefix => {
         created_by integer not null,
         created_ts integer not null
     )`);
-    
-    
+
     commands.push(`create table if not exists ${table_prefix}groups_to_users
     (
         id integer not null
@@ -24,7 +22,7 @@ const create_schema = table_prefix => {
         group_id integer not null,
         user_id integer not null
     )`);
-    
+
     commands.push(`create table if not exists ${table_prefix}i18n_labels
     (
         id integer not null
@@ -46,8 +44,7 @@ const create_schema = table_prefix => {
         label_lang_ru varchar(200) default NULL::character varying,
         label_lang_zh varchar(200) default NULL::character varying
     )`);
-    
-    
+
     commands.push(`create table if not exists ${table_prefix}i18n_languages
     (
         id integer not null
@@ -56,8 +53,7 @@ const create_schema = table_prefix => {
         language_name varchar(32) not null,
         language_code varchar(5) not null
     )`);
-    
-    
+
     commands.push(`create table if not exists ${table_prefix}inst_cpu
     (
         id integer not null
@@ -72,11 +68,10 @@ const create_schema = table_prefix => {
         ts integer not null,
         node_name varchar(120) not null
     )`);
-    
-    
+
     commands.push(`create unique index ${table_prefix}inst_cpu_uk1
         on ${table_prefix}inst_cpu (node_name, ts)`);
-    
+
     commands.push(`create table if not exists ${table_prefix}inst_disk
     (
         id integer not null
@@ -90,11 +85,10 @@ const create_schema = table_prefix => {
         disk_device varchar(120),
         node_name varchar(120) not null
     )`);
-    
-    
+
     commands.push(`create unique index ${table_prefix}inst_disk_uk1
         on ${table_prefix}inst_disk (mount_point, ts, node_name)`);
-    
+
     commands.push(`create table if not exists ${table_prefix}inst_memory
     (
         id integer not null
@@ -112,7 +106,7 @@ const create_schema = table_prefix => {
         swapused numeric,
         swapfree numeric
     )`);
-    
+
     // Sessions are on Redis now
     // commands.push(`create table if not exists ${table_prefix}sessions
     // (
@@ -122,7 +116,7 @@ const create_schema = table_prefix => {
     //     created integer not null,
     //     updated integer
     // )`);
-    
+
     commands.push(`create table if not exists ${table_prefix}tz_zones
     (
         zone_id integer not null,
@@ -130,7 +124,7 @@ const create_schema = table_prefix => {
         zone_name varchar(35) not null,
         country_id integer
     )`);
-    
+
     commands.push(`create table if not exists ${table_prefix}users
     (
         id integer not null
@@ -149,7 +143,7 @@ const create_schema = table_prefix => {
         country_id integer,
         language_id integer
     )`);
-    
+
     commands.push(`create table if not exists ${table_prefix}tests
     (
         id integer not null
@@ -158,7 +152,7 @@ const create_schema = table_prefix => {
         text varchar(1000),
         number numeric
     )`);
-    
+
     commands.push(`create table if not exists ${table_prefix}tz_countries
     (
         id bigint not null
@@ -167,8 +161,7 @@ const create_schema = table_prefix => {
         country_code varchar(2),
         country_name varchar(45)
     )`);
-    
-    
+
     commands.push(`create table if not exists ${table_prefix}groups_to_modules
     (
         id integer not null
@@ -1535,8 +1528,6 @@ const create_schema = table_prefix => {
         ,(30139, '', 'SOCKETS', 'Sockets', 'Sockets', 'Sockets', 'Sockets', 'Sockets', 'Prese', '소켓', 'ソケット', 'שקעים', 'Розетки', '插座')`);
 
     return commands;
-
 }
 
 module.exports = { create_schema }
-

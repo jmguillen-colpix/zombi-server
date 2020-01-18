@@ -1,23 +1,42 @@
 {
   "name": "zombi-server",
-  "version": "7.0.0",
+  "version": "8.0.0",
   "description": "This is the Zombi Server application",
-  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jmlxxvi/zombi-server.git"
+  },
   "scripts": {
     "schema": "node server/app/db/schema.js $ZOMBI_DB_TABLE_PREFIX",
     "start": "node server/app/zombi.js",
     "startdev": "npx nodemon --ignore 'public/' server/app/zombi.js",
-    "test": "jest server/test/"
+    "test": "jest server/test/*test.js",
+    "stress": "node stress.js",
+    "lint": "eslint server/**/*.js",
+    "deploy": "npm run test && npm run lint && node infra/aws/deploy.js",
+    "audit": "npm audit --registry=https://registry.npmjs.org"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "backend",
+    "RPC",
+    "JSON",
+    "JSON-RPC",
+    "REST"
+  ],
+  "contributors": [
+    {
+      "name": "Juan Martín Guillén",
+      "email": "juanmartinguillen@gmail.com"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
     "chalk": "^3.0.0",
+    "dotenv": "^8.2.0",
     "get-comments": "^1.0.1",
-    "lodash": "^4.17.15",
+    "mime-types": "^2.1.26",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.23",
     "mysql": "^2.17.1",
@@ -29,8 +48,17 @@
     "websocket": "^1.0.29"
   },
   "devDependencies": {
-    "artillery": "^1.6.0-29",
+    "autocannon": "^4.4.2",
+    "aws-sdk": "^2.602.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "jest": "^24.9.0",
+    "node-ssh": "^7.0.0",
     "nodemon": "^2.0.2"
   }
 }

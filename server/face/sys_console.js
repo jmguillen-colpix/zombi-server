@@ -1,6 +1,4 @@
-const config  = require("../app/config");
-const i18n  = require("../app/i18n");
-const log = require("../app/log");
+const i18n = require("../app/i18n");
 
 const path = require("path");
 const fs = require("fs");
@@ -24,25 +22,19 @@ Returns:
 
 */
 const funs = async (args, extras) => {
-
     const module_name = args;
 
     const module_path = path.join(__dirname, "/" + module_name + ".js");
 
     try {
-
         fs.accessSync(module_path, fs.R_OK);
 
         const action = require(module_path);
 
         return [false, Object.keys(action)];
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, "Error loading module [" + module_name + ": ]" + error.message];
-
     }
-
 }
 
 /**
@@ -63,19 +55,15 @@ Returns:
 
 */
 const mods = async (args, extras) => {
-
-    let module_files = []
+    const module_files = []
 
     const modules_path = path.join(__dirname);
 
     fs.readdirSync(modules_path).forEach((file) => {
-
         module_files.push(path.parse(file).name);
-
     });
 
     return [false, module_files];
-
 }
 
 /**
@@ -96,7 +84,6 @@ Returns:
 
 */
 const coms = async (args, extras) => {
-
     /*
     Example of the data returned by get-comments
     [ { start: 587,
@@ -114,39 +101,26 @@ const coms = async (args, extras) => {
     const module_path = path.join(__dirname, "/" + mod + ".js")
 
     try {
-
         fs.accessSync(module_path, fs.R_OK);
 
-        const commdata = comments(fs.readFileSync(module_path, 'utf8'), true);
+        const commdata = comments(fs.readFileSync(module_path, "utf8"), true);
 
         let response = "";
 
-        if(commdata.length === 0) {
-
-            return [true, null, i18n.label(extras.token, "FUNCTION_DETAILS_NOT_FOUND")];
-
+        if (commdata.length === 0) {
+            return [true, null, await i18n.label(extras.token, "FUNCTION_DETAILS_NOT_FOUND")];
         } else {
-
             for (const comment of commdata) {
-
-                if(comment.after && comment.after.indexOf(fun) !== -1) {
-    
+                if (comment.after && comment.after.indexOf(fun) !== -1) {
                     response = comment.value.replace("*\r\n", "");
-    
                 }
-    
             }
-    
+
             return [false, response];
-
         }
-
-    } catch(error) {
-
+    } catch (error) {
         return [true, null, "Module file not found " + error.message];
-
     }
-
 }
 
 module.exports = { funs, mods, coms }

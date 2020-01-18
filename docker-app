@@ -1,6 +1,0 @@
-FROM node:10-jessie
-
-WORKDIR /opt/zombi
-
-COPY . /opt/zombi/
-
