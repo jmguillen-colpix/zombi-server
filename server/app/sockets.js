@@ -104,7 +104,7 @@ const send_message_to_user = async (user_id = null, context = "none", data = [])
 
             log(`Sending message to ${user_name}, token: ${utils.make_token_shorter(token)}`, "sockets/send_message_to_user");
 
-            send_message_to_session(token, context, data);
+            await send_message_to_session(token, context, data);
         }
     } catch (error) {
         log(error.message, "sockets/send_message_to_user", true);
@@ -115,7 +115,7 @@ const send_message_to_user = async (user_id = null, context = "none", data = [])
 
 const send_message_broadcast = async (context = "none", data = []) => {
     try {
-        send_message_to_user();
+        await send_message_to_user(null, context, data);
     } catch (error) {
         log(error.message, "sockets/send_message_broadcast", true);
 

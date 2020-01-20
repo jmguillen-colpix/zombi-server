@@ -26,48 +26,50 @@ const http_server = http.createServer((req, res) => {
 
     if (url === config.server.endpoint) {
         switch (method) {
-        case "OPTIONS":
+            case "OPTIONS":
 
-            res.statusCode = 204;
-            res.end("ok");
-            break;
+                res.statusCode = 204;
+                res.end("ok");
+                break;
 
-        case "POST":
+            case "POST":
 
-            req.on("data", chunk => data.push(chunk));
+                res.setHeader("Content-type", "application/json");
 
-            req.on("end", async () => {
-                try {
-                    stats.oup();
+                req.on("data", chunk => data.push(chunk));
 
-                    const post_data = JSON.parse(data.toString());
+                req.on("end", async () => {
+                    try {
+                        stats.oup();
 
-                    const mod = post_data.module;
-                    const fun = post_data.function;
-                    const args = post_data.args;
-                    const token = post_data.token;
-                    var seq = post_data.sequence; // We want this also visible on the catch block
+                        const post_data = JSON.parse(data.toString());
 
-                    // This is to get IP Address from HAProxy directed requests
-                    const ip = headers["x-forwarded-for"] || res.socket.remoteAddress;
-                    const ua = headers["user-agent"];
+                        const mod = post_data.module;
+                        const fun = post_data.function;
+                        const args = post_data.args;
+                        const token = post_data.token;
+                        var seq = post_data.sequence; // We want this also visible on the catch block
 
-                    res.end(JSON.stringify(await server.execute(mod, fun, args, token, seq, ip, ua)));
-                } catch (error) {
-                    stats.eup();
+                        // This is to get IP Address from HAProxy directed requests
+                        const ip = headers["x-forwarded-for"] || res.socket.remoteAddress;
+                        const ua = headers["user-agent"];
 
-                    res.end(JSON.stringify(server.response(true, error.message, null, seq)));
-                }
-            });
+                        res.end(JSON.stringify(await server.execute(mod, fun, args, token, seq, ip, ua)));
+                    } catch (error) {
+                        stats.eup();
 
-            break;
+                        res.end(JSON.stringify(server.response(true, error.message, null, seq)));
+                    }
+                });
 
-        default:
+                break;
 
-            res.statusCode = 500;
-            res.end(`Invalid method ${method}`);
+            default:
 
-            break;
+                res.statusCode = 500;
+                res.end(`Invalid method ${method}`);
+
+                break;
         }
     } else {
         const public_directory = config.server.public_directory;
@@ -101,19 +103,31 @@ http_server.listen(
     config.server.http_port,
 
     async () => {
+
         log(`Hello, I am ${config.node_name} serving HTTP on port ${config.server.http_port}`, "main");
 
         try {
+
             await db.connect();
 
             await i18n.load_labels();
 
             reactor.start();
+
         } catch (error) {
+
             log(error, "app/startup", true);
 
-            http_server.close(() => process.exit(1));
+            http_server.close(async () => {
+            
+                await db.disconnect();
+            
+                process.exit(1);
+            
+            });
+
         }
+
     }
 
 );
@@ -154,3 +168,5 @@ wss.on("connection", (ws, req) => {
         }
     });
 });
+
+module.exports = http_server;

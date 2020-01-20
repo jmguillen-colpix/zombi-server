@@ -1,11 +1,15 @@
 module.exports = {
+    testEnvironment: "node",
     verbose: true,
     collectCoverage: true,
-    collectCoverageFrom: [
-        "**/*.{js,jsx}",
-        "!**/node_modules/**",
-        "!**/vendor/**"
-    ],
     coverageDirectory: ".coverage",
-    coverageReporters: ["text"]
+    coverageReporters: ["text"],
+    collectCoverageFrom: [
+        "!**/node_modules/**",
+        "!**/vendor/**",
+        "<rootDir>/server/app/*.js",
+        "<rootDir>/server/app/db/db.js",
+        "<rootDir>/server/app/db/abstraction/*.js"
+    ],
+    testPathIgnorePatterns: ["<rootDir>/public/*"]
 };

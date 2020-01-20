@@ -9,7 +9,6 @@ const url = require("url");
 
 const sanitize_path = url_path => {
     // https://en.wikipedia.org/wiki/Directory_traversal_attack
-    // TODO change this to url.URL
     // eslint-disable-next-line node/no-deprecated-api, no-useless-escape
     return path.normalize(url.parse(url_path).pathname).replace(/^(\.\.[\/\\])+/, "");
 }
