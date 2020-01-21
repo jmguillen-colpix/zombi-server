@@ -30,7 +30,8 @@ const config = {
 
     cache: {
         host: "localhost",
-        port: 6379
+        port: 6379,
+        pass: process.env.ZOMBI_CACHE_PASSWORD || "the_cache_password"
     },
 
     i18n: {

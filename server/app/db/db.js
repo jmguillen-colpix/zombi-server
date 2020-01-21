@@ -41,7 +41,12 @@ const disconnect = async (database = null) => {
     const databases = Object.keys(config.db);
 
     for (const db_name of databases) {
-        if ((db_name === database || database === null) && config.db[db_name].enabled === true) {
+        if (
+            (db_name === database || database === null) && 
+            config.db[db_name].enabled === true &&
+            db[db_name]
+            ) {
+                
             await db[db_name].disconnect(db_name);
 
             log(`Disconnected from db ${db_name}`, "db/disconnect");

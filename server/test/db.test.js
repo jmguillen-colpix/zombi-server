@@ -1,45 +1,63 @@
-console.log = jest.fn();
+process._rawDebug = jest.fn();
 
 const db = require("../app/db/db");
 
 const test_table = `${db.table_prefix()}test`;
 
-beforeAll(async done => {
-    await db.connect();
-    done();
-});
+describe('Database tests', () => {
 
-test("simple select", async () => {
-    const uno = await db.sql("select 1");
+    beforeAll(async done => {
+        await db.connect();
+        done();
+    });
 
-    await expect(!!uno.rows).toBe(true);
+    test("should return a simple select", async () => {
+        const uno = await db.sql("select 1");
 
-    await expect(uno.rows[0][0]).toBe(1);
-});
+        await expect(!!uno.rows).toBe(true);
 
-test("create test table and do some DML", async () => {
-    await db.sql(`drop table if exists ${test_table}`);
+        await expect(uno.rows[0][0]).toBe(1);
+    });
 
-    await db.sql(`create table ${test_table} (a int, b varchar(100))`);
+    test("should return a simple value", async () => {
+        const uno = await db.sqlv("select 1");
 
-    const phase1 = await db.sql(`select count(*) from ${test_table}`);
+        await expect(uno).toBe(1);
 
-    await expect(phase1.rows[0][0]).toBe("0");
+    });
 
-    await db.sql(`insert into ${test_table} (a, b) values (99, 'test')`);
+    test("should return 2 values in sequence", async () => {
+        const uno = await db.sequence();
+        const dos = await db.sequence();
 
-    const phase2 = await db.sql(`select count(*) from ${test_table}`);
+        expect(uno).toBeNumber();
+        expect(dos).toBeNumber();
+        expect(dos).toBeGreaterThan(uno);
 
-    await expect(phase2.rows[0][0]).toBe("1");
+    });
 
-    const phase3 = await db.sql(`select a from ${test_table}`);
+    test("create test table and do some DML", async () => {
+        await db.sql(`drop table if exists ${test_table}`);
+        await db.sql(`create table ${test_table} (a int, b varchar(100))`);
 
-    await expect(phase3.rows[0][0]).toBe(99);
+        const phase1 = await db.sql(`select count(*) from ${test_table}`);
 
-    await db.sql(`drop table if exists ${test_table}`);
-});
+        await expect(phase1.rows[0][0]).toBe("0");
+        await db.sql(`insert into ${test_table} (a, b) values (99, 'test')`);
 
-afterAll(async done => {
-    await db.disconnect();
-    done();
+        const phase2 = await db.sql(`select count(*) from ${test_table}`);
+
+        await expect(phase2.rows[0][0]).toBe("1");
+
+        const phase3 = await db.sql(`select a from ${test_table}`);
+
+        await expect(phase3.rows[0][0]).toBe(99);
+        await db.sql(`drop table if exists ${test_table}`);
+    });
+
+    afterAll(async done => {
+        await db.disconnect();
+        done();
+    });
+
 });

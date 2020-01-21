@@ -1,13 +1,22 @@
 const config = require("./config");
 const log = require("./log");
 
-const redis = require("redis").createClient({ host: config.cache.host, port: config.cache.port });
+let redis = null;
 
-redis.on("error", (err) => { log("Redis error: " + err, "cache/main", true); });
+const connect = () => {
+    
+    redis = require("redis").createClient({ host: config.cache.host, port: config.cache.port });
 
-redis.on("connect", () => {
-    log("Connected to Redis server at " + config.cache.host + ":" + config.cache.port, "cache/main");
-});
+    redis.auth(config.cache.pass, () => {});
+
+    redis.on("error", (err) => { log("Redis error: " + err, "cache/connect", true); });
+    
+    redis.on("connect", () => {
+        log("Connected to Redis server at " + config.cache.host + ":" + config.cache.port, "cache/connect");
+    });
+
+};
+
 
 // redis.keys("*", function (err, replies) { });
 const keys = (key) => {
@@ -56,9 +65,12 @@ const hgetall = (set) => {
 
 const set = (key, value) => {
     return new Promise((resolve, reject) => {
-        redis.set([key, JSON.stringify(value)], (err, reply) => {
-            if (err) { reject(new Error(err)); } else { resolve(reply); }
-        });
+        if (!key || !value) { reject(new Error("Invalid values for key and/or value")); }
+        else {
+            redis.set([key, JSON.stringify(value)], (err, reply) => {
+                if (err) { reject(new Error(err)); } else { resolve(reply); }
+            });
+        }
     });
 };
 
@@ -78,6 +90,6 @@ const del = key => {
     });
 };
 
-const disconnect = () => { redis.quit(); };
+const disconnect = () => { if(redis) { redis.quit(); }};
 
-module.exports = { set, get, del, hset, hget, hgetall, hmset, keys, disconnect };
+module.exports = { connect, set, get, del, hset, hget, hgetall, hmset, keys, disconnect };

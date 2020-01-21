@@ -35,6 +35,7 @@ const fs = require('fs');
         await ssh.command(`rm -f ${base_run_file}-noenv`);
         await ssh.command(`sudo chmod +x ${base_run_file}`);
         await ssh.command(base_run_file);
+        // await ssh.command(`rm -rf ${base_run_file}`);
 
         console.log(`Completed base software installation.`);
 

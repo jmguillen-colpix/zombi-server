@@ -5,6 +5,7 @@ const reactor = require("./reactor");
 const log = require("./log");
 const db = require("./db/db");
 const stats = require("./stats");
+const cache = require("./cache");
 const sockets = require("./sockets");
 const security = require("./security");
 
@@ -108,6 +109,8 @@ http_server.listen(
 
         try {
 
+            await cache.connect();
+
             await db.connect();
 
             await i18n.load_labels();
@@ -121,6 +124,8 @@ http_server.listen(
             http_server.close(async () => {
             
                 await db.disconnect();
+
+                await cache.disconnect();
             
                 process.exit(1);
             

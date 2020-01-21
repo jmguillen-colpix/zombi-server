@@ -9,6 +9,7 @@ node -v
 
 # Redis
 sudo yum -y install redis
+sudo sed -i "s/^# requirepass foobared/requirepass ${ZOMBI_CACHE_PASSWORD}/" /etc/redis.conf
 sudo systemctl start redis
 sudo systemctl enable redis
 sudo systemctl status redis

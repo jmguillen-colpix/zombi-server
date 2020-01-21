@@ -1,4 +1,4 @@
-console.log = jest.fn();
+process._rawDebug = jest.fn();
 
 const config = require("../app/config");
 const server = require("../app/zombi");
@@ -12,7 +12,7 @@ let token = null;
 
 describe('Login and get a token', () => {
 
-    it('should login via HTTP', done => {
+    test('should login via HTTP', done => {
         request(server)
             .post(config.server.endpoint)
             .send({
@@ -39,7 +39,7 @@ describe('Login and get a token', () => {
 
 
 
-    it("should start via websockets", async done => {
+    test("should start via websockets", async done => {
         const ws = new W3CWebSocket(`ws://localhost:${config.server.http_port}?token=${token}`);
 
         ws.onopen = () => {
@@ -59,7 +59,7 @@ describe('Login and get a token', () => {
         ws.onclose = () => done();
     });
 
-    it("should send broadcast via websockets", async done => {
+    test("should send broadcast via websockets", async done => {
 
         const ws = new W3CWebSocket(`ws://localhost:${config.server.http_port}?token=${token}`);
 
@@ -68,7 +68,6 @@ describe('Login and get a token', () => {
         };
 
         ws.onmessage = msg => {
-            console.log(msg.data)
             expect(JSON.parse(msg.data).data).toEqual("test_broadcast");
             ws.close();
         };
@@ -77,7 +76,7 @@ describe('Login and get a token', () => {
 
     });
 
-    it("should heartbeat ping from server", async done => {
+    test("should heartbeat ping from server", async done => {
 
         const ws = new W3CWebSocket(`ws://localhost:${config.server.http_port}?token=${token}`);
 
@@ -86,7 +85,6 @@ describe('Login and get a token', () => {
         };
 
         ws.onmessage = msg => {
-            console.log(msg.data)
             expect(msg.data).toEqual("ping");
             ws.close();
         };
@@ -97,7 +95,7 @@ describe('Login and get a token', () => {
 });
 
 // describe("Testing HTTP server", () => {
-//     it("should get 404 on non existent key", async done => {
+//     test("should get 404 on non existent key", async done => {
 //         await request(server)
 //             .get("/server?key=1&token=12345")
 //             .expect(404);
@@ -107,7 +105,7 @@ describe('Login and get a token', () => {
 
 
 
-//     it("should get 200 on existent key", async done => {
+//     test("should get 200 on existent key", async done => {
 //         const res = await request(server).get("/server?key=test&token=12345");
 
 //         expect(res.statusCode).toEqual(200);
@@ -122,21 +120,21 @@ describe('Login and get a token', () => {
 
 describe("Security tests", () => {
 
-    it("should check the user is admin", async done => {
+    test("should check the user is admin", async done => {
 
         expect(await security.user_is_admin(token));
 
         done();
     });
 
-    it("should not authorize user with fake token", async done => {
+    test("should not authorize user with fake token", async done => {
 
         expect(await security.authorize("false token", "sys_login")).toBe(false);;
 
         done();
     });
 
-    it("should return a sanitized url", done => {
+    test("should return a sanitized url", done => {
         const urls = {
             "/server/../malware.js": "/malware.js",
             "/../..": "/"
@@ -150,7 +148,7 @@ describe("Security tests", () => {
     });
 
 
-    it("should hash and compate pasword with hash", async done => {
+    test("should hash and compate pasword with hash", async done => {
 
         const password_hash = await security.password_hash("test_pasword");
 
