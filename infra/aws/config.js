@@ -9,8 +9,13 @@ const config = {
         subnet_id: process.env.AWS_SUBNET_ID || "subnet-e1cxxxxx",
         instance_name: process.env.AWS_INSTANCE_NAME || "Zombi Server Development.",
         instance_type: process.env.AWS_INSTANCE_TYPE || "t2.micro.",
+        lambda: {
+            bucket_name: "zombibucketdev"
+        },
         api_versions: {
-            ec2: '2016-11-15'
+            ec2: '2016-11-15',
+            s3: '2006-03-01',
+            iam: '2010-05-08'
         },
         use_console: false,
         ssh: {

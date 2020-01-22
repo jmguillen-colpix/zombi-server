@@ -23,14 +23,14 @@ const get_empty_data = () => {
 
 var stats_data = get_empty_data();
 
-const oup = () => { stats_data.nop++; };
-const eup = () => { stats_data.noe++; };
+const oup = () => { stats_data.nop++; }; // Web operations
+const eup = () => { stats_data.noe++; }; // Web operations error
 
-const dup = () => { stats_data.dbr++; };
-const rup = () => { stats_data.dbe++; };
+const dup = () => { stats_data.dbr++; }; // Database operations
+const rup = () => { stats_data.dbe++; }; // Database operations error
 
-const tup = (time) => {
-    stats_data.ret = stats_data.ret + time;
+const tup = (time) => { // Time elapsed 
+    stats_data.ret += time;
 
     stats_data.tor++;
 
@@ -59,10 +59,10 @@ const start = () => {
         log("OPS:" + stats_data.nop + " OPS/s:" + stats_data.ops + " ERR:" + stats_data.noe + " ERR/s:" + stats_data.eps + " RES:" + stats_data.tor + " AVG:" + stats_data.tav + " MIN:" + stats_data.tmi + " MAX:" + stats_data.tma + " DBR:" + stats_data.dbr + " DBE:" + stats_data.dbe, "stats/counters");
 
         start();
-    }, 60000);
+    }, (config.inst.stats_show_interval * 1000));
 }
 
-const run = (reactor_sequence) => {
+const run = reactor_sequence => {
     try {
     // const {rss, heapTotal, heapUsed, external } = process.memoryUsage();
         const { rss } = process.memoryUsage();
@@ -126,5 +126,4 @@ Example of disks result
     "use": 1.83,
     "mount": "/"
 },
-
 */

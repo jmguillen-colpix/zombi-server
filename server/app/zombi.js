@@ -1,3 +1,5 @@
+"use strict";
+
 const config = require("./config");
 const server = require("./server");
 const i18n = require("./i18n");
@@ -18,6 +20,7 @@ const mime = require("mime-types");
 const websocket = require("ws");
 
 const http_server = http.createServer((req, res) => {
+
     const data = [];
     const { method, url, headers } = req;
 
@@ -26,53 +29,52 @@ const http_server = http.createServer((req, res) => {
     res.setHeader("Access-Control-Allow-Headers", config.security.cors.headers);
 
     if (url === config.server.endpoint) {
+
         switch (method) {
             case "OPTIONS":
-
                 res.statusCode = 204;
                 res.end("ok");
                 break;
 
             case "POST":
-
                 res.setHeader("Content-type", "application/json");
 
                 req.on("data", chunk => data.push(chunk));
 
                 req.on("end", async () => {
+
                     try {
+
                         stats.oup();
 
-                        const post_data = JSON.parse(data.toString());
+                        const params = JSON.parse(data.toString());
 
-                        const mod = post_data.module;
-                        const fun = post_data.function;
-                        const args = post_data.args;
-                        const token = post_data.token;
-                        var seq = post_data.sequence; // We want this also visible on the catch block
+                        const { mod, fun, args, token } = params;
+                        var sequence = params.sequence;
 
                         // This is to get IP Address from HAProxy directed requests
                         const ip = headers["x-forwarded-for"] || res.socket.remoteAddress;
                         const ua = headers["user-agent"];
 
-                        res.end(JSON.stringify(await server.execute(mod, fun, args, token, seq, ip, ua)));
+                        res.end(JSON.stringify(await server.execute(mod, fun, args, token, sequence, ip, ua)));
+                        
                     } catch (error) {
                         stats.eup();
 
-                        res.end(JSON.stringify(server.response(true, error.message, null, seq)));
+                        res.end(JSON.stringify(server.response({ error: true, message: error.message, sequence })));
                     }
-                });
 
+                });
                 break;
 
             default:
-
                 res.statusCode = 500;
                 res.end(`Invalid method ${method}`);
-
                 break;
         }
+
     } else {
+
         const public_directory = config.server.public_directory;
 
         const file_path = public_directory.substr(0, 1) === "/"
@@ -90,7 +92,6 @@ const http_server = http.createServer((req, res) => {
                 log(err, "zombi", true);
 
                 res.statusCode = 404;
-
                 res.end(`File not found: ${err}.`);
             } else {
                 res.end(data);
@@ -110,9 +111,7 @@ http_server.listen(
         try {
 
             await cache.connect();
-
             await db.connect();
-
             await i18n.load_labels();
 
             reactor.start();
@@ -124,7 +123,6 @@ http_server.listen(
             http_server.close(async () => {
             
                 await db.disconnect();
-
                 await cache.disconnect();
             
                 process.exit(1);
@@ -148,7 +146,9 @@ wss.on("connection", (ws, req) => {
     sockets.add_client(token, ws);
 
     ws.on("message", async message => {
+
         try {
+
             stats.oup();
 
             if (message === "pong") {
@@ -156,22 +156,25 @@ wss.on("connection", (ws, req) => {
             } else {
                 const params = JSON.parse(message);
 
-                const mod = params.module;
-                const fun = params.function;
-                const args = params.args;
-                const token = params.token;
-                var seq = params.sequence;
+                const { mod, fun, args, token } = params;
+                var sequence = params.sequence;
 
                 // This is to get IP Address from HAProxy directed requests
                 const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
                 const ua = req.headers["user-agent"];
 
-                ws.send(JSON.stringify(await server.execute(mod, fun, args, token, seq, ip, ua)));
+                ws.send(JSON.stringify(await server.execute(mod, fun, args, token, sequence, ip, ua)));
+
             }
+
         } catch (error) {
-            ws.send(JSON.stringify(server.response(true, error.message, null, seq)));
+
+            ws.send(JSON.stringify(server.response({ error: true, message: error.message, sequence })));
+
         }
+
     });
+
 });
 
 module.exports = http_server;

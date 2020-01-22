@@ -70,6 +70,7 @@ const config = {
     },
 
     inst: {
+        stats_show_interval: 60, // seconds
         save_cpu_data: true,
         save_disk_data: true,
         save_mem_data: true,

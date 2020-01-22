@@ -1,8 +1,8 @@
 "use strict";
 
-const config = require("./config");
-const ssh = require("./ssh");
-const zombi_env = require("./zombi.env");
+const config = require("../config");
+const ssh = require("../ssh");
+const zombi_env = require("../zombi.env");
 
 const fs = require('fs');
 
