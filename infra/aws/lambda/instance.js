@@ -5,6 +5,8 @@ const ssh = require("../ssh");
 
 const AWS = require("aws-sdk");
 const fs = require('fs');
+const { zip } = require('zip-a-folder');
+const shell = require('shelljs');
 
 const sleep = ms => { return new Promise(resolve => setTimeout(resolve, ms)); };
 
@@ -93,28 +95,127 @@ const instance_check_network = async (instance_public_dns_name, attempts = 0) =>
 
             if (error.code = 'BucketAlreadyOwnedByYou') {
 
-                console.log("Bucket was already ceated");
+                console.log("Bucket was already created");
 
             } else { throw error; }
         }
 
+        const code_dir = `${__dirname}/../../../server`;
+        const pack_files = `${__dirname}/../../../package*.json`;
+
+        shell.cp('-r', code_dir, `${__dirname}/../.temp/code/`);
+        shell.cp(pack_files, `${__dirname}/../.temp/code/server`);
+
+        shell.pushd(`${__dirname}/../.temp/code/server`);
+
+        shell.exec('npm i');
+
+        const zip_file_name = "server.zip";
+        const zip_file_path = `${__dirname}/../.temp/zip/${zip_file_name}`;
+
+        await zip(`${__dirname}/../.temp/code/server`, zip_file_path);
+
         // Read content from the file
-        const fileContent = fs.readFileSync(config.aws.ssh.key_file);
+        const fileContent = fs.readFileSync(zip_file_path);
 
         // Setting up S3 upload parameters
         const params = {
             Bucket: config.aws.lambda.bucket_name,
-            Key: 'key.pem', // File name you want to save as in S3
+            Key: zip_file_name,
             Body: fileContent
         };
 
         // Uploading files to the bucket
         const upload_data = await s3.upload(params).promise();
 
-        console.log(`File uploaded successfully. ${upload_data.Location}`);
+        console.log(`File uploaded successfully to ${upload_data.Location}`);
 
         console.log(JSON.stringify(upload_data));
+        // {"ETag":"\"b62f5f98dc76b247cca4583d9c936726\"","Location":"https://zombibucketdev.s3.us-east-2.amazonaws.com/key.pem","key":"key.pem","Key":"key.pem","Bucket":"zombibucketdev"}
 
+
+        const iam = new AWS.IAM();
+
+        const myPolicy = {
+            "Version": "2012-10-17",
+            "Statement": [
+                {
+                    "Effect": "Allow",
+                    "Principal": {
+                        "Service": "lambda.amazonaws.com"
+                    },
+                    "Action": "sts:AssumeRole"
+                }
+            ]
+        };
+
+        //$ aws iam attach-role-policy --role-name lambda-ex --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+        let role_arn;
+
+        try {
+
+            // const role_delete_data = await iam.deleteRole({RoleName: "ROLE"}).promise();
+
+            // console.log(JSON.stringify(role_delete_data));
+
+            const createParams = {
+                AssumeRolePolicyDocument: JSON.stringify(myPolicy),
+                RoleName: "ROLE"
+            };
+            
+            const role_data = await iam.createRole(createParams).promise();
+
+            role_arn = role_data.Role.Arn;
+
+            console.log("Role ARN:", role_arn);
+
+            fs.writeFileSync(`${__dirname}/role.arn`, role_arn);
+
+        } catch (error) {
+
+            if (error.code = 'Role with name ROLE already exists.') {
+
+                console.log("Role was already created");
+
+                role_arn = fs.readFileSync(`${__dirname}/role.arn`).toString();
+
+            } else { throw error; }
+
+        }
+
+        var policyParams = {
+            PolicyArn: "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+            RoleName: "ROLE"
+        };
+
+        const policy_data = await iam.attachRolePolicy(policyParams).promise();
+
+        console.log(JSON.stringify(policy_data));
+
+        console.log("AWSLambdaBasicExecutionRole Policy attached");
+
+        // AWSLambdaVPCAccessExecutionRole
+
+        const lambda = new AWS.Lambda();
+
+        console.log(JSON.stringify(await lambda.deleteFunction({ FunctionName: "server" }).promise()));
+        
+        const lambda_params = {
+            Code: {
+                S3Bucket: config.aws.lambda.bucket_name,
+                S3Key: zip_file_name
+            },
+            FunctionName: 'server', /* required */
+            Handler: 'endpoints.server', /* required */
+            Role: role_arn, /* required */
+            Runtime: 'nodejs12.x', /* required */
+            Description: 'Zombi Server Lambda'
+        };
+
+        await lambda.createFunction(lambda_params).promise();
+        
+        console.log("Lambda created successfully"); 
 
         // // Create the IAM service object
         // const iam = new AWS.IAM();

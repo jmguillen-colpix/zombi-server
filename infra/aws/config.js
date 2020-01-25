@@ -15,12 +15,13 @@ const config = {
         api_versions: {
             ec2: '2016-11-15',
             s3: '2006-03-01',
-            iam: '2010-05-08'
+            iam: '2010-05-08',
+            lanbda: '2015-03-31'
         },
         use_console: false,
         ssh: {
             username: process.env.AWS_SSH_USERNAME || "centos.",
-            key_file: process.env.AWS_SSH_KEY_FILE || `${__dirname}/key.pem.`
+            key_file: process.env.AWS_SSH_KEY_FILE || `${__dirname}/key.pem`
         }
     }
 };

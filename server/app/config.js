@@ -41,7 +41,7 @@ const config = {
 
     security: {
         salt_rounds: 10,
-        token_size: 64, // <= size of the column token on sessions table
+        token_size: 64,
         cors: {
             origin: "*",
             methods: "GET,HEAD,PUT,PATCH,POST,DELETE",

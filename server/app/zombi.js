@@ -21,6 +21,8 @@ const websocket = require("ws");
 
 const http_server = http.createServer((req, res) => {
 
+    let sequence, mod, fun;
+
     const data = [];
     const { method, url, headers } = req;
 
@@ -49,27 +51,63 @@ const http_server = http.createServer((req, res) => {
 
                         const params = JSON.parse(data.toString());
 
-                        const { mod, fun, args, token } = params;
-                        var sequence = params.sequence;
+                        const { args, token } = params;
+                        mod = params.mod;
+                        fun = params.fun;
+                        sequence = params.sequence;
 
-                        // This is to get IP Address from HAProxy directed requests
+                        // This is to get IP Address from HAProxy or directed requests
                         const ip = headers["x-forwarded-for"] || res.socket.remoteAddress;
                         const ua = headers["user-agent"];
 
-                        res.end(JSON.stringify(await server.execute(mod, fun, args, token, sequence, ip, ua)));
+                        res.end(
+                            JSON.stringify(
+                                await server.execute(
+                                    mod, 
+                                    fun, 
+                                    args, 
+                                    token, 
+                                    sequence, 
+                                    ip, 
+                                    ua
+                                )
+                            )
+                        );
                         
                     } catch (error) {
                         stats.eup();
 
-                        res.end(JSON.stringify(server.response({ error: true, message: error.message, sequence })));
+                        res.statusCode = 500;
+
+                        res.end(
+                            JSON.stringify(
+                                server.response({ 
+                                    error: true,
+                                    code: 500,
+                                    message: `${mod}/${fun}: ${error.message}`, 
+                                    sequence 
+                                })
+                            )
+                        );
+
                     }
 
                 });
                 break;
 
             default:
+                log(`Invalid method ${method}`, "zombi", true);
                 res.statusCode = 500;
-                res.end(`Invalid method ${method}`);
+                res.end(
+                    JSON.stringify(
+                        server.response({ 
+                            error: true, 
+                            code: 500, 
+                            message: `Invalid method ${method}`, 
+                            sequence 
+                        })
+                    )
+                );
                 break;
         }
 
@@ -97,7 +135,74 @@ const http_server = http.createServer((req, res) => {
                 res.end(data);
             }
         });
+
     }
+
+});
+
+const wss = new websocket.Server({ server: http_server, clientTracking: false });
+
+wss.on("connection", (ws, req) => {
+    // https://github.com/nodejs/node/issues/23694
+    // eslint-disable-next-line node/no-deprecated-api
+    const { query: { token } } = urlm.parse(req.url, true);
+
+    sockets.add_client(token, ws);
+
+    ws.on("message", async message => {
+
+        let sequence, mod, fun;
+
+        try {
+
+            stats.oup();
+
+            if (message === "pong") {
+                sockets.is_alive(token);
+            } else {
+                const params = JSON.parse(message);
+
+                const { args, token } = params;
+                mod = params.mod;
+                fun = params.fun;
+                sequence = params.sequence;
+
+                // This is to get IP Address from HAProxy or directed requests
+                const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+                const ua = req.headers["user-agent"];
+
+                ws.send(
+                    JSON.stringify(
+                        await server.execute(
+                            mod, 
+                            fun, 
+                            args, 
+                            token, 
+                            sequence, 
+                            ip, 
+                            ua
+                        )
+                    )
+                );
+
+            }
+
+        } catch (error) {
+
+            ws.send(
+                JSON.stringify(
+                    server.response({ 
+                        error: true, 
+                        message: `${mod}/${fun}: ${error.message}`, 
+                        sequence 
+                    })
+                )
+            );
+
+        }
+
+    });
+
 });
 
 http_server.listen(
@@ -134,47 +239,5 @@ http_server.listen(
     }
 
 );
-
-const wss = new websocket.Server({ server: http_server, clientTracking: false });
-
-wss.on("connection", (ws, req) => {
-    // https://github.com/nodejs/node/issues/23694
-    // TODO change this to url.URL
-    // eslint-disable-next-line node/no-deprecated-api
-    const { query: { token } } = urlm.parse(req.url, true);
-
-    sockets.add_client(token, ws);
-
-    ws.on("message", async message => {
-
-        try {
-
-            stats.oup();
-
-            if (message === "pong") {
-                sockets.is_alive(token);
-            } else {
-                const params = JSON.parse(message);
-
-                const { mod, fun, args, token } = params;
-                var sequence = params.sequence;
-
-                // This is to get IP Address from HAProxy directed requests
-                const ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-                const ua = req.headers["user-agent"];
-
-                ws.send(JSON.stringify(await server.execute(mod, fun, args, token, sequence, ip, ua)));
-
-            }
-
-        } catch (error) {
-
-            ws.send(JSON.stringify(server.response({ error: true, message: error.message, sequence })));
-
-        }
-
-    });
-
-});
 
 module.exports = http_server;

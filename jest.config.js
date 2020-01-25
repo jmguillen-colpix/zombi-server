@@ -14,5 +14,8 @@ module.exports = {
         "<rootDir>/server/app/db/db.js",
         "<rootDir>/server/app/db/abstraction/postgresql.js"
     ],
-    testPathIgnorePatterns: ["<rootDir>/public/*"]
+    testPathIgnorePatterns: [
+        "<rootDir>/public/*",
+        "<rootDir>/infra/*"
+    ]
 };

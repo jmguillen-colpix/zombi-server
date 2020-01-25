@@ -2,3 +2,4 @@ node_modules/
 public/
 *.pem
 .env*
+infra/aws/.temp/
