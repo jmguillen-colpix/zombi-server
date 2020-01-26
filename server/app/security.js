@@ -48,7 +48,7 @@ const authorize = async (token, mod) => {
                     and zou.id = :user_id
                     and zom.module_name = :module_name) inq`;
 
-                const reply = parseInt(await db.sqlv(sql, [user_id, mod]));
+                const reply = parseInt(await db.sqlv({ sql, bind: [user_id, mod] }));
 
                 const authorized = reply > 0 ? "yes" : "no";
 

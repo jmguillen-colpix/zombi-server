@@ -1,11 +1,11 @@
 const utils = require("../app/utils");
 const i18n = require("../app/i18n");
 const db = require("../app/db/db");
-const select = require("../app/select");
+const select = require("../backend/select");
 const security = require("../app/security");
 const sockets = require("../app/sockets");
 
-const datatables = require("../app/datatables");
+const datatables = require("../backend/datatables");
 
 /**
 sys_users/users_languages_select
@@ -110,10 +110,10 @@ Returns:
 
 */
 const users_table_data = async (args, extras) => {
-    try {
-        const sql = `select 
+
+    const sql = `select 
                     zou.id,
-                    zou.id,
+                    zou.id as "id2",
                     zou.username,
                     zou.full_name,
                     zou.is_admin,
@@ -128,19 +128,17 @@ const users_table_data = async (args, extras) => {
                         left join ${db.table_prefix()}i18n_languages zla on (zou.language_id = zla.id)
                         left join ${db.table_prefix()}tz_countries zco on (zou.country_id = zco.id)
                 where
-                    lower(zou.username) like '%' || lower(:search) || '%' or
-                    lower(zou.full_name) like '%' || lower(:search) || '%' or
-                    lower(zou.email) like '%' || lower(:search) || '%' or
-                    lower(zla.language_name) like '%' || lower(:search) || '%' or
-                    lower(zco.country_name) like '%' || lower(:search) || '%' or
-                    lower(zzo.zone_name) like '%' || lower(:search) || '%'`;
+                    lower(zou.username) like concat('%', concat(lower(:search), '%')) or
+                    lower(zou.full_name) like concat('%', concat(lower(:search), '%')) or
+                    lower(zou.email) like concat('%', concat(lower(:search), '%')) or
+                    lower(zla.language_name) like concat('%', concat(lower(:search), '%')) or
+                    lower(zco.country_name) like concat('%', concat(lower(:search), '%')) or
+                    lower(zzo.zone_name) like concat('%', concat(lower(:search), '%'))`;
 
-        const data = await datatables.sql({ sql: sql, data: args.data, download: args.download });
+    const data = await datatables.sql({ sql: sql, data: args.data, download: args.download });
 
-        return [false, data];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+    return [false, data];
+
 };
 
 /**
@@ -209,15 +207,15 @@ const users_add = async (args, extras) => {
 
         const hash = await security.password_hash(password);
 
-        const reply = await db.sql(
+        const reply = await db.sql({
             sql,
-            [seq, username, fullname, hash, email, language, country, timezone, utils.timestamp(), is_admin, "Y"]
-        );
+            bind: [seq, username, fullname, hash, email, language, country, timezone, utils.timestamp(), is_admin, "Y"]
+        });
 
         return [false, reply];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -247,7 +245,9 @@ Returns:
 
 */
 const users_edit_data = async (args, extras) => {
+
     try {
+
         const user_id = parseInt(args);
 
         const sql = `select 
@@ -266,12 +266,12 @@ const users_edit_data = async (args, extras) => {
                             left join ${db.table_prefix()}tz_countries zco on (zou.country_id = zco.id)
                     where zou.id = :id`;
 
-        const reply = await db.sql(sql, [user_id]);
+        const reply = await db.sql({ sql, bind: [user_id] });
 
         return [false, reply.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -302,7 +302,9 @@ Returns:
 
 */
 const users_edit = async (args, extras) => {
+
     try {
+
         const id = args[0];
         const username = args[1];
         const fullname = args[2];
@@ -314,6 +316,7 @@ const users_edit = async (args, extras) => {
         const is_admin = args[8];
 
         if (password === "") {
+
             const sql = `update ${db.table_prefix()}users
                         set
                             username = :username,
@@ -328,7 +331,9 @@ const users_edit = async (args, extras) => {
             const reply = await db.sql(sql, [username, fullname, email, language, country, timezone, is_admin, id]);
 
             return [false, reply.info.rows];
+
         } else {
+
             const sql = `update ${db.table_prefix()}users
                         set
                             username = :username,
@@ -343,13 +348,26 @@ const users_edit = async (args, extras) => {
 
             const hash = await security.password_hash(password);
 
-            const reply = await db.sql(sql, [username, fullname, hash, email, language, country, timezone, is_admin, id]);
+            const reply = await db.sql({
+                sql,
+                bind: [
+                    username,
+                    fullname,
+                    hash,
+                    email,
+                    language,
+                    country,
+                    timezone,
+                    is_admin,
+                    id
+                ]
+            });
 
             return [false, reply.info.rows];
+
         }
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
 };
 
 /**
@@ -368,19 +386,24 @@ Returns:
 
 */
 const users_delete = async (args, extras) => {
+
     try {
+
         const id = parseInt(args);
 
-        if (id === 0) { return [true, await i18n.label(extras.token, "USER_SYSTEM_CANNOT_BE_DELETED")]; } else {
+        if (id === 0) { return [true, await i18n.label(extras.token, "USER_SYSTEM_CANNOT_BE_DELETED")]; }
+        else {
+
             const sql = `delete from ${db.table_prefix()}users where id = :id`;
 
-            const reply = await db.sql(sql, [id]);
+            const reply = await db.sql({ sql, bind: [id] });
 
             return [false, reply.info.rows];
+
         }
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -399,17 +422,21 @@ Returns:
 
 */
 const users_toggle_admin = async (args, extras) => {
+
     try {
+
         const id = args;
+
+        if(id == 0) { return { error: true, message: await i18n.label(extras.token, "SYSTEM_USER_CANNOT_BE_DISABLED") } }
 
         const sql = `update ${db.table_prefix()}users set is_admin = case when is_admin = 'Y' then 'N' else 'Y' end where id = :id`;
 
-        const reply = await db.sql(sql, [id]);
+        const reply = await db.sql({ sql, bind: [id] });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -428,16 +455,17 @@ Returns:
 
 */
 const send_message_to_user = async (args, extras) => {
+
     try {
+
         const user_id = args[0];
         const message = args[1];
 
         await sockets.send_message_to_user(user_id, "SESSIONS_SEND_MESSAGE", message);
 
         return [false];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
 };
 
 module.exports = {

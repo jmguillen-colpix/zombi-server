@@ -1,7 +1,7 @@
 const utils = require("../app/utils");
 const db = require("../app/db/db");
 const session = require("../app/session");
-const datatables = require("../app/datatables");
+const datatables = require("../backend/datatables");
 
 const path = require("path");
 const fs = require("fs");
@@ -23,27 +23,25 @@ Returns:
 
 */
 const groups_table_data = async (args, extras) => {
-    try {
-        const sql = `select
+
+    const sql = `select
                     zog.id,
                     zog.group_name,
                     zog.description,
-                    zog.id,
-                    zog.id,
+                    zog.id as "id2",
+                    zog.id as "id3",
                     zou.full_name,
                     zog.created_ts
                 from ${db.table_prefix()}groups zog
                     left join ${db.table_prefix()}users zou on (zog.created_by = zou.id)
                 where
-                    lower(zog.group_name) like '%' || lower(:search) || '%' or
-                    lower(zou.full_name) like '%' || lower(:search)`;
+                    lower(zog.group_name) like concat('%', concat(lower(:search), '%')) or
+                    lower(zou.full_name) like concat('%', concat(lower(:search), '%'))`;
 
-        const data = await datatables.sql({ sql: sql, data: args.data, download: args.download });
+    const data = await datatables.sql({ sql: sql, data: args.data, download: args.download });
 
-        return [false, data];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+    return [false, data];
+
 };
 
 /**
@@ -65,7 +63,9 @@ Returns:
 
 */
 const groups_add = async (args, extras) => {
+
     try {
+
         const groupname = args[0];
         const description = args[1];
 
@@ -86,17 +86,21 @@ const groups_add = async (args, extras) => {
 
         const seq = await db.sequence();
 
-        console.log(seq);
-
-        const reply = await db.sql(
+        const reply = await db.sql({
             sql,
-            [seq, groupname, description, await session.get(extras.token, "user_id"), utils.timestamp()]
-        );
+            bind: [
+                seq, 
+                groupname, 
+                description, 
+                await session.get(extras.token, "user_id"), 
+                utils.timestamp()
+            ]
+        });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -121,7 +125,9 @@ Returns:
 
 */
 const groups_edit_data = async (args, extras) => {
+
     try {
+
         const user_id = parseInt(args[0]);
 
         const sql = `select 
@@ -130,15 +136,15 @@ const groups_edit_data = async (args, extras) => {
                         ${db.table_prefix()}groups
                     where id = :id`;
 
-        const reply = await db.sql(
+        const reply = await db.sql({
             sql,
-            [user_id]
-        );
+            bind: [user_id]
+        });
 
         return [false, reply.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -161,7 +167,9 @@ Returns:
 
 */
 const groups_edit = async (args, extras) => {
+
     try {
+
         const group_name = args[0];
         const description = args[1];
         const id = args[2];
@@ -172,15 +180,15 @@ const groups_edit = async (args, extras) => {
                             description = :description
                         where id = :id`;
 
-        const reply = await db.sql(
+        const reply = await db.sql({
             sql,
-            [group_name, description, id]
-        );
+            bind: [group_name, description, id]
+        });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -199,20 +207,22 @@ Returns:
 
 */
 const groups_delete = async (args, extras) => {
+
     try {
+
         const id = args;
 
         const sql = `delete from ${db.table_prefix()}groups where id = :id`;
 
-        const reply = await db.sql(
+        const reply = await db.sql({
             sql,
-            [id]
-        );
+            bind: [id]
+        });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -233,22 +243,24 @@ Returns:
 */
 
 const groups_add_user_to_group = async (args, extras) => {
+
     try {
+
         const group_id = args[0];
         const user_id = args[1];
 
         let sql = `delete from ${db.table_prefix()}groups_to_users where group_id = :group_id and user_id = :user_id`;
 
-        await db.sql(sql, [group_id, user_id]);
+        await db.sql({ sql, bind: [group_id, user_id] });
 
         sql = `insert into ${db.table_prefix()}groups_to_users (id, group_id, user_id) values (${await db.sequence()}, :group_id, :user_id)`;
 
-        const reply = await db.sql(sql, [group_id, user_id]);
+        const reply = await db.sql({ sql, bind: [group_id, user_id] });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+        
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -267,18 +279,19 @@ Returns:
 
 */
 const groups_remove_user_from_group = async (args, extras) => {
+
     try {
+
         const group_id = args[0];
         const user_id = args[1];
 
         const sql = `delete from ${db.table_prefix()}groups_to_users where group_id = :group_id and user_id = :user_id`;
 
-        const reply = await db.sql(sql, [group_id, user_id]);
+        const reply = await db.sql({ sql, bind: [group_id, user_id] });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
 };
 
 /**
@@ -304,17 +317,19 @@ Returns:
 
 */
 const groups_users_shift_to_group = async (args, extras) => {
+
     const id = args;
 
     const sql1 = `select id, full_name from ${db.table_prefix()}users where id not in (select user_id from ${db.table_prefix()}groups_to_users where group_id = :id) order by 2`;
 
-    const users_not_in = await db.sql(sql1, [id]);
+    const users_not_in = await db.sql({ sql: sql1, bind: [id] });
 
     const sql2 = `select id, full_name from ${db.table_prefix()}users where id in (select user_id from ${db.table_prefix()}groups_to_users where group_id = :id) order by 2`;
 
-    const users_in = await db.sql(sql2, [id]);
+    const users_in = await db.sql({ sql: sql2, bind: [id] });
 
     return [false, [users_not_in.rows, users_in.rows]];
+
 };
 
 /**
@@ -334,22 +349,24 @@ Returns:
 */
 
 const groups_add_module_to_group = async (args, extras) => {
+
     try {
+
         const group_id = args[0];
         const module_name = args[1];
 
         let sql = `delete from ${db.table_prefix()}groups_to_modules where group_id = :group_id and module_name = :module_name`;
 
-        await db.sql(sql, [group_id, module_name]);
+        await db.sql({ sql, bind: [group_id, module_name] });
 
         sql = `insert into ${db.table_prefix()}groups_to_modules (id, group_id, module_name) values (${await db.sequence()}, :group_id, :module_name)`;
 
-        const reply = await db.sql(sql, [group_id, module_name]);
+        const reply = await db.sql({ sql, bind: [group_id, module_name] });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -375,7 +392,9 @@ Returns:
 
 */
 const groups_modules_shift_to_group = async (args, extras) => {
+
     try {
+
         const group_id = parseInt(args);
 
         const module_files = []
@@ -388,24 +407,22 @@ const groups_modules_shift_to_group = async (args, extras) => {
 
         const sql = `select module_name from ${db.table_prefix()}groups_to_modules where group_id = :id order by 1`;
 
-        const reply = await db.sql(sql, [group_id]);
+        const reply = await db.sql({ sql, bind: [group_id] });
 
         const included = reply.rows;
 
         const elements = [];
 
-        for (const iterator of included) {
-            elements.push(iterator[0]);
-        }
+        for (const iterator of included) { elements.push(iterator[0]); }
 
         const intersection = module_files.filter(x => elements.includes(x));
 
         const difference = module_files.filter(x => !elements.includes(x));
 
         return [false, [difference, intersection]];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 /**
@@ -424,18 +441,20 @@ Returns:
 
 */
 const groups_remove_module_from_group = async (args, extras) => {
+
     try {
+        
         const group_id = args[0];
         const module_name = args[1];
 
         const sql = `delete from ${db.table_prefix()}groups_to_modules where group_id = :group_id and module_name = :module_name`;
 
-        const reply = await db.sql(sql, [group_id, module_name]);
+        const reply = await db.sql({ sql, bind: [group_id, module_name] });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 };
 
 module.exports = {

@@ -73,45 +73,104 @@ const run = reactor_sequence => {
             log("Saving disk status data", "stats/save disk");
 
             si.fsSize(async data => {
+
                 for (const disk of data) {
+
                     const seq = await db.sequence();
 
-                    const sql = `insert into ${db.table_prefix()}inst_disk (ID, NODE_NAME, DISK_SIZE, SPACE_USED, PCT_USED, MOUNT_POINT, TS, DISK_DEVICE) values (:id, :node_name, :disk_size, :space_used, :pct_used, :mount_point, :ts, :disk_device)`;
+                    const sql = `insert 
+                                into ${db.table_prefix()}inst_disk 
+                                    (ID, NODE_NAME, DISK_SIZE, SPACE_USED, PCT_USED, MOUNT_POINT, TS, DISK_DEVICE) 
+                                values 
+                                    (:id, :node_name, :disk_size, :space_used, :pct_used, :mount_point, :ts, :disk_device)`;
 
-                    db.sql(sql, [seq, config.node_name, disk.size, disk.used, disk.use, disk.mount, utils.timestamp(), disk.fs])
-                        .catch((error) => { log(error.message, "stats/save disk", true); });
+                    await db.sql({
+                        sql, 
+                        bind: [
+                            seq, 
+                            config.node_name, 
+                            disk.size, 
+                            disk.used, 
+                            disk.use, 
+                            disk.mount, 
+                            utils.timestamp(), 
+                            disk.fs
+                        ]
+                    });
                 }
             });
         }
 
         if (config.inst.save_cpu_data && (reactor_sequence % config.inst.save_cpu_skip === 0)) {
+
             log("Saving CPU status", "stats/save cpu");
 
             si.currentLoad(async data => {
+
                 const seq = await db.sequence();
 
-                const sql = `insert into ${db.table_prefix()}inst_cpu (ID, NODE_NAME, CPU_USER, CPU_NICE, CPU_SYSTEM, CPU_IOWAIT, CPU_STEAL, CPU_IDLE, TS) values (:id, :node_name, :cpu_user, :cpu_nice, :cpu_system, :cpu_iowait, :cpu_steal, :cpu_idle, :ts)`;
+                const sql = `insert 
+                            into ${db.table_prefix()}inst_cpu 
+                                (ID, NODE_NAME, CPU_USER, CPU_NICE, CPU_SYSTEM, CPU_IOWAIT, CPU_STEAL, CPU_IDLE, TS) 
+                            values 
+                                (:id, :node_name, :cpu_user, :cpu_nice, :cpu_system, :cpu_iowait, :cpu_steal, :cpu_idle, :ts)`;
 
-                db.sql(sql, [seq, config.node_name, data.currentload_user, data.currentload_nice, data.currentload_system, null, null, data.currentload_idle, utils.timestamp()])
-                    .catch((error) => { log(error.message, "stats/save cpu", true); });
+                await db.sql({
+                    sql, 
+                    bind: [
+                        seq, 
+                        config.node_name, 
+                        data.currentload_user, 
+                        data.currentload_nice, 
+                        data.currentload_system, 
+                        null, 
+                        null, 
+                        data.currentload_idle, 
+                        utils.timestamp()
+                    ]
+                });
+
             });
+
         }
 
         if (config.inst.save_mem_data && (reactor_sequence % config.inst.save_mem_skip === 0)) {
+
             log("Saving memory stats data", "stats/save memory");
 
             si.mem(async data => {
+
                 const seq = await db.sequence();
 
-                const sql = `insert into ${db.table_prefix()}inst_memory (ID, NODE_NAME, TS, TOTAL, FREE, USED, ACTIVE, AVAILABLE, BUFFCACHE, SWAPTOTAL, SWAPUSED, SWAPFREE) values (:id, :node_name, :ts, :total, :free, :used, :active, :available, :buffcache, :swaptotal, :swapused, :swapfree)`;
+                const sql = `insert 
+                            into ${db.table_prefix()}inst_memory 
+                                (ID, NODE_NAME, TS, TOTAL, FREE, USED, ACTIVE, AVAILABLE, BUFFCACHE, SWAPTOTAL, SWAPUSED, SWAPFREE) 
+                            values 
+                                (:id, :node_name, :ts, :total, :free, :used, :active, :available, :buffcache, :swaptotal, :swapused, :swapfree)`;
 
-                db.sql(sql, [seq, config.node_name, utils.timestamp(), data.total, data.free, data.used, data.active, data.available, data.buffcache, data.swaptotal, data.swapused, data.swapfree])
-                    .catch((error) => { log(error.message, "stats/save memory", true); });
+                await db.sql({
+                    sql, 
+                    bind: [
+                        seq, 
+                        config.node_name, 
+                        utils.timestamp(), 
+                        data.total, 
+                        data.free, 
+                        data.used, 
+                        data.active, 
+                        data.available, 
+                        data.buffcache, 
+                        data.swaptotal, 
+                        data.swapused, 
+                        data.swapfree
+                    ]
+                });
+
             });
+
         }
-    } catch (error) {
-        log(error.message, "stats/run", true);
-    }
+
+    } catch (error) { log(error.message, "stats/run", true); }
 };
 
 module.exports = { start, run, oup, eup, tup, stats_info, stats_reset, dup, rup }

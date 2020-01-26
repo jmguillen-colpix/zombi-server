@@ -28,7 +28,9 @@ const label = async (token, label) => {
 };
 
 const load_labels = async () => {
+
     try {
+
         const sql = `select
                     label_name,
                     label_lang_es,
@@ -46,13 +48,14 @@ const load_labels = async () => {
                     ${db.table_prefix()}i18n_labels
                 order by 1`;
 
-        const reply = await db.sql(sql);
+        const reply = await db.sql({sql});
 
         const rows = reply.rows;
 
         log(rows.length + " i18n labels loaded", "load_labels");
 
         for (const row of rows) {
+
             const label_name = row[0].toUpperCase();
 
             i18n_data.es[label_name] = row[1];
@@ -67,9 +70,13 @@ const load_labels = async () => {
             i18n_data.ru[label_name] = row[10];
             i18n_data.zh[label_name] = row[11];
         }
+
     } catch (error) {
+
         log(error.message, "load_labels", true);
+
     }
+    
 };
 
 module.exports = { load_labels, label, get_lang_data }

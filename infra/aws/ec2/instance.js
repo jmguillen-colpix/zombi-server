@@ -1,7 +1,7 @@
 "use strict";
 
-const config = require("./config");
-const ssh = require("./ssh");
+const config = require("../config");
+const ssh = require("../ssh");
 
 const AWS = require("aws-sdk");
 const fs = require('fs');

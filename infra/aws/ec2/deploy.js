@@ -30,11 +30,11 @@ const fs = require('fs');
 
         await ssh.command(`rm -rf ${deploy_home}/server`);
 
-        await ssh.putdir(`${__dirname}/../../server`, `${deploy_home}/server`);
+        await ssh.putdir(`${__dirname}/../../../server`, `${deploy_home}/server`);
         
-        await ssh.putfile(`${__dirname}/../../ecosystem.config.js`, `${deploy_home}/ecosystem.config.js`);
-        await ssh.putfile(`${__dirname}/../../package-lock.json`, `${deploy_home}/package-lock.json`);
-        await ssh.putfile(`${__dirname}/../../package.json`, `${deploy_home}/package.json`);
+        await ssh.putfile(`${__dirname}/../../../ecosystem.config.js`, `${deploy_home}/ecosystem.config.js`);
+        await ssh.putfile(`${__dirname}/../../../package-lock.json`, `${deploy_home}/package-lock.json`);
+        await ssh.putfile(`${__dirname}/../../../package.json`, `${deploy_home}/package.json`);
 
         await ssh.command("npm i", [], deploy_home);
 

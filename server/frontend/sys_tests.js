@@ -2,6 +2,8 @@
 const db = require("../app/db/db");
 const session = require("../app/session");
 
+const config = require("../app/config");
+
 /**
 sys_tests/ping
 
@@ -19,9 +21,7 @@ Returns:
     On error returns the error message
 
 */
-const ping = async (args, extras) => {
-    return [false, null, "pong"];
-};
+const ping = async (args, extras) => { return { message: "pong" }; }
 
 /**
 sys_tests/echo
@@ -38,13 +38,7 @@ Returns:
     The arguments without modification or processing
 
 */
-const echo = async (args, extras) => {
-    try {
-        return [false, args];
-    } catch (error) {
-        return [true, null, error.message];
-    }
-};
+const echo = async (args, extras) => { return { data: { args, extras } }; }
 
 /**
 sys_tests/db_sequence
@@ -61,13 +55,7 @@ Returns:
     The next sequence value or error on error
 
 */
-const db_sequence = async (args, extras) => {
-    try {
-        return [false, await db.sequence()];
-    } catch (error) {
-        return [true, null, error.message];
-    }
-};
+const db_sequence = async (args, extras) => { return { data: await db.sequence() }; };
 
 /*
 
@@ -81,13 +69,24 @@ Joi.array().items(Joi.object({
 }))
 */
 const test = async (args, extras) => {
-    try {
-        const x = await session.tokens(0);
 
-        return [false, x];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    const x = Object.keys(config.db).filter(db => config.db[db].enabled);
+
+    // const x = await db.sql({
+    //     sql: "select * from tt6users",
+    //     options: { rows_as_objects: true }
+    // });
+
+    return { data: x };
+
+    // try {
+    //     const x = await session.tokens(0);
+
+    //     return [false, x];
+    // } catch (error) {
+    //     return [true, null, error.message];
+    // }
 
     // send_message = (token, context = "none", data = [])
 }

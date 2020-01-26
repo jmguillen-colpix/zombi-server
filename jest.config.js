@@ -12,7 +12,8 @@ module.exports = {
         "!<rootDir>/server/app/datatables.js",
         "!<rootDir>/server/app/select.js",
         "<rootDir>/server/app/db/db.js",
-        "<rootDir>/server/app/db/abstraction/postgresql.js"
+        "<rootDir>/server/app/db/abstraction/postgresql.js",
+        "<rootDir>/server/app/db/abstraction/mysql.js"
     ],
     testPathIgnorePatterns: [
         "<rootDir>/public/*",

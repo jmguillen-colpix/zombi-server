@@ -80,7 +80,7 @@ const login = async (args, extras) => {
                         left join ${db.table_prefix()}tz_countries zco on (zou.country_id = zco.id)
                 where lower(username) = :username`;
 
-    const res = await db.sql(sql, [userlower]);
+    const res = await db.sql({ sql, bind: [userlower] });
 
     if (res.rows.length === 0) {
 

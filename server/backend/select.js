@@ -1,8 +1,7 @@
-// const config = require("../app/config");
-// const server = require("../app/server");
-const db = require("./db/db");
+const db = require("../app/db/db");
 
 const select = async data => {
+
     const results = [];
 
     var sql = "select " + data.id + ", " + data.text + " from " + data.table;
@@ -10,6 +9,7 @@ const select = async data => {
     const order = (data.order) ? data.order : "1";
 
     if (data.filter) {
+        
         sql += " where ";
 
         if (Array.isArray(data.filter) && Array.isArray(data.filter[0])) {
@@ -27,7 +27,7 @@ const select = async data => {
 
     sql += " order by " + order;
 
-    const reply = await db.sql(sql);
+    const reply = await db.sql({sql});
 
     for (const s of reply.rows) {
         results.push([s[0], s[1]]);

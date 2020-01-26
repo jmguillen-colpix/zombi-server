@@ -34,11 +34,11 @@ const db = require("../db/db");
 
         const commands = schema.create_schema(table_prefix);
 
-        for (const command of commands) {
+        for (const sql of commands) {
 
             try {
 
-                await db.sql(command);
+                await db.sql({sql});
 
             } catch (error) {
 

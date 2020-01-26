@@ -2,12 +2,6 @@ const config = require("../../config");
 const log = require("../../log");
 const stats = require("../../stats");
 
-/*
-create database if not exists zombi;
-create user zombi identified by 'SIBSadmin01';
-grant all privileges on zombi.* to zombi;
-*/
-
 const mysql = require("mysql");
 
 const clients = {};
@@ -37,7 +31,8 @@ const connect = async (db_name, callback) => {
                 port: config.db[db_name].port,
                 user: config.db[db_name].user,
                 password: config.db[db_name].pass,
-                database: config.db[db_name].name
+                database: config.db[db_name].name,
+                charset: 'utf8mb4_general_ci'
             });
         }
 
@@ -46,7 +41,7 @@ const connect = async (db_name, callback) => {
                 log(err, "mysql/connect", true);
                 if (typeof callback === "function") { callback(err, false); }
             } else {
-                log("Connected to " + db_name + " mysql@" + config.db[db_name].host + ":" + config.db[db_name].port + "/" + config.db[db_name].name, "mysql/connect");
+                // log("Connected to " + db_name + " mysql@" + config.db[db_name].host + ":" + config.db[db_name].port + "/" + config.db[db_name].name, "mysql/connect");
                 if (typeof callback === "function") { callback(null, true); }
             }
         });
@@ -56,11 +51,21 @@ const connect = async (db_name, callback) => {
 
             setTimeout(() => { connect(db_name); }, 1000);
         });
+
     } catch (err) { log(err.message, "mysql/connect", true); }
 }
 
-const sql = (sql, bind, callback, db_name) => {
-    const reply = { info: { db_name: db_name, db_type: config.db[db_name].type, rows: 0, fields: [] }, rows: null };
+const sql = (sql, bind, callback, db_name, options) => {
+
+    const reply = { 
+        info: { 
+            db_name: db_name, 
+            db_type: config.db[db_name].type, 
+            rows: 0, 
+            fields: [] 
+        }, 
+        rows: null 
+    };
 
     // This is to use Oracle style bindvars, meaning colon prefixed words as bind variables on the SQL text
     // so this transforms a SQL text like "where id = :id" to "where id = ?"
@@ -69,31 +74,61 @@ const sql = (sql, bind, callback, db_name) => {
     });
 
     clients[db_name].query({
+
         sql: mysql_sql
+
     },
     bind,
     (error, results, fields) => {
+
         if (error) {
+
             stats.rup();
 
             if (typeof callback === "function") { callback(error.message, false); }
 
             log(mysql_sql, "mysql/sql", true);
+
             log(error.message, "mysql/sql", true);
+
         } else {
+
             stats.dup();
 
             if (typeof callback === "function") {
+
                 if (fields) {
+
                     reply.info.rows = results.length;
 
                     fields.forEach(field => {
+
                         reply.info.fields.push({ name: field.name, type: get_data_type(field.type) });
+
                     });
 
-                    reply.rows = results;
+                    if(options.rows_as_objects) {
+
+                        reply.rows = results;
+
+                    } else {
+
+                        const array_rows = [];
+
+                        results.forEach(row => {
+
+                            array_rows.push(Object.values(row));
+
+                        });
+
+                        reply.rows = array_rows;
+
+                    }
+
                 } else {
+
                     reply.info.rows = results.affectedRows;
+
                 }
 
                 callback(null, reply);
@@ -104,14 +139,6 @@ const sql = (sql, bind, callback, db_name) => {
     );
 }
 
-const shutdown = (db_name) => {
-    try {
-        log("Shutting down MySQL connections", "mysql/shutdown");
+const disconnect = async db_name => { await clients[db_name].end(); };
 
-        clients[db_name].end(function (err) {
-            if (err) { log(err, "mysql/shutdown", true); }
-        });
-    } catch (err) { log(err.message, "mysql/shutdown", true); }
-}
-
-module.exports = { connect, shutdown, sql }
+module.exports = { connect, disconnect, sql }
