@@ -40,7 +40,7 @@ const funs = async (args, extras) => {
 /**
 sys_console/mods
 
-This function return the modules defined on the server/face directory.
+This function return the modules defined on the server/frontend directory.
 
 Arguments:
     None.

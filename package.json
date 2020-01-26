@@ -58,7 +58,11 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^24.9.0",
+    "jest-extended": "^0.11.2",
     "node-ssh": "^7.0.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "shelljs": "^0.8.3",
+    "supertest": "^4.0.2",
+    "zip-a-folder": "0.0.10"
   }
 }

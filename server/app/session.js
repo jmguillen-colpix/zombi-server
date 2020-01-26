@@ -9,11 +9,7 @@ const moment = require("moment");
 const check = async token => {
     const data = await cache.hgetall(config.session.cache_prefix + token);
 
-    if (!(data !== null && data.authenticated && data.authenticated === "true")) {
-        log(`Invalid session for token ${utils.make_token_shorter(token)}`, "sessions/create", true);
-
-        throw new Error("INVALID_SESSION");
-    }
+    return (data && data.authenticated && data.authenticated === "true");
 };
 
 const update = token => {

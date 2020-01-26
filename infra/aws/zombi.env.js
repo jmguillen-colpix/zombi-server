@@ -6,7 +6,10 @@ const create_env_file = (file_name = "zombi_env")  => {
 
     Object.keys(process.env).forEach(key => {
         // Anything we want to put into deployment environment
-        if(key.substr(0, 5) === "ZOMBI" || key === "NODE_ENV") {
+        if(
+            (key.substr(0, 5) === "ZOMBI" || key === "NODE_ENV") &&
+            key.substr(0, 10) !== "ZOMBI_TEST"
+        ) {
             ZOMBI_ENV += `export ${key}=${process.env[key]}\n`;
         }
     });

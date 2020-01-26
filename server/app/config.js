@@ -20,17 +20,18 @@ const config = {
         other_db: {
             user: process.env.ZOMBI_DB_USER_1 || "the_user",
             host: process.env.ZOMBI_DB_HOST_1 || "the_host",
-            port: process.env.ZOMBI_DB_PORT_1 || 1521,
+            port: process.env.ZOMBI_DB_PORT_1 || 3306,
             pass: process.env.ZOMBI_DB_PASS_1 || "the_password",
             name: process.env.ZOMBI_DB_NAME_1 || "the_db_user",
-            type: process.env.ZOMBI_DB_TYPE_1 || "oracle",
+            type: process.env.ZOMBI_DB_TYPE_1 || "mysql",
             enabled: false
         }
     },
 
     cache: {
         host: "localhost",
-        port: 6379
+        port: 6379,
+        pass: process.env.ZOMBI_CACHE_PASSWORD || "the_cache_password"
     },
 
     i18n: {
@@ -40,7 +41,7 @@ const config = {
 
     security: {
         salt_rounds: 10,
-        token_size: 64, // <= size of the column token on sessions table
+        token_size: 64,
         cors: {
             origin: "*",
             methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
@@ -69,6 +70,7 @@ const config = {
     },
 
     inst: {
+        stats_show_interval: 60, // seconds
         save_cpu_data: true,
         save_disk_data: true,
         save_mem_data: true,

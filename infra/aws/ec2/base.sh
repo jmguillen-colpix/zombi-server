@@ -9,6 +9,7 @@ node -v
 
 # Redis
 sudo yum -y install redis
+sudo sed -i "s/^# requirepass foobared/requirepass ${ZOMBI_CACHE_PASSWORD}/" /etc/redis.conf
 sudo systemctl start redis
 sudo systemctl enable redis
 sudo systemctl status redis
@@ -24,4 +25,15 @@ sudo systemctl enable postgresql-11
 sudo systemctl status postgresql-11
 sudo -u postgres psql -c "CREATE USER ${ZOMBI_DB_USER} WITH PASSWORD '${ZOMBI_DB_PASS}';"
 sudo -u postgres psql -c "CREATE DATABASE ${ZOMBI_DB_NAME} OWNER=${ZOMBI_DB_USER};"
+
+# MySQL (MariaDB)
+sudo yum -y install mariadb-server
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+sudo systemctl status mariadb
+sudo mysql -e "create database if not exists ${ZOMBI_DB_NAME}"
+sudo mysql -e "create user '${ZOMBI_DB_USER}'@'localhost' identified by '${ZOMBI_DB_PASS}'"
+sudo mysql -e "grant all privileges on ${ZOMBI_DB_NAME}.* to '${ZOMBI_DB_USER}'@'localhost'"
+
+# PM2
 sudo npm i -g pm2

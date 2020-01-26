@@ -4,88 +4,141 @@ const session = require("./session");
 const stats = require("./stats");
 const security = require("./security");
 const utils = require("./utils");
+const i18n = require("./i18n");
 
 const path = require("path");
 
-const execute = async (mod, fun, args, token, seq, ip, ua) => {
-    try {
-        log(`Executing ${mod}/${fun} with token ${utils.make_token_shorter(token)}`, "server/execute");
+const execute = async (mod, fun, args, token, sequence, ip, ua) => {
+
+    log(`Executing ${mod}/${fun} with token ${utils.make_token_shorter(token)}`, "server/execute");
+
+    const is_login = (mod === "sys_login" && ["login", "logoff"].includes(fun));
+    const is_start = (mod === "sys_login" && fun === "start");
+
+    if (is_login) {
+
+        return run(mod, fun, args, token, sequence, ip, ua);
+
+    } else {
 
         if (token) {
+
             await session.update(token);
 
-            await session.check(token);
-
-            await security.authorize(token, mod);
-
-            return await run(mod, fun, args, token, seq, ip, ua);
-        } else {
-            const is_login = (mod === "sys_login" && ["login", "logoff", "start"].includes(fun));
-
-            if (is_login) {
-                return await run(mod, fun, args, token, seq, ip, ua);
+            if(
+                await session.check(token) &&
+                (is_start || await security.authorize(token, mod))
+            ) {
+                return run(mod, fun, args, token, sequence, ip, ua);
             } else {
-                log(`Trying to execute ${mod}/${fun} without token`, "server/execute", true);
-
-                return response(true, "Not authorized", null, seq, -1, true);
+                return response({ 
+                    error: true, 
+                    code: 1000,
+                    message: "Not authorized", 
+                    sequence 
+                });
             }
-        }
-    } catch (error) {
-        log(error.message, "server/execute", true);
+            
+        } else {
 
-        return response(true, error.message, null, seq, -1, error.message === "INVALID_SESSION");
+            return response({ 
+                error: true,
+                code: 1001,
+                message: "Invalid token", 
+                sequence, 
+                expired: true 
+            });
+
+        }
+
     }
+
 };
 
-const run = async (mod, fun, args, token, seq, ip, ua) => {
-    try {
-        const start_time = new Date();
+// TODO do something useful with ip, ua
+const run = async (mod, fun, args, token, sequence, ip, ua) => {
 
-        const module_path = path.join(__dirname, "../face/" + mod + ".js");
+    /* 
+        Error codes reference
+        1000 Not authorized
+        1001 Invalid token
+        1002 Invalid response from action function ${mod}/${fun}
+        1003 Function [${fun}] is not defined on module [${mod}]
+        1004 Cannot login
+        1005 Invalid language
+    */
 
-        log(`Loading module file ${module_path}`, "server/run");
+    const start_time = new Date();
 
-        const action = require(module_path);
+    const module_path = path.join(__dirname, "../frontend/" + mod + ".js");
 
-        if (typeof action[fun] === "function") {
-            const [error, data, message] = await action[fun](args, { token: token, sequence: seq });
+    log(`Loading module file ${module_path}`, "server/run");
 
-            if (typeof error === "undefined") {
-                stats.eup();
+    const action = require(module_path);
 
-                log(`Invalid response from action function ${mod}/${fun}`, "server/run", true);
+    if (typeof action[fun] === "function") {
 
-                return response(true, `Invalid response from action function ${mod}/${fun}`, seq);
-            } else {
-                const elapsed = new Date() - start_time;
+        let error, data, message, code;
 
-                stats.tup(elapsed);
+        const results = await action[fun](args, { token, sequence });
 
-                return response(error, message, data, seq, elapsed);
-            }
+        if (Array.isArray(results)) {
+
+            [error, data, message, code] = results;
+
         } else {
+
+            error = results.error;
+            code = results.code;
+            data = results.data;
+            message = results.message;
+
+        }
+
+        if (typeof error === "undefined" && typeof code === "undefined" && typeof data === "undefined") {
             stats.eup();
 
-            log(`Function [${fun}] is not defined on module [${mod}]`, "server/run", true);
+            log(`Invalid response from action function ${mod}/${fun}`, "server/run", true);
 
-            return response(true, `Function [${fun}] is not defined on module [${mod}]`, null, seq);
+            return response({ 
+                error: true, 
+                code: 1002,
+                message: `Invalid response from action function ${mod}/${fun}`, 
+                sequence 
+            });
+
+        } else {
+
+            const elapsed = new Date() - start_time;
+
+            stats.tup(elapsed);
+
+            return response({ error, code, message, data, sequence, elapsed });
+
         }
-    } catch (error) {
-        log(error, "server/run", true);
 
-        throw (error);
+    } else {
+
+        stats.eup();
+
+        log(`Function [${fun}] is not defined on module [${mod}]`, "server/run", true);
+
+        return response({ 
+            error: true, 
+            code: 1003,
+            message: `Function [${fun}] is not defined on module [${mod}]`, 
+            sequence 
+        });
+
     }
+
 }
 
-const response = (error, message, data, sequence, elapsed = -1, expired = false) => {
-    const e = error !== false;
-    const m = (typeof message === "undefined") ? "ok" : message;
-    const d = (typeof data === "undefined") ? {} : data;
-    const i = { time: elapsed, sequence: sequence, expired: expired };
-
+const response = ({ error = false, code = 0, message = "ok", data = {}, sequence = 0, elapsed = -1, expired = false }) => {
+    
     log(`Server response time: ${elapsed} ms`, "server/execute");
 
-    return { error: e, message: m, data: d, info: i };
+    return { error, code, message, data, info: { time: elapsed, sequence, expired } };
 };
 
 module.exports = { execute, response };

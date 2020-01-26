@@ -2,8 +2,6 @@ const config = require("../config");
 const log = require("../log");
 const db = require("../db/db");
 
-const prefix = process.argv[2];
-
 (async () => {
 
     if (config.schema.locked) {
@@ -12,7 +10,7 @@ const prefix = process.argv[2];
 
     } else {
 
-        const table_prefix = (!prefix) ? config.schema.table_prefix : prefix;
+        const table_prefix = process.env.ZOMBI_DB_TABLE_PREFIX || config.schema.table_prefix;
 
         log(`Using schema prefix "${table_prefix}"`, "schema/create");
 
@@ -36,11 +34,11 @@ const prefix = process.argv[2];
 
         const commands = schema.create_schema(table_prefix);
 
-        for (const command of commands) {
+        for (const sql of commands) {
 
             try {
 
-                await db.sql(command);
+                await db.sql({sql});
 
             } catch (error) {
 

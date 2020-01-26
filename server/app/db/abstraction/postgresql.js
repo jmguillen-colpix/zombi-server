@@ -100,8 +100,17 @@ const connect = db_name => {
     } catch (error) { log(error.message, "postgresql/connect", true); }
 }
 
-const sql = (sql, bind, callback, db_name) => {
-    const reply = { info: { db_name: db_name, db_type: config.db[db_name].type, rows: 0, fields: [] }, rows: null };
+const sql = (sql, bind, callback, db_name, options) => {
+
+    const reply = { 
+        info: { 
+            db_name: db_name, 
+            db_type: config.db[db_name].type, 
+            rows: 0, 
+            fields: [] 
+        }, 
+        rows: null 
+    };
 
     let bind_count = 0;
 
@@ -120,17 +129,42 @@ const sql = (sql, bind, callback, db_name) => {
 
     clients[db_name].query(query)
         .then(res => {
+
             stats.dup();
 
             if (typeof callback === "function") {
+
                 reply.info.rows = res.rowCount;
 
                 if (res.command && res.command === "SELECT") {
+
                     res.fields.forEach(field => {
                         reply.info.fields.push({ name: field.name, type: get_data_type(field.dataTypeID) });
                     });
 
-                    reply.rows = res.rows;
+                    if(options.rows_as_objects) {
+
+                        const object_rows = [];
+
+                        res.rows.forEach(row => {
+
+                            const object_row = {};
+
+                            res.fields.forEach((field, index) => {
+
+                                object_row[field.name] = row[index];
+
+                            });
+
+                            object_rows.push(object_row)
+
+                        });
+
+                        reply.rows = object_rows;
+
+
+                    } else { reply.rows = res.rows; }
+
                 }
 
                 callback(null, reply);

@@ -2,64 +2,109 @@ const create_schema = table_prefix => {
     
     const commands = [];
 
-    commands.push("create sequence if not exists zombi_seq start 1");
+    commands.push(`create table if not exists ${table_prefix}sequence 
+    (
+        sequence_name varchar(100) NOT NULL,
+        increment int(11) NOT NULL DEFAULT 1,
+        min_value int(11) NOT NULL DEFAULT 1,
+        max_value bigint(20) NOT NULL DEFAULT 9223372036854775807,
+        cur_value bigint(20) DEFAULT 1,
+        cycle boolean NOT NULL DEFAULT FALSE,
+        primary key (sequence_name)
+    )`);
+
+    commands.push(`delete from ${table_prefix}sequence where sequence_name = 'zombi_sequence'`);
+
+    commands.push(`insert into ${table_prefix}sequence (sequence_name) values ('zombi_sequence')`);
+
+    commands.push(`drop function if exists nextval`);
+
+    commands.push(`CREATE FUNCTION nextval (seq_name varchar(100))
+                    RETURNS bigint NOT DETERMINISTIC
+                    BEGIN
+                        DECLARE cur_val bigint;
+                    
+                        SELECT
+                            cur_value INTO cur_val
+                        FROM
+                            ${table_prefix}sequence
+                        WHERE
+                            sequence_name = seq_name;
+                    
+                        IF cur_val IS NOT NULL THEN
+                            UPDATE
+                                ${table_prefix}sequence
+                            SET
+                                cur_value = IF (
+                                    (cur_value + increment) > max_value OR (cur_value + increment) < min_value,
+                                    IF (
+                                        cycle = TRUE,
+                                        IF (
+                                            (cur_value + increment) > max_value,
+                                            min_value, 
+                                            max_value 
+                                        ),
+                                        NULL
+                                    ),
+                                    cur_value + increment
+                                )
+                            WHERE
+                                sequence_name = seq_name;
+                        END IF; 
+                        RETURN cur_val;
+                    END;`);
+
+
 
     commands.push(`create table if not exists ${table_prefix}groups
     (
-        id integer not null
-            constraint ${table_prefix}groups_pk
-                primary key,
+        id integer,
         group_name varchar(120) not null,
         description varchar(2000),
         created_by integer not null,
-        created_ts integer not null
+        created_ts integer not null,
+        primary key (id)
     )`);
 
     commands.push(`create table if not exists ${table_prefix}groups_to_users
     (
-        id integer not null
-            constraint ${table_prefix}groups_to_users_pk
-                primary key,
+        id integer,
         group_id integer not null,
-        user_id integer not null
+        user_id integer not null,
+        primary key (id)
     )`);
 
     commands.push(`create table if not exists ${table_prefix}i18n_labels
     (
-        id integer not null
-            constraint ${table_prefix}i18n_labels_pk
-                primary key,
-        details varchar(400) default NULL::character varying,
-        label_name varchar(60) not null
-            constraint ${table_prefix}i18n_labels_un_label_name
-                unique,
-        label_lang_es varchar(200) default NULL::character varying,
-        label_lang_pt varchar(200) default NULL::character varying,
-        label_lang_en varchar(200) default NULL::character varying,
-        label_lang_fr varchar(200) default NULL::character varying,
-        label_lang_de varchar(200) default NULL::character varying,
-        label_lang_it varchar(200) default NULL::character varying,
-        label_lang_ko varchar(200) default NULL::character varying,
-        label_lang_ja varchar(200) default NULL::character varying,
-        label_lang_he varchar(200) default NULL::character varying,
-        label_lang_ru varchar(200) default NULL::character varying,
-        label_lang_zh varchar(200) default NULL::character varying
+        id integer,
+        details varchar(400) default NULL,
+        label_name varchar(60) not null,
+        label_lang_es varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        label_lang_pt varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        label_lang_en varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        label_lang_fr varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        label_lang_de varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        label_lang_it varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        label_lang_ko varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        label_lang_ja varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        label_lang_he varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        label_lang_ru varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        label_lang_zh varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        primary key (id),
+        unique (label_name)
     )`);
 
     commands.push(`create table if not exists ${table_prefix}i18n_languages
     (
-        id integer not null
-            constraint ${table_prefix}i18n_languages_pk
-                primary key,
-        language_name varchar(32) not null,
-        language_code varchar(5) not null
+        id integer,
+        language_name varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci not null,
+        language_code varchar(5) not null,
+        primary key (id)
     )`);
 
     commands.push(`create table if not exists ${table_prefix}inst_cpu
     (
-        id integer not null
-            constraint ${table_prefix}inst_cpu_pk
-                primary key,
+        id integer,
         cpu_user numeric,
         cpu_nice numeric,
         cpu_system numeric,
@@ -67,7 +112,8 @@ const create_schema = table_prefix => {
         cpu_steal numeric,
         cpu_idle numeric,
         ts integer not null,
-        node_name varchar(120) not null
+        node_name varchar(120) not null,
+        primary key (id)
     )`);
 
     commands.push(`create unique index ${table_prefix}inst_cpu_uk1
@@ -75,16 +121,15 @@ const create_schema = table_prefix => {
 
     commands.push(`create table if not exists ${table_prefix}inst_disk
     (
-        id integer not null
-            constraint ${table_prefix}inst_disk_pk
-                primary key,
+        id integer,
         disk_size numeric,
         space_used numeric,
         pct_used numeric,
-        mount_point varchar(120) default NULL::character varying,
+        mount_point varchar(120) default NULL,
         ts numeric not null,
         disk_device varchar(120),
-        node_name varchar(120) not null
+        node_name varchar(120) not null,
+        primary key (id)
     )`);
 
     commands.push(`create unique index ${table_prefix}inst_disk_uk1
@@ -92,9 +137,7 @@ const create_schema = table_prefix => {
 
     commands.push(`create table if not exists ${table_prefix}inst_memory
     (
-        id integer not null
-            constraint ${table_prefix}inst_memory_pk
-                primary key,
+        id integer,
         node_name varchar(120) not null,
         ts numeric not null,
         total numeric,
@@ -105,18 +148,9 @@ const create_schema = table_prefix => {
         buffcache numeric,
         swaptotal numeric,
         swapused numeric,
-        swapfree numeric
+        swapfree numeric,
+        primary key (id)
     )`);
-
-    // Sessions are on Redis now
-    // commands.push(`create table if not exists ${table_prefix}sessions
-    // (
-    //     token varchar(128) not null,
-    //     session_data varchar(3200) not null,
-    //     user_id integer not null,
-    //     created integer not null,
-    //     updated integer
-    // )`);
 
     commands.push(`create table if not exists ${table_prefix}tz_zones
     (
@@ -128,48 +162,44 @@ const create_schema = table_prefix => {
 
     commands.push(`create table if not exists ${table_prefix}users
     (
-        id integer not null
-            constraint ${table_prefix}users_pk
-                primary key,
+        id integer,
         username varchar(120) not null,
         full_name varchar(100) not null,
-        enabled varchar(1) default 'y'::character varying not null,
-        email varchar(120) default NULL::character varying,
+        enabled varchar(1) default 'y' not null,
+        email varchar(120) default NULL,
         language numeric,
-        password varchar(60) default NULL::character varying,
+        password varchar(60) default NULL,
         created_date integer not null,
         login_date integer,
         is_admin varchar(1),
         timezone_id integer,
         country_id integer,
-        language_id integer
+        language_id integer,
+        primary key (id)
     )`);
 
     commands.push(`create table if not exists ${table_prefix}tests
     (
-        id integer not null
-            constraint ${table_prefix}tests_pk
-                primary key,
+        id integer,
         text varchar(1000),
-        number numeric
+        number numeric,
+        primary key (id)
     )`);
 
     commands.push(`create table if not exists ${table_prefix}tz_countries
     (
-        id bigint not null
-            constraint ${table_prefix}tz_countries_pk
-                primary key,
+        id bigint,
         country_code varchar(2),
-        country_name varchar(45)
+        country_name varchar(45),
+        primary key (id)
     )`);
 
     commands.push(`create table if not exists ${table_prefix}groups_to_modules
     (
-        id integer not null
-            constraint ${table_prefix}groups_to_modules_pk
-                primary key,
+        id integer,
         group_id integer not null,
-        module_name varchar(200) not null
+        module_name varchar(200) not null,
+        primary key (id)
     )`);
 
     commands.push(`INSERT INTO ${table_prefix}users (id, username, full_name, enabled, email, language, password, created_date, login_date, is_admin, timezone_id, country_id, language_id) VALUES 

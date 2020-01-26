@@ -3,7 +3,7 @@ const utils = require("../app/utils");
 const log = require("../app/log");
 const db = require("../app/db/db");
 const i18n = require("../app/i18n");
-const datatables = require("../app/datatables");
+const datatables = require("../backend/datatables");
 
 const request = require("request-promise-native");
 
@@ -23,45 +23,43 @@ Returns:
     Error message when there is an error
 
 */
-const labels_table_data = async (args, callback, extras) => {
-    try {
-        const sql = `select
-                        id,
-                        label_name,
-                        label_lang_es,
-                        label_lang_pt,
-                        label_lang_en,
-                        label_lang_fr,
-                        label_lang_de,
-                        label_lang_it,
-                        label_lang_ko,
-                        label_lang_ja,
-                        label_lang_he,
-                        label_lang_ru,
-                        label_lang_zh,
-                        details
-                    from
-                        ${db.table_prefix()}i18n_labels
-                    where
-                        lower(label_name) like '%' || lower(:search) || '%' or
-                        lower(label_lang_es) like '%' || lower(:search) || '%' or
-                        lower(label_lang_pt) like '%' || lower(:search) || '%' or
-                        lower(label_lang_en) like '%' || lower(:search) || '%' or
-                        lower(label_lang_fr) like '%' || lower(:search) || '%' or
-                        lower(label_lang_de) like '%' || lower(:search) || '%' or
-                        lower(label_lang_it) like '%' || lower(:search) || '%' or
-                        lower(label_lang_ko) like '%' || lower(:search) || '%' or
-                        lower(label_lang_ja) like '%' || lower(:search) || '%' or
-                        lower(label_lang_he) like '%' || lower(:search) || '%' or
-                        lower(label_lang_ru) like '%' || lower(:search) || '%' or
-                        lower(label_lang_zh) like '%' || lower(:search) || '%'`;
+const labels_table_data = async (args, extras) => {
 
-        const data = await datatables.sql({ sql: sql, data: args.data, download: args.download });
+    const sql = `select
+                    id,
+                    label_name,
+                    label_lang_es,
+                    label_lang_pt,
+                    label_lang_en,
+                    label_lang_fr,
+                    label_lang_de,
+                    label_lang_it,
+                    label_lang_ko,
+                    label_lang_ja,
+                    label_lang_he,
+                    label_lang_ru,
+                    label_lang_zh,
+                    details
+                from
+                    ${db.table_prefix()}i18n_labels
+                where
+                    lower(label_name) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_es) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_pt) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_en) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_fr) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_de) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_it) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_ko) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_ja) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_he) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_ru) like concat('%', concat(lower(:search), '%')) or
+                    lower(label_lang_zh) like concat('%', concat(lower(:search), '%'))`;
 
-        return [false, data];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+    const data = await datatables.sql({ sql, data: args.data, download: args.download });
+
+    return [false, data];
+
 };
 
 /**
@@ -148,15 +146,15 @@ const labels_add = async (args, extras) => {
 
         const seq = await db.sequence();
 
-        const reply = await db.sql(
+        const reply = await db.sql({
             sql,
-            [seq, details, name, es, pt, en, fr, de, it, ko, ja, he, ru, zh]
-        );
+            bind: [seq, details, name, es, pt, en, fr, de, it, ko, ja, he, ru, zh]
+        });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, false, error.message];
-    }
+
+    } catch (error) { return [true, false, error.message]; }
+
 };
 
 /**
@@ -178,17 +176,19 @@ Returns:
 
 */
 const labels_edit_data = async (args, extras) => {
+
     try {
+
         const id = parseInt(args[0]);
 
         const sql = `select LABEL_NAME, LABEL_LANG_ES, LABEL_LANG_PT, LABEL_LANG_EN, LABEL_LANG_FR, LABEL_LANG_DE, LABEL_LANG_IT, LABEL_LANG_KO, LABEL_LANG_JA, LABEL_LANG_HE, LABEL_LANG_RU, LABEL_LANG_ZH, DETAILS from ${db.table_prefix()}i18n_labels where id = :id`;
 
-        const reply = await db.sql(sql, [id]);
+        const reply = await db.sql({ sql, bind: [id] });
 
         return [false, reply.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 }
 
 /**
@@ -222,7 +222,9 @@ Returns:
 
 */
 const labels_edit = async (args, extras) => {
+
     try {
+
         const id = args[0];
         const name = args[1];
         const es = args[2];
@@ -256,12 +258,15 @@ const labels_edit = async (args, extras) => {
                 details = :details
             where id = :id`;
 
-        const reply = await db.sql(sql, [name, es, pt, en, fr, de, it, ko, ja, he, ru, zh, details, id]);
+        const reply = await db.sql({
+            sql,
+            bind: [name, es, pt, en, fr, de, it, ko, ja, he, ru, zh, details, id]
+        });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 }
 
 /**
@@ -280,15 +285,20 @@ Returns:
 
 */
 const labels_delete = async (args, extras) => {
+
     try {
+
         const id = args[0];
 
-        const reply = await db.sql(`delete from ${db.table_prefix()}i18n_labels where id = :id`, [id]);
+        const reply = await db.sql({
+            sql: `delete from ${db.table_prefix()}i18n_labels where id = :id`,
+            bind: [id]
+        });
 
         return [false, reply.info.rows];
-    } catch (error) {
-        return [true, null, error.message];
-    }
+
+    } catch (error) { return [true, null, error.message]; }
+
 }
 
 /**
@@ -307,7 +317,9 @@ Returns:
 
 */
 const labels_translate = async (args, extras) => {
+
     try {
+
         const langs = ["es", "pt", "fr", "de", "it", "ko", "ja", "ru", "zh", "he"];
 
         var lang_values = {};
@@ -333,9 +345,10 @@ const labels_translate = async (args, extras) => {
                     where label_lang_en is not null
                     order by 1`;
 
-        const reply = await db.sql(sql);
+        const reply = await db.sql({ sql });
 
         for (const row of reply.rows) {
+
             lang_values.name = row[0];
             lang_values.es = row[1];
             lang_values.pt = row[2];
@@ -351,13 +364,19 @@ const labels_translate = async (args, extras) => {
             lang_values.row_id = row[12];
 
             if (utils.is_empty(lang_values.en)) {
+
                 log("Text english value is empty, cannot translate", "sys_labels/labels_translate");
+
             } else {
+
                 const url = "https://translate.yandex.net/api/v1.5/tr.json/translate";
 
                 for (const lang of langs) {
+
                     try {
+
                         if (utils.is_empty(lang_values[lang])) {
+
                             var translate_what = lang_values.en;
                             var translate_to = lang;
                             var translate_row_id = lang_values.row_id;
@@ -374,31 +393,35 @@ const labels_translate = async (args, extras) => {
                             var http_body = JSON.parse(body);
 
                             if (http_body.text && Array.isArray(http_body.text)) {
+
                                 var label = http_body.text[0];
 
                                 log("Translating [" + lang + "] " + translate_what + " to " + label, "sys_labels/labels_translate");
 
-                                await db.sql(
-                                    `update ${db.table_prefix()}i18n_labels set label_lang_${lang} = :label where id = :id`,
-                                    [label, translate_row_id]
-                                );
+                                await db.sql({
+                                    sql: `update ${db.table_prefix()}i18n_labels set label_lang_${lang} = :label where id = :id`,
+                                    bind: [label, translate_row_id]
+                                });
 
                                 messages.push(`Translated ${translate_what} to ${label}`);
+
                             } else { messages.push(`Label not found: ${label}`); }
                         }
+
                     } catch (error) { messages.push(`Label not found: ${label}`); }
+
                 }
+
             }
+
         }
 
         if (messages.length === 0) {
             return [true, "No labels to translate"];
-        } else {
-            return [false, null, messages];
-        }
-    } catch (error) {
-        return [true, null, error.message];
-    }
+        } else { return [false, null, messages]; }
+
+    } catch (error) { return [true, null, error.message]; }
+
 }
 
 module.exports = { labels_add, labels_edit_data, labels_edit, labels_delete, labels_translate, labels_table_data }
