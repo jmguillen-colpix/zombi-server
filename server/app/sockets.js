@@ -1,3 +1,5 @@
+"use strict";
+
 const config = require("./config");
 const utils = require("./utils");
 const log = require("./log");

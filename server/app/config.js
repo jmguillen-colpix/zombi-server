@@ -40,6 +40,8 @@ const config = {
     },
 
     security: {
+        user_cache_prefix: "USER_AUTH:",
+        user_cache_enabled: true,
         salt_rounds: 10,
         token_size: 64,
         cors: {
@@ -57,6 +59,7 @@ const config = {
             log_info: true,
             log_error: true
         },
+        hide_errors_500: true,
         http_port: process.env.ZOMBI_HTTP_PORT || 8080
     },
 
@@ -70,7 +73,7 @@ const config = {
     },
 
     inst: {
-        stats_show_interval: 60, // seconds
+        stats_show_interval: 60, // seconds, 0 to disable
         save_cpu_data: true,
         save_disk_data: true,
         save_mem_data: true,

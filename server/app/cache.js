@@ -90,23 +90,6 @@ const del = key => {
     });
 };
 
-const maybe = async (key, callback) => {
-
-    const reply = await get(key);
-
-    console.log("cache maybe reply", reply);
-
-    if(reply) {
-        return reply;
-    } else {
-        const value = await callback(key);
-        console.log("cache maybe value", value);
-        await set(key, value);
-        return value;
-    }   
-
-};
-
 const disconnect = () => { if(redis) { redis.quit(); }};
 
-module.exports = { connect, set, get, del, hset, hget, hgetall, hmset, keys, disconnect, maybe };
+module.exports = { connect, set, get, del, hset, hget, hgetall, hmset, keys, disconnect };

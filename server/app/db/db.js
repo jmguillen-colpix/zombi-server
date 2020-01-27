@@ -180,49 +180,7 @@ const sequence = async (db_name = "default") => {
 
 const table_prefix = () => { return config.schema.table_prefix; }
 
-const metadata = async (object_name, object_type = "table", db_name = "default") => {
-
-    const db_type = config.db[db_name].type;
-
-    let data = [];
-
-    switch (db_type) {
-
-        case "postgresql":
-
-            switch (object_type) {
-
-                case "table":
-
-                    data = await _sql(
-                        `SELECT columns.table_name,
-                                columns.column_name,
-                                columns.data_type,
-                                columns.column_default,
-                                columns.is_nullable
-                            FROM information_schema.columns
-                            where table_name = :object_name`,
-                        [object_name]
-                    );
-
-                    break;
-            }
-
-            break;
-
-        case "oracle": break;
-
-        case "mysql": break;
-
-        default: throw new Error("Wrong DB Type, check config file");
-
-    }
-
-    return data;
-}
-
 module.exports = {
-    metadata,
     sql: _sql,
     sqlv,
     sequence,

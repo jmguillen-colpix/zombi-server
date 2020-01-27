@@ -1,10 +1,10 @@
+"use strict";
 
 const log = require("./log");
 const session = require("./session");
 const stats = require("./stats");
 const security = require("./security");
 const utils = require("./utils");
-const i18n = require("./i18n");
 
 const path = require("path");
 
@@ -25,28 +25,41 @@ const execute = async (mod, fun, args, token, sequence, ip, ua) => {
 
             await session.update(token);
 
-            if(
-                await session.check(token) &&
-                (is_start || await security.authorize(token, mod))
-            ) {
-                return run(mod, fun, args, token, sequence, ip, ua);
+            if(await session.check(token)) {
+
+                if(is_start || await security.authorize(token, mod)) {
+    
+                    return run(mod, fun, args, token, sequence, ip, ua);
+    
+                } else {
+    
+                    return response({ 
+                        error: true, 
+                        code: 1000,
+                        message: "Not authorized", 
+                        sequence 
+                    });
+    
+                }
+
             } else {
+
                 return response({ 
-                    error: true, 
-                    code: 1000,
-                    message: "Not authorized", 
-                    sequence 
+                    error: true,
+                    code: 1001,
+                    message: "Session expired", 
+                    sequence
                 });
+
             }
-            
+
         } else {
 
             return response({ 
                 error: true,
                 code: 1001,
                 message: "Invalid token", 
-                sequence, 
-                expired: true 
+                sequence
             });
 
         }
@@ -55,13 +68,13 @@ const execute = async (mod, fun, args, token, sequence, ip, ua) => {
 
 };
 
-// TODO do something useful with ip, ua
+// TODO do something useful with ip and ua
 const run = async (mod, fun, args, token, sequence, ip, ua) => {
 
     /* 
         Error codes reference
         1000 Not authorized
-        1001 Invalid token
+        1001 Invalid token/Session expired
         1002 Invalid response from action function ${mod}/${fun}
         1003 Function [${fun}] is not defined on module [${mod}]
         1004 Cannot login
@@ -96,6 +109,7 @@ const run = async (mod, fun, args, token, sequence, ip, ua) => {
         }
 
         if (typeof error === "undefined" && typeof code === "undefined" && typeof data === "undefined") {
+
             stats.eup();
 
             log(`Invalid response from action function ${mod}/${fun}`, "server/run", true);
@@ -134,11 +148,11 @@ const run = async (mod, fun, args, token, sequence, ip, ua) => {
 
 }
 
-const response = ({ error = false, code = 0, message = "ok", data = {}, sequence = 0, elapsed = -1, expired = false }) => {
+const response = ({ error = false, code = 0, message = "ok", data = {}, sequence = 0, elapsed = -1 }) => {
     
-    log(`Server response time: ${elapsed} ms`, "server/execute");
+    log(`Server response: code ${code}, time: ${elapsed} ms`, "server/execute");
 
-    return { error, code, message, data, info: { time: elapsed, sequence, expired } };
+    return { error, code, message, data, info: { time: elapsed, sequence } };
 };
 
 module.exports = { execute, response };

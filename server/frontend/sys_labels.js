@@ -1,3 +1,4 @@
+"use strict";
 
 const utils = require("../app/utils");
 const log = require("../app/log");

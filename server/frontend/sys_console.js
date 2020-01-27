@@ -1,3 +1,5 @@
+"use strict";
+
 const i18n = require("../app/i18n");
 
 const path = require("path");

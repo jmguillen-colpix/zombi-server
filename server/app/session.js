@@ -1,3 +1,5 @@
+"use strict";
+
 const config = require("./config");
 const utils = require("./utils");
 const log = require("./log");
@@ -44,28 +46,40 @@ const create = async (token, user_id, language, timezone, full_name, is_admin) =
 };
 
 const destroy = async (token) => {
+
     try {
+
         const sockets = require("./sockets");
+        const security = require("./security");
 
         sockets.send_message_to_session(token, "ZOMBI_SERVER_SESSION_EXPIRED");
 
+        await security.delete_cache(token);
+
         await cache.del(config.session.cache_prefix + token);
 
-        log("Deleted session with token " + utils.make_token_shorter(token), "sessions/destroy");
+        log(`Deleted session with token ${utils.make_token_shorter(token)}`, "sessions/destroy");
+
     } catch (error) {
-        log(error.message, "session/destroy", true);
+
+        log(error, "session/destroy", true);
 
         throw (error);
+
     }
+
 };
 
 const expire = async () => {
+
     try {
+
         const limit = Math.floor(new Date() / 1000) - config.session.expire;
 
         const keys = await cache.keys(config.session.cache_prefix);
 
         keys.forEach(async key => {
+
             const updated = await cache.hget(key, "updated");
 
             if (updated === null || (parseInt(updated) < limit)) {
@@ -76,11 +90,17 @@ const expire = async () => {
                 log("Expired session token " + utils.make_token_shorter(token) + " inactive since " + moment.utc(limit, "X").format("LLL") + " (UTC), " + Math.floor(config.session.expire / 60) + " minutes ago", "session/expire");
 
                 await destroy(token);
+
             }
+
         });
+
     } catch (error) {
+
         log(error.message, "session/expire", true);
+
     }
+
 };
 
 const get = (token, key) => {

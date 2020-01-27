@@ -1,3 +1,5 @@
+"use strict";
+
 const utils = require("../app/utils");
 const i18n = require("../app/i18n");
 const db = require("../app/db/db");

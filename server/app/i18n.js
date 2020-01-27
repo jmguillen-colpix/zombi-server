@@ -1,5 +1,5 @@
-// const config  = require("./config");
-// const server  = require("./server");
+"use strict";
+
 const session = require("./session");
 const log = require("./log");
 
@@ -29,9 +29,7 @@ const label = async (token, label) => {
 
 const load_labels = async () => {
 
-    try {
-
-        const sql = `select
+    const sql = `select
                     label_name,
                     label_lang_es,
                     label_lang_pt,
@@ -48,35 +46,29 @@ const load_labels = async () => {
                     ${db.table_prefix()}i18n_labels
                 order by 1`;
 
-        const reply = await db.sql({sql});
+    const reply = await db.sql({ sql });
 
-        const rows = reply.rows;
+    const rows = reply.rows;
 
-        log(rows.length + " i18n labels loaded", "load_labels");
+    log(rows.length + " i18n labels loaded", "i18n/load_labels");
 
-        for (const row of rows) {
+    for (const row of rows) {
 
-            const label_name = row[0].toUpperCase();
+        const label_name = row[0].toUpperCase();
 
-            i18n_data.es[label_name] = row[1];
-            i18n_data.pt[label_name] = row[2];
-            i18n_data.en[label_name] = row[3];
-            i18n_data.fr[label_name] = row[4];
-            i18n_data.de[label_name] = row[5];
-            i18n_data.it[label_name] = row[6];
-            i18n_data.ko[label_name] = row[7];
-            i18n_data.ja[label_name] = row[8];
-            i18n_data.he[label_name] = row[9];
-            i18n_data.ru[label_name] = row[10];
-            i18n_data.zh[label_name] = row[11];
-        }
-
-    } catch (error) {
-
-        log(error.message, "load_labels", true);
-
+        i18n_data.es[label_name] = row[1];
+        i18n_data.pt[label_name] = row[2];
+        i18n_data.en[label_name] = row[3];
+        i18n_data.fr[label_name] = row[4];
+        i18n_data.de[label_name] = row[5];
+        i18n_data.it[label_name] = row[6];
+        i18n_data.ko[label_name] = row[7];
+        i18n_data.ja[label_name] = row[8];
+        i18n_data.he[label_name] = row[9];
+        i18n_data.ru[label_name] = row[10];
+        i18n_data.zh[label_name] = row[11];
     }
-    
+
 };
 
 module.exports = { load_labels, label, get_lang_data }

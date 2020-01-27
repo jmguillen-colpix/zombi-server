@@ -1,3 +1,5 @@
+"use strict";
+
 const config = require("../app/config");
 const log = require("../app/log");
 const db = require("../app/db/db");

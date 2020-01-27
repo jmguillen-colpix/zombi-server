@@ -1,3 +1,5 @@
+"use strict";
+
 const db = require("../app/db/db");
 
 const select = async data => {

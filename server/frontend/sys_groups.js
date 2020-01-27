@@ -1,3 +1,5 @@
+"use strict";
+
 const utils = require("../app/utils");
 const db = require("../app/db/db");
 const session = require("../app/session");

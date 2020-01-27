@@ -3,4 +3,3 @@ public/
 *.pem
 .env*
 infra/aws/.temp/
-assets/

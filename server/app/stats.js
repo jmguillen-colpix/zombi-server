@@ -1,3 +1,5 @@
+"use strict";
+
 const config = require("./config");
 const utils = require("./utils");
 const log = require("./log");
@@ -7,17 +9,20 @@ const si = require("systeminformation");
 
 const get_empty_data = () => {
     return {
-        ops: 0,
-        nop: 0,
-        eps: 0,
-        noe: 0,
-        tor: 0, // Total requests
-        ret: 0, // Requests time
-        tav: 0, // Average time
+        ops: 0,  // Operations per second
+        nop: 0,  // Number of operations
+        eps: 0,  // Errors per second
+        noe: 0,  // Number of errors
+        tor: 0,  // Total requests
+        ret: 0,  // Requests time
+        tav: 0,  // Average time
         tmi: -1, // Time min
-        tma: 0, // Time max
-        dbr: 0, // DB requests
-        dbe: 0 // DB errors
+        tma: 0,  // Time max
+        dbr: 0,  // DB requests
+        dbe: 0,  // DB errors
+        cht: 0,  // Cache hit
+        cms: 0,  // Cache miss
+        cpc: 0   // Cache hit/miss percentage
     };
 };
 
@@ -28,6 +33,9 @@ const eup = () => { stats_data.noe++; }; // Web operations error
 
 const dup = () => { stats_data.dbr++; }; // Database operations
 const rup = () => { stats_data.dbe++; }; // Database operations error
+
+const cup = () => { stats_data.cht++; }; // Cache hit up
+const mup = () => { stats_data.cms++; }; // Cache miss up
 
 const tup = (time) => { // Time elapsed 
     stats_data.ret += time;
@@ -44,22 +52,33 @@ const stats_reset = () => { stats_data = get_empty_data(); }
 const stats_info = () => { return stats_data; }
 
 const start = () => {
-    const sample_ops = stats_data.nop;
-    const sample_err = stats_data.noe;
 
-    setTimeout(() => {
-        const delta_ops = stats_data.nop - sample_ops;
-        const delta_err = stats_data.noe - sample_err;
+    if (config.inst.stats_show_interval > 0) {
 
-        stats_data.ops = Math.round(delta_ops / 60);
-        stats_data.eps = Math.round(delta_err / 60);
+        const sample_ops = stats_data.nop;
+        const sample_err = stats_data.noe;
+    
+        setTimeout(() => {
+            const delta_ops = stats_data.nop - sample_ops;
+            const delta_err = stats_data.noe - sample_err;
+    
+            stats_data.ops = Math.round(delta_ops / config.inst.stats_show_interval);
+            stats_data.eps = Math.round(delta_err / config.inst.stats_show_interval);
+    
+            stats_data.tav = (stats_data.tor === 0) ? 0 : Math.round(stats_data.ret / stats_data.tor);
+    
+            stats_data.cpc = (stats_data.cht + stats_data.cms) === 0 ? 0 : (stats_data.cht * 100 / (stats_data.cht + stats_data.cms)).toFixed(2);
+    
+            log(`Total operations: ${stats_data.nop}, Operations per second: ${stats_data.ops}, Errors: ${stats_data.noe}, Errors per second: ${stats_data.eps}`, "stats/counters");
+            log(`Total responses: ${stats_data.tor}, Average response time: ${stats_data.tav}ms, Min response time: ${stats_data.tmi}ms, Max response time: ${stats_data.tma}ms`, "stats/counters");
+            log(`Database operations: ${stats_data.dbr}, Database errors: ${stats_data.dbe}`, "stats/counters");
+            log(`Cache hit percentage: ${stats_data.cpc}%`, "stats/counters");
+    
+            start();
+        }, (config.inst.stats_show_interval * 1000));
+        
+    }
 
-        stats_data.tav = (stats_data.tor === 0) ? 0 : Math.round(stats_data.ret / stats_data.tor);
-
-        log("OPS:" + stats_data.nop + " OPS/s:" + stats_data.ops + " ERR:" + stats_data.noe + " ERR/s:" + stats_data.eps + " RES:" + stats_data.tor + " AVG:" + stats_data.tav + " MIN:" + stats_data.tmi + " MAX:" + stats_data.tma + " DBR:" + stats_data.dbr + " DBE:" + stats_data.dbe, "stats/counters");
-
-        start();
-    }, (config.inst.stats_show_interval * 1000));
 }
 
 const run = reactor_sequence => {
@@ -173,16 +192,4 @@ const run = reactor_sequence => {
     } catch (error) { log(error.message, "stats/run", true); }
 };
 
-module.exports = { start, run, oup, eup, tup, stats_info, stats_reset, dup, rup }
-
-/*
-Example of disks result
-{
-    "fs": "/dev/sda3",
-    "type": "xfs",
-    "size": 104100007936,
-    "used": 1901244416,
-    "use": 1.83,
-    "mount": "/"
-},
-*/
+module.exports = { start, run, oup, eup, tup, stats_info, stats_reset, dup, rup, cup, mup };

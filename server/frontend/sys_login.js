@@ -1,3 +1,5 @@
+"use strict";
+
 const config = require("../app/config");
 const i18n = require("../app/i18n");
 const session = require("../app/session");

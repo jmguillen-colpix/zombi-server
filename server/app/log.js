@@ -1,3 +1,5 @@
+"use strict";
+
 const config = require("./config");
 
 const chalk = require("chalk");
@@ -25,6 +27,8 @@ const log = (message, context = "UNKNOWN", error = false) => {
         const badge = (error) ? chalk.red("ERROR ") : chalk.green("INFO  ");
 
         process._rawDebug(badge + m);
+
+        return true;
     }
 };
 

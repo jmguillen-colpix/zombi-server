@@ -75,6 +75,9 @@ const http_server = http.createServer((req, res) => {
                         );
                         
                     } catch (error) {
+
+                        log(error, "zombi", true);
+
                         stats.eup();
 
                         res.statusCode = 500;
@@ -84,7 +87,7 @@ const http_server = http.createServer((req, res) => {
                                 server.response({ 
                                     error: true,
                                     code: 500,
-                                    message: `${mod}/${fun}: ${error.message}`, 
+                                    message: config.server.hide_errors_500 ? "Server error" : `${mod}/${fun}: ${error.message}`, 
                                     sequence 
                                 })
                             )
@@ -103,7 +106,7 @@ const http_server = http.createServer((req, res) => {
                         server.response({ 
                             error: true, 
                             code: 500, 
-                            message: `Invalid method ${method}`, 
+                            message: config.server.hide_errors_500 ? "Server error" : `Invalid method ${method}`, 
                             sequence 
                         })
                     )
@@ -158,8 +161,11 @@ wss.on("connection", (ws, req) => {
             stats.oup();
 
             if (message === "pong") {
+
                 sockets.is_alive(token);
+
             } else {
+                
                 const params = JSON.parse(message);
 
                 const { args, token } = params;
@@ -189,11 +195,14 @@ wss.on("connection", (ws, req) => {
 
         } catch (error) {
 
+            log(error, "zombi", true);
+
             ws.send(
                 JSON.stringify(
                     server.response({ 
-                        error: true, 
-                        message: `${mod}/${fun}: ${error.message}`, 
+                        error: true,
+                        code: 500,
+                        message: config.server.hide_errors_500 ? "Server error" : `${mod}/${fun}: ${error.message}`, 
                         sequence 
                     })
                 )
@@ -215,7 +224,7 @@ http_server.listen(
 
         try {
 
-            await cache.connect();
+            cache.connect();
             await db.connect();
             await i18n.load_labels();
 
@@ -228,7 +237,7 @@ http_server.listen(
             http_server.close(async () => {
             
                 await db.disconnect();
-                await cache.disconnect();
+                cache.disconnect();
             
                 process.exit(1);
             
