@@ -1,16 +1,57 @@
 "use strict";
 
+const config = require("./config");
 const log = require("./log");
 const session = require("./session");
 const stats = require("./stats");
 const security = require("./security");
 const utils = require("./utils");
 
+const fs = require("fs").promises;
 const path = require("path");
+const mime = require("mime-types");
+
+const file = async url => {
+
+    try {
+        
+        const public_directory = config.server.public_directory;
+
+        const file_path = public_directory.substr(0, 1) === "/"
+            ? path.join(public_directory, security.sanitize_path(url))
+            : path.join(__dirname, "../../", public_directory, security.sanitize_path(url));
+    
+        const file_name = (url === "/") ? `${file_path}index.html` : file_path;
+    
+        const mime_type = mime.lookup(path.parse(file_name).ext) || "text/plain";
+    
+        const data = await fs.readFile(file_name);
+        
+        return {
+            code: 200, 
+            data,
+            mime_type
+        };
+
+    } catch (error) {
+
+        log.debug(error, "server/file");
+
+        const status_code = (error.code === "ENOENT") ? 404 : 500;
+
+        return {
+            code: status_code, 
+            data: `${config.server.hide_errors_500 ? "Server error" : error.message}`,
+            mime_type: "text/plain"
+        };
+
+    }
+
+};
 
 const execute = async (mod, fun, args, token, sequence, ip, ua) => {
 
-    log(`Executing ${mod}/${fun} with token ${utils.make_token_shorter(token)}`, "server/execute");
+    log.debug(`Executing ${mod}/${fun} with token ${utils.make_token_shorter(token)}`, "server/execute");
 
     const is_login = (mod === "sys_login" && ["login", "logoff"].includes(fun));
     const is_start = (mod === "sys_login" && fun === "start");
@@ -85,7 +126,7 @@ const run = async (mod, fun, args, token, sequence, ip, ua) => {
 
     const module_path = path.join(__dirname, "../frontend/" + mod + ".js");
 
-    log(`Loading module file ${module_path}`, "server/run");
+    log.debug(`Loading module file ${module_path}`, "server/run");
 
     const action = require(module_path);
 
@@ -93,7 +134,20 @@ const run = async (mod, fun, args, token, sequence, ip, ua) => {
 
         let error, data, message, code;
 
-        const results = await action[fun](args, { token, sequence });
+        let results = await action[fun](args, { token, sequence });
+
+        if(!results) {
+
+            log.error(`Invalid response from action function ${mod}/${fun}`, "server/run");
+
+            return response({ 
+                error: true, 
+                code: 1002,
+                message: `Invalid response from action function ${mod}/${fun}`, 
+                sequence 
+            });
+
+        }
 
         if (Array.isArray(results)) {
 
@@ -112,7 +166,7 @@ const run = async (mod, fun, args, token, sequence, ip, ua) => {
 
             stats.eup();
 
-            log(`Invalid response from action function ${mod}/${fun}`, "server/run", true);
+            log.error(`Invalid response from action function ${mod}/${fun}`, "server/run");
 
             return response({ 
                 error: true, 
@@ -135,7 +189,7 @@ const run = async (mod, fun, args, token, sequence, ip, ua) => {
 
         stats.eup();
 
-        log(`Function [${fun}] is not defined on module [${mod}]`, "server/run", true);
+        log.debug(`Function [${fun}] is not defined on module [${mod}]`, "server/run", true);
 
         return response({ 
             error: true, 
@@ -148,11 +202,11 @@ const run = async (mod, fun, args, token, sequence, ip, ua) => {
 
 }
 
-const response = ({ error = false, code = 0, message = "ok", data = {}, sequence = 0, elapsed = -1 }) => {
+const response = ({ error = false, code = 200, message = "ok", data = {}, sequence = 0, elapsed = -1 }) => {
     
-    log(`Server response: code ${code}, time: ${elapsed} ms`, "server/execute");
+    log.debug(`Server response: code ${code}, time: ${elapsed} ms`, "server/execute");
 
     return { error, code, message, data, info: { time: elapsed, sequence } };
 };
 
-module.exports = { execute, response };
+module.exports = { execute, response, file };

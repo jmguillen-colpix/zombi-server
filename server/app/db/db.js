@@ -19,7 +19,7 @@ const connect = async (database = null) => {
 
     }
 
-    log(`Connecting to databases ${dbs}`, "db/connect");
+    log.info(`Connecting to databases ${dbs}`, "db/connect");
 
     for (const db_name of databases) {
 
@@ -41,7 +41,7 @@ const connect = async (database = null) => {
 
             await db[db_name].connect(db_name);
 
-            log(`Connected to db ${db_name} ${db_type}@${config.db[db_name].host}:${config.db[db_name].port}/${config.db[db_name].name}`, `db/${db_name}/connect`);
+            log.info(`Connected to db ${db_name} ${db_type}@${config.db[db_name].host}:${config.db[db_name].port}/${config.db[db_name].name}`, `db/${db_name}/connect`);
         
         }
 
@@ -63,7 +63,7 @@ const disconnect = async (database = null) => {
 
             await db[db_name].disconnect(db_name);
 
-            log(`Disconnected from db ${db_name}`, "db/disconnect");
+            log.info(`Disconnected from db ${db_name}`, "db/disconnect");
         }
 
     }
@@ -175,7 +175,7 @@ const sequence = async (db_name = "default") => {
 
         return res.rows[0][0];
 
-    } catch (error) { log(error, "db/sequence", true); }
+    } catch (error) { log.error(error, "db/sequence"); }
 }
 
 const table_prefix = () => { return config.schema.table_prefix; }

@@ -14,7 +14,7 @@ const start = () => {
     
     const interval = (config.reactor.interval * 1000);
 
-    log("Reactor started, interval " + config.reactor.interval + " seconds", "reactor/start");
+    log.info("Reactor started, interval " + config.reactor.interval + " seconds", "reactor/start");
 
     setInterval(async () => {
 
@@ -27,7 +27,7 @@ const start = () => {
 
             sockets.heartbeat();
 
-        } catch (error) { log(error, "reactor/start", true); }
+        } catch (error) { log.error(error, "reactor/start"); }
 
     }, interval);
 };

@@ -50,7 +50,7 @@ const load_labels = async () => {
 
     const rows = reply.rows;
 
-    log(rows.length + " i18n labels loaded", "i18n/load_labels");
+    log.info(rows.length + " i18n labels loaded", "i18n/load_labels");
 
     for (const row of rows) {
 

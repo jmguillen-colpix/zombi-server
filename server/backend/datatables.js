@@ -100,7 +100,7 @@ const sql = async (args) => {
             break;
 
         default:
-            log("Database setup error", "datatables/sql", true);
+            log.error("Database setup error", "datatables/sql");
             throw new Error(`Database setup error: ${__filename}`);
 
     }
@@ -141,7 +141,7 @@ const sql = async (args) => {
                 break;
 
             default:
-                log("Database setup error", "datatables/sql", true);
+                log.error("Database setup error", "datatables/sql");
                 throw new Error(`Database setup error: ${__filename}`);
 
         }

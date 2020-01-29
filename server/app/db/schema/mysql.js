@@ -90,6 +90,7 @@ const create_schema = table_prefix => {
         label_lang_he varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
         label_lang_ru varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
         label_lang_zh varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci default NULL,
+        usage_control integer,
         primary key (id),
         unique (label_name)
     )`);
@@ -905,7 +906,7 @@ const create_schema = table_prefix => {
         ,(10, 'עברית', 'he')
         ,(11, 'Русский', 'ru')`);
 
-    commands.push(`INSERT INTO ${table_prefix}i18n_labels (id, details, label_name, label_lang_es, label_lang_pt, label_lang_en, label_lang_fr, label_lang_de, label_lang_it, label_lang_ko, label_lang_ja, label_lang_he, label_lang_ru, label_lang_zh) values
+        commands.push(`INSERT INTO ${table_prefix}i18n_labels (id, details, label_name, label_lang_es, label_lang_pt, label_lang_en, label_lang_fr, label_lang_de, label_lang_it, label_lang_ko, label_lang_ja, label_lang_he, label_lang_ru, label_lang_zh) values
         (37, null, 'APPUSERNAME', '{USER}', '{USER}', '{USER}', '{UTILISATEUR}', '{USER}', '{UTENTE}', '{USER}', '{ユーザ}', '{USER}', '{Пользователь}', '{用户}')
         ,(82, null, 'PROFILE', 'Perfil', 'Perfil', 'Profile', 'Profil', 'Profil', 'Profilo', '프로필', '概要', 'פרופיל', 'Профиль', '简介')
         ,(88, null, 'USERS', 'Usuarios', 'Usuários', 'Users', 'Les utilisateurs', 'Benutzer', 'Utenti', '사용자', 'ユーザー', 'משתמשים', 'Пользователи', '用户')
@@ -1557,7 +1558,7 @@ const create_schema = table_prefix => {
         ,(24885, '', 'ENABLE', 'Habilitar', 'Activar', 'Enable', 'Activer', 'Aktivieren', 'Attivare', '사', '能', 'לאפשר', 'Включить', '启用')
         ,(24884, '', 'TRAFFIC', 'El tráfico', 'Sequência', 'Traffic', 'Séquence', 'Sequenz', 'Sequenza', '순서', '配列', 'רצף', 'Последовательность', '序列')
         ,(30139, '', 'SOCKETS', 'Sockets', 'Sockets', 'Sockets', 'Sockets', 'Sockets', 'Prese', '소켓', 'ソケット', 'שקעים', 'Розетки', '插座')`);
-
+   
     return commands;
 }
 

@@ -86,7 +86,7 @@ const login = async (args, extras) => {
 
     if (res.rows.length === 0) {
 
-        log(`User [${username}] not found`, "sys_login/login");
+        log.debug(`User [${username}] not found`, "sys_login/login");
 
         return {
             error: true,
@@ -114,7 +114,7 @@ const login = async (args, extras) => {
 
         } else {
 
-            log(`User [${username}] cannot login`, "sys_login/login");
+            log.debug(`User [${username}] cannot login`, "sys_login/login");
 
             return {
                 error: true,

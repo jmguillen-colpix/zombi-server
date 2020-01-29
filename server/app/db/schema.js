@@ -6,13 +6,13 @@ const db = require("../db/db");
 
     if (config.schema.locked) {
 
-        log("Schema is locked, check config file");
+        log.debug("Schema is locked, check config file");
 
     } else {
 
         const table_prefix = process.env.ZOMBI_DB_TABLE_PREFIX || config.schema.table_prefix;
 
-        log(`Using schema prefix "${table_prefix}"`, "schema/create");
+        log.debug(`Using schema prefix "${table_prefix}"`, "schema/create");
 
         let schema;
 
@@ -42,7 +42,7 @@ const db = require("../db/db");
 
             } catch (error) {
 
-                log(error, "schema/create", true);
+                log.error(error, "schema/create");
 
                 process.exit(1);
 

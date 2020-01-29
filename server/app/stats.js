@@ -59,6 +59,7 @@ const start = () => {
         const sample_err = stats_data.noe;
     
         setTimeout(() => {
+
             const delta_ops = stats_data.nop - sample_ops;
             const delta_err = stats_data.noe - sample_err;
     
@@ -67,29 +68,43 @@ const start = () => {
     
             stats_data.tav = (stats_data.tor === 0) ? 0 : Math.round(stats_data.ret / stats_data.tor);
     
-            stats_data.cpc = (stats_data.cht + stats_data.cms) === 0 ? 0 : (stats_data.cht * 100 / (stats_data.cht + stats_data.cms)).toFixed(2);
+            stats_data.cpc = (stats_data.cht + stats_data.cms) === 0 ? 0 : (stats_data.cht * 100 / (stats_data.cht + stats_data.cms));
     
-            log(`Total operations: ${stats_data.nop}, Operations per second: ${stats_data.ops}, Errors: ${stats_data.noe}, Errors per second: ${stats_data.eps}`, "stats/counters");
-            log(`Total responses: ${stats_data.tor}, Average response time: ${stats_data.tav}ms, Min response time: ${stats_data.tmi}ms, Max response time: ${stats_data.tma}ms`, "stats/counters");
-            log(`Database operations: ${stats_data.dbr}, Database errors: ${stats_data.dbe}`, "stats/counters");
-            log(`Cache hit percentage: ${stats_data.cpc}%`, "stats/counters");
-    
+            log.info(`Total operations: ${stats_data.nop}, Operations per second: ${stats_data.ops}, Errors: ${stats_data.noe}, Errors per second: ${stats_data.eps}`, "stats/counters");
+            log.info(`Total responses: ${stats_data.tor}, Average response time: ${stats_data.tav}ms, Min response time: ${stats_data.tmi}ms, Max response time: ${stats_data.tma}ms`, "stats/counters");
+            log.info(`Database operations: ${stats_data.dbr}, Database errors: ${stats_data.dbe}`, "stats/counters");
+
+            const cache_stats_message = `Cache hit percentage: ${(stats_data.cpc).toFixed(2)}%`;
+
+            if(stats_data.cpc < 90) {
+
+                log.warn(cache_stats_message, "stats/counters");
+
+            } else {
+
+                log.info(cache_stats_message, "stats/counters");
+
+            }
+
             start();
+
         }, (config.inst.stats_show_interval * 1000));
-        
+
     }
 
 }
 
 const run = reactor_sequence => {
+
     try {
-    // const {rss, heapTotal, heapUsed, external } = process.memoryUsage();
+        // const {rss, heapTotal, heapUsed, external } = process.memoryUsage();
         const { rss } = process.memoryUsage();
 
-        log(`Memory usage total (RSS): ${(rss / 1024 / 1204).toFixed(2)} MB`, "stats/run");
+        log.info(`Memory usage total (RSS): ${(rss / 1024 / 1204).toFixed(2)} MB`, "stats/run");
 
         if (config.inst.save_disk_data && (reactor_sequence % config.inst.save_disk_skip === 0)) {
-            log("Saving disk status data", "stats/save disk");
+
+            log.debug("Saving disk status data", "stats/save disk");
 
             si.fsSize(async data => {
 
@@ -122,7 +137,7 @@ const run = reactor_sequence => {
 
         if (config.inst.save_cpu_data && (reactor_sequence % config.inst.save_cpu_skip === 0)) {
 
-            log("Saving CPU status", "stats/save cpu");
+            log.debug("Saving CPU status", "stats/save cpu");
 
             si.currentLoad(async data => {
 
@@ -155,7 +170,7 @@ const run = reactor_sequence => {
 
         if (config.inst.save_mem_data && (reactor_sequence % config.inst.save_mem_skip === 0)) {
 
-            log("Saving memory stats data", "stats/save memory");
+            log.debug("Saving memory stats data", "stats/save memory");
 
             si.mem(async data => {
 
@@ -189,7 +204,7 @@ const run = reactor_sequence => {
 
         }
 
-    } catch (error) { log(error.message, "stats/run", true); }
+    } catch (error) { log.error(error, "stats/run"); }
 };
 
 module.exports = { start, run, oup, eup, tup, stats_info, stats_reset, dup, rup, cup, mup };

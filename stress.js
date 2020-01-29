@@ -53,11 +53,9 @@ const request = require("request-promise-native");
                 })
             }
         ]
-    }, finishedBench)
-    
-    function finishedBench(err, res) {
+    }, (err, res) => {
         console.log('finished bench', err, res)
-    }
+    });
 
 })()
 

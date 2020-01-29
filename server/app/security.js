@@ -38,7 +38,7 @@ const authorize = async (token, mod) => {
 
         if (await user_is_admin(token) === "true") { 
             
-            log(`User with token ${utils.make_token_shorter(token)} is admin`, "security/authorize");
+            log.debug(`User with token ${utils.make_token_shorter(token)} is admin`, "security/authorize");
 
             return true; // You are already God, say no more
 
@@ -52,7 +52,7 @@ const authorize = async (token, mod) => {
 
                 stats.cup();
 
-                log(`Cache hit (yes) for user ID ${user_id} module ${mod}`, "security/authorize");
+                log.debug(`Cache hit (yes) for user ID ${user_id} module ${mod}`, "security/authorize");
 
                 return true;
 
@@ -60,7 +60,7 @@ const authorize = async (token, mod) => {
 
                 stats.cup();
 
-                log(`Cache hit (no) for user ID ${user_id} module ${mod}`, "security/authorize");
+                log.debug(`Cache hit (no) for user ID ${user_id} module ${mod}`, "security/authorize");
 
                 return false;
 
@@ -81,7 +81,7 @@ const authorize = async (token, mod) => {
 
                 if (reply > 0) {
 
-                    log(`User with ID ${user_id} authorized on the database for [${mod}]`, "security/authorize");
+                    log.debug(`User with ID ${user_id} authorized on the database for [${mod}]`, "security/authorize");
 
                     if(config.security.user_cache_enabled) {
 
@@ -93,7 +93,7 @@ const authorize = async (token, mod) => {
 
                 } else {
 
-                    log(`User with ID ${user_id} not authorized on the database for [${mod}]`, "security/authorize");
+                    log.debug(`User with ID ${user_id} not authorized on the database for [${mod}]`, "security/authorize");
 
                     if(config.security.user_cache_enabled) {
 
@@ -111,7 +111,7 @@ const authorize = async (token, mod) => {
 
     } catch (error) {
 
-        log(error, "security/authorize", true);
+        log.error(error, "security/authorize");
 
         throw error;
 
@@ -125,7 +125,7 @@ const delete_cache = async token => {
 
     cache.del(`${config.security.user_cache_prefix}${user_id}`);
 
-    log(`Cleared user cache, token ${utils.make_token_shorter(token)}, id ${user_id}`, "security/delete_cache");
+    log.debug(`Cleared user cache, token ${utils.make_token_shorter(token)}, id ${user_id}`, "security/delete_cache");
 
 };
 

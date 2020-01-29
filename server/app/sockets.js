@@ -24,11 +24,11 @@ const is_alive = token => {
 
         clients[token].timestamp = utils.timestamp();
 
-        log(`Client responded ping with pong, token: ${short_token}`, "sockets/is_alive");
+        log.debug(`Client responded ping with pong, token: ${short_token}`, "sockets/is_alive");
 
     } else {
 
-        log(`Client sent pong but is not on client list, token: ${short_token}`, "sockets/is_alive", true);
+        log.debug(`Client sent pong but is not on client list, token: ${short_token}`, "sockets/is_alive", true);
 
     }
 
@@ -41,7 +41,7 @@ const heartbeat = () => {
 
         const tokens = Object.keys(clients);
 
-        if (tokens.length === 0) { log("Nobody is connected", "sockets/heartbeat") }
+        if (tokens.length === 0) { log.debug("Nobody is connected", "sockets/heartbeat") }
 
         for (const token of tokens) {
 
@@ -53,11 +53,11 @@ const heartbeat = () => {
 
                         clients[token].is_alive = false;
 
-                        log(error.message, "sockets/heartbeat", true);
+                        log.error(error, "sockets/heartbeat");
 
                     } else {
 
-                        log("Pinged token " + utils.make_token_shorter(token), "sockets/heartbeat");
+                        log.debug("Pinged token " + utils.make_token_shorter(token), "sockets/heartbeat");
 
                     }
                 });
@@ -76,7 +76,7 @@ const heartbeat = () => {
 
                     delete clients[token];
 
-                    log(`Deleted WS client with token ${utils.make_token_shorter(token)}`, "sockets/heartbeat");
+                    log.debug(`Deleted WS client with token ${utils.make_token_shorter(token)}`, "sockets/heartbeat");
 
                 }
 
@@ -84,7 +84,7 @@ const heartbeat = () => {
 
         }, limit);
 
-    } catch (error) { log(error, "sockets/heartbeat", true); }
+    } catch (error) { log.error(error, "sockets/heartbeat"); }
 
 };
 
@@ -94,7 +94,7 @@ const send_message_to_session = (token, context = "NO_CONTEXT", data = []) => {
 
     if (clients[token]) {
 
-        log(`Sending message to token: ${short_token}`, "sockets/send_message_to_session");
+        log.debug(`Sending message to token: ${short_token}`, "sockets/send_message_to_session");
 
         clients[token].ws.send(JSON.stringify({ context, data }), {}, (error) => {
 
@@ -102,7 +102,7 @@ const send_message_to_session = (token, context = "NO_CONTEXT", data = []) => {
 
                 clients[token].is_alive = false;
 
-                log(error, "sockets/send_message_to_session", true);
+                log.error(error, "sockets/send_message_to_session");
 
             }
 
@@ -110,7 +110,7 @@ const send_message_to_session = (token, context = "NO_CONTEXT", data = []) => {
 
     } else {
 
-        log(`Client not found for token: ${short_token}`, "sockets/send_message_to_session");
+        log.debug(`Client not found for token: ${short_token}`, "sockets/send_message_to_session");
 
     }
 
@@ -124,9 +124,9 @@ const send_message_to_user = async (user_id = null, context = "none", data = [])
 
         const user_name = await session.get(token, "full_name")
 
-        log(`Sending message to ${user_name}, token: ${utils.make_token_shorter(token)}`, "sockets/send_message_to_user");
+        log.debug(`Sending message to ${user_name}, token: ${utils.make_token_shorter(token)}`, "sockets/send_message_to_user");
 
-        await send_message_to_session(token, context, data);
+        send_message_to_session(token, context, data);
 
     }
 

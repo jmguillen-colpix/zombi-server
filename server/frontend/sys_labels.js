@@ -366,7 +366,7 @@ const labels_translate = async (args, extras) => {
 
             if (utils.is_empty(lang_values.en)) {
 
-                log("Text english value is empty, cannot translate", "sys_labels/labels_translate");
+                log.debug("Text english value is empty, cannot translate", "sys_labels/labels_translate");
 
             } else {
 
@@ -397,7 +397,7 @@ const labels_translate = async (args, extras) => {
 
                                 var label = http_body.text[0];
 
-                                log("Translating [" + lang + "] " + translate_what + " to " + label, "sys_labels/labels_translate");
+                                log.debug("Translating [" + lang + "] " + translate_what + " to " + label, "sys_labels/labels_translate");
 
                                 await db.sql({
                                     sql: `update ${db.table_prefix()}i18n_labels set label_lang_${lang} = :label where id = :id`,
@@ -425,4 +425,42 @@ const labels_translate = async (args, extras) => {
 
 }
 
-module.exports = { labels_add, labels_edit_data, labels_edit, labels_delete, labels_translate, labels_table_data }
+/**
+sys_labels/labels_delete
+
+This function is used by the client to inform the last time a label was used.
+
+Arguments:
+    <string>label_name
+
+Example:
+    LANG
+
+Returns:
+    Error on error
+
+*/
+const inform_usage = async (args, extras) => {
+
+    const label_name = args;
+
+    await db.sql({
+        sql: `update ${db.table_prefix()}i18n_labels set usage_control = :usage_control where label_name = :label_name`,
+        bind: [utils.timestamp(), label_name]
+    });
+
+    return [false];
+
+}
+
+
+
+module.exports = {
+    labels_add, 
+    labels_edit_data, 
+    labels_edit, 
+    labels_delete, 
+    labels_translate, 
+    labels_table_data,
+    inform_usage
+}

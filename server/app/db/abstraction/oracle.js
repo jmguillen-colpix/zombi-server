@@ -71,14 +71,14 @@ const connect = async (db_name, callback) => {
         },
         (err, pool) => {
             if (err) {
-                log(err, "oracle/connect", true);
+                log.debug(err, "oracle/connect", true);
                 if (typeof callback === "function") { callback(err, false); }
             } else {
-                log("Connected to " + db_name + " oracle@" + config.db[db_name].host + ":" + config.db[db_name].port + "/" + config.db[db_name].name, "oracle/connect");
+                log.debug("Connected to " + db_name + " oracle@" + config.db[db_name].host + ":" + config.db[db_name].port + "/" + config.db[db_name].name, "oracle/connect");
                 if (typeof callback === "function") { callback(null, true); }
             }
         });
-    } catch (err) { log(err.message, "oracle/connect", true); }
+    } catch (err) { log.debug(err.message, "oracle/connect", true); }
 }
 
 const sql = (sql, bind, callback, db_name) => {
@@ -87,7 +87,7 @@ const sql = (sql, bind, callback, db_name) => {
 
         oracledb.getConnection(db_name, (err, connection) => {
             if (err) {
-                log(err, "oracle/sql/connection", true);
+                log.debug(err, "oracle/sql/connection", true);
                 if (typeof callback === "function") { callback(err.message, false); }
             } else {
                 connection.execute(
@@ -96,7 +96,7 @@ const sql = (sql, bind, callback, db_name) => {
                     { extendedMetaData: true },
                     (err, result) => {
                         if (err) {
-                            log(err, "oracle/sql/execute", true);
+                            log.debug(err, "oracle/sql/execute", true);
                             if (typeof callback === "function") { callback(err, false); }
                         } else {
                             if (typeof result.rowsAffected === "undefined") {
@@ -125,12 +125,12 @@ const sql = (sql, bind, callback, db_name) => {
 
 const shutdown = (db_name) => {
     try {
-        log("Shutting down Oracle connections", "oracle/shutdown");
+        log.debug("Shutting down Oracle connections", "oracle/shutdown");
 
         oracledb.getPool(db_name).close(1, (err) => {
-            if (err) { log(err.message, "oracle/shutdown", true); } else { log("Oracle (" + config.db[db_name].host + ":" + config.db[db_name].port + "/" + config.db[db_name].name + ") disconnected", "oracle/shutdown"); }
+            if (err) { log.debug(err.message, "oracle/shutdown", true); } else { log.debug("Oracle (" + config.db[db_name].host + ":" + config.db[db_name].port + "/" + config.db[db_name].name + ") disconnected", "oracle/shutdown"); }
         });
-    } catch (err) { log(err.message, "oracle/shutdown", true); }
+    } catch (err) { log.debug(err.message, "oracle/shutdown", true); }
 }
 
 module.exports = { connect, shutdown, sql }

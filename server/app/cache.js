@@ -9,10 +9,10 @@ const connect = () => {
 
     redis.auth(config.cache.pass, () => {});
 
-    redis.on("error", (err) => { log("Redis error: " + err, "cache/connect", true); });
+    redis.on("error", (err) => { log.error("Redis error: " + err, "cache/connect"); });
     
     redis.on("connect", () => {
-        log("Connected to Redis server at " + config.cache.host + ":" + config.cache.port, "cache/connect");
+        log.info("Connected to Redis server at " + config.cache.host + ":" + config.cache.port, "cache/connect");
     });
 
 };

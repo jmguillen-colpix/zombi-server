@@ -11,7 +11,7 @@ const W3CWebSocket = require("websocket").w3cwebsocket;
 
 let token = null;
 
-describe('Test AppServer functions', () => {
+describe('Test server API functions', () => {
 
     test('should login via HTTP', done => {
         request(server)
@@ -39,13 +39,13 @@ describe('Test AppServer functions', () => {
             });
     });
 
-    test('should return code 1000 on not authorized token', done => {
+    test('should return code 1000 on not authorized user', done => {
         request(server)
             .post(config.server.endpoint)
             .send({
-                token: "invald token",
-                mod: "sys_login",
-                fun: "start",
+                token,
+                mod: "sys_tests",
+                fun: "none",
                 args: []
             })
             .set('Accept', 'application/json')

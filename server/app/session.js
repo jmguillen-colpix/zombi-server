@@ -19,8 +19,11 @@ const update = token => {
 };
 
 const create = async (token, user_id, language, timezone, full_name, is_admin) => {
+
     try {
+
         if (token) {
+
             const timestamp = utils.timestamp();
 
             const data = {
@@ -36,13 +39,17 @@ const create = async (token, user_id, language, timezone, full_name, is_admin) =
 
             await cache.hmset(config.session.cache_prefix + token, data);
 
-            log("Session created for token " + utils.make_token_shorter(token), "sessions/create");
-        } else { log("Cannot create session, empty token", "session/create"); }
+            log.debug("Session created for token " + utils.make_token_shorter(token), "sessions/create");
+
+        } else { log.error("Cannot create session, empty token", "session/create"); }
+
     } catch (error) {
-        log(error.message, "session/start", true);
+
+        log.error(error, "session/start");
 
         throw (error);
     }
+
 };
 
 const destroy = async (token) => {
@@ -58,11 +65,11 @@ const destroy = async (token) => {
 
         await cache.del(config.session.cache_prefix + token);
 
-        log(`Deleted session with token ${utils.make_token_shorter(token)}`, "sessions/destroy");
+        log.debug(`Deleted session with token ${utils.make_token_shorter(token)}`, "sessions/destroy");
 
     } catch (error) {
 
-        log(error, "session/destroy", true);
+        log.error(error, "session/destroy");
 
         throw (error);
 
@@ -87,7 +94,7 @@ const expire = async () => {
 
                 const token = parts[1];
 
-                log("Expired session token " + utils.make_token_shorter(token) + " inactive since " + moment.utc(limit, "X").format("LLL") + " (UTC), " + Math.floor(config.session.expire / 60) + " minutes ago", "session/expire");
+                log.debug("Expired session token " + utils.make_token_shorter(token) + " inactive since " + moment.utc(limit, "X").format("LLL") + " (UTC), " + Math.floor(config.session.expire / 60) + " minutes ago", "session/expire");
 
                 await destroy(token);
 
@@ -97,7 +104,7 @@ const expire = async () => {
 
     } catch (error) {
 
-        log(error.message, "session/expire", true);
+        log.debug(error.message, "session/expire", true);
 
     }
 

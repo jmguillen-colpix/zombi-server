@@ -56,8 +56,8 @@ exports.server = (event, context) => {
 
     // try {
 
-    //     log(JSON.stringify(event));
-    //     log(JSON.stringify(context));
+    //     log.debug(JSON.stringify(event));
+    //     log.debug(JSON.stringify(context));
 
     //     stats.oup();
 

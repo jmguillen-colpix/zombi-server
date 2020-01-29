@@ -97,7 +97,7 @@ const connect = db_name => {
         }
 
         return clients[db_name].connect();
-    } catch (error) { log(error.message, "postgresql/connect", true); }
+    } catch (error) { log.error(error, "postgresql/connect"); }
 }
 
 const sql = (sql, bind, callback, db_name, options) => {
@@ -175,8 +175,8 @@ const sql = (sql, bind, callback, db_name, options) => {
 
             if (typeof callback === "function") { callback(error.message, false); }
 
-            log(pgized_sql, "postgresql/sql", true);
-            log(error, "postgresql/sql", true);
+            log.error(pgized_sql, "postgresql/sql");
+            log.error(error, "postgresql/sql");
         });
 }
 

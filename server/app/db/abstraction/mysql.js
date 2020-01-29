@@ -24,7 +24,9 @@ const get_data_type = (code) => {
 }
 
 const connect = async (db_name, callback) => {
+
     try {
+
         if (typeof clients[db_name] === "undefined") {
             clients[db_name] = mysql.createConnection({
                 host: config.db[db_name].host,
@@ -36,23 +38,22 @@ const connect = async (db_name, callback) => {
             });
         }
 
-        clients[db_name].connect((err) => {
-            if (err) {
-                log(err, "mysql/connect", true);
-                if (typeof callback === "function") { callback(err, false); }
+        clients[db_name].connect((error) => {
+            if (error) {
+                log.error(error, "mysql/connect");
+                if (typeof callback === "function") { callback(error, false); }
             } else {
-                // log("Connected to " + db_name + " mysql@" + config.db[db_name].host + ":" + config.db[db_name].port + "/" + config.db[db_name].name, "mysql/connect");
                 if (typeof callback === "function") { callback(null, true); }
             }
         });
 
         clients[db_name].on("error", (error) => {
-            log(error.message, "mysql/connect", true);
+            log.error(error.message, "mysql/connect");
 
             setTimeout(() => { connect(db_name); }, 1000);
         });
 
-    } catch (err) { log(err.message, "mysql/connect", true); }
+    } catch (error) { log.error(error, "mysql/connect"); }
 }
 
 const sql = (sql, bind, callback, db_name, options) => {
@@ -87,9 +88,8 @@ const sql = (sql, bind, callback, db_name, options) => {
 
             if (typeof callback === "function") { callback(error.message, false); }
 
-            log(mysql_sql, "mysql/sql", true);
-
-            log(error.message, "mysql/sql", true);
+            log.error(mysql_sql, "mysql/sql");
+            log.error(error, "mysql/sql");
 
         } else {
 

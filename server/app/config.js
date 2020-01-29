@@ -56,8 +56,7 @@ const config = {
         public_directory: "/home/jmg/zombi-client", // If starts with / it is absolute path
         request_timeout: 60, // seconds
         log: {
-            log_info: true,
-            log_error: true
+            log_level: "DEBUG" // FATAL, ERROR, WARN, INFO, DEBUG, TRACE
         },
         hide_errors_500: true,
         http_port: process.env.ZOMBI_HTTP_PORT || 8080

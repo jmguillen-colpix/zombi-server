@@ -9,17 +9,14 @@ const db = require("./db/db");
 const stats = require("./stats");
 const cache = require("./cache");
 const sockets = require("./sockets");
-const security = require("./security");
 
-const fs = require("fs");
 const http = require("http");
 const urlm = require("url");
-const path = require("path");
-const mime = require("mime-types");
+
 
 const websocket = require("ws");
 
-const http_server = http.createServer((req, res) => {
+const http_server = http.createServer(async (req, res) => {
 
     let sequence, mod, fun;
 
@@ -33,6 +30,7 @@ const http_server = http.createServer((req, res) => {
     if (url === config.server.endpoint) {
 
         switch (method) {
+
             case "OPTIONS":
                 res.statusCode = 204;
                 res.end("ok");
@@ -76,7 +74,7 @@ const http_server = http.createServer((req, res) => {
                         
                     } catch (error) {
 
-                        log(error, "zombi", true);
+                        log.error(error, "start/server");
 
                         stats.eup();
 
@@ -99,7 +97,7 @@ const http_server = http.createServer((req, res) => {
                 break;
 
             default:
-                log(`Invalid method ${method}`, "zombi", true);
+                log.error(`Invalid method ${method}`, "start/server");
                 res.statusCode = 500;
                 res.end(
                     JSON.stringify(
@@ -116,28 +114,11 @@ const http_server = http.createServer((req, res) => {
 
     } else {
 
-        const public_directory = config.server.public_directory;
+        const { code, data, mime_type } = await server.file(req.url);
 
-        const file_path = public_directory.substr(0, 1) === "/"
-            ? path.join(public_directory, security.sanitize_path(req.url))
-            : path.join(__dirname, "../../", public_directory, security.sanitize_path(req.url));
-
-        const file_name = (req.url === "/") ? `${file_path}index.html` : file_path;
-
-        const mime_type = mime.lookup(path.parse(file_name).ext);
-
-        fs.readFile(file_name, (err, data) => {
-            res.setHeader("Content-type", mime_type || "text/plain");
-
-            if (err) {
-                log(err, "zombi", true);
-
-                res.statusCode = 404;
-                res.end(`File not found: ${err}.`);
-            } else {
-                res.end(data);
-            }
-        });
+        res.setHeader("Content-type", mime_type);
+        res.statusCode = code;
+        res.end(data);
 
     }
 
@@ -195,7 +176,7 @@ wss.on("connection", (ws, req) => {
 
         } catch (error) {
 
-            log(error, "zombi", true);
+            log.error(error, "start/server");
 
             ws.send(
                 JSON.stringify(
@@ -220,7 +201,9 @@ http_server.listen(
 
     async () => {
 
-        log(`Hello, I am ${config.node_name} serving HTTP on port ${config.server.http_port}`, "main");
+        log.always(`Log level: ${config.server.log.log_level}`, "start/listen");
+
+        log.info(`Hello, I am ${config.node_name} serving HTTP on port ${config.server.http_port}`, "start/listen");
 
         try {
 
@@ -232,7 +215,7 @@ http_server.listen(
 
         } catch (error) {
 
-            log(error, "app/startup", true);
+            log.error(error, "start/listen");
 
             http_server.close(async () => {
             

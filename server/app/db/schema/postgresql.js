@@ -2,7 +2,7 @@ const create_schema = table_prefix => {
     
     const commands = [];
 
-    commands.push("create sequence if not exists zombi_seq start 1");
+    commands.push("create sequence if not exists zombi_seq start 100000");
 
     commands.push(`create table if not exists ${table_prefix}groups
     (
@@ -43,7 +43,8 @@ const create_schema = table_prefix => {
         label_lang_ja varchar(200) default NULL::character varying,
         label_lang_he varchar(200) default NULL::character varying,
         label_lang_ru varchar(200) default NULL::character varying,
-        label_lang_zh varchar(200) default NULL::character varying
+        label_lang_zh varchar(200) default NULL::character varying,
+        usage_control integer
     )`);
 
     commands.push(`create table if not exists ${table_prefix}i18n_languages
@@ -107,16 +108,6 @@ const create_schema = table_prefix => {
         swapused numeric,
         swapfree numeric
     )`);
-
-    // Sessions are on Redis now
-    // commands.push(`create table if not exists ${table_prefix}sessions
-    // (
-    //     token varchar(128) not null,
-    //     session_data varchar(3200) not null,
-    //     user_id integer not null,
-    //     created integer not null,
-    //     updated integer
-    // )`);
 
     commands.push(`create table if not exists ${table_prefix}tz_zones
     (
@@ -1527,7 +1518,6 @@ const create_schema = table_prefix => {
         ,(24885, '', 'ENABLE', 'Habilitar', 'Activar', 'Enable', 'Activer', 'Aktivieren', 'Attivare', '사', '能', 'לאפשר', 'Включить', '启用')
         ,(24884, '', 'TRAFFIC', 'El tráfico', 'Sequência', 'Traffic', 'Séquence', 'Sequenz', 'Sequenza', '순서', '配列', 'רצף', 'Последовательность', '序列')
         ,(30139, '', 'SOCKETS', 'Sockets', 'Sockets', 'Sockets', 'Sockets', 'Sockets', 'Prese', '소켓', 'ソケット', 'שקעים', 'Розетки', '插座')`);
-
     return commands;
 }
 
